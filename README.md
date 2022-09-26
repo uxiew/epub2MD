@@ -1,2 +1,2 @@
-# ConvertToMarkdown
-epub、mobi、azw3file is converted to markdown files
+# epubToMarkdown
+epub is converted to markdown files
