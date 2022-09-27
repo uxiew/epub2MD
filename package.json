@@ -1,6 +1,6 @@
 {
-  "name": "@gxl/epub-parser",
-  "version": "2.0.4",
+  "name": "epub-parser-mod",
+  "version": "3.0.4",
   "description": "A powerful yet easy-to-use epub parser",
   "main": "lib/index.js",
   "bin": {
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gaoxiaoliangz/epub-parser.git"
+    "url": "git+https://github.com/chandlerver5/epub2MD.git"
   },
   "keywords": [
     "epub-parser",
