@@ -9,7 +9,7 @@ The package exports a simple parser function which use epub file as input and ou
 
 As it is written in TypeScript, types are already included in the package.
 
-This release fixes some issues and adds command line operations。
+This repo fixes some issues and adds command line operations。
 
 souce from [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)
 
