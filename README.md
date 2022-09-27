@@ -9,6 +9,7 @@ The package exports a simple parser function which use epub file as input and ou
 
 As it is written in TypeScript, types are already included in the package.
 
+This release fixes some issues and adds command line operations。
 
 souce from [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)
 
@@ -22,6 +23,15 @@ or if you prefer yarn
 
 ```bash
 yarn add @gxl/epub-parser
+```
+
+## CLI
+```shell
+$ epub-parser help
+$ epub-parser --md ../../fixtures/zhihu.epub
+$ epub-parser -i ../../fixtures/zhihu.epub
+$ epub-parser -S ../../fixtures/zhihu.epub
+$ epub-parser -s ../../fixtures/zhihu.epub
 ```
 
 ## Usage
