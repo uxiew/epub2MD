@@ -1,6 +1,7 @@
 import fs from 'fs'
 import xml2js from 'xml2js'
 import _ from 'lodash'
+
 // @ts-ignore
 import nodeZip from 'node-zip'
 import parseLink from './parseLink'
@@ -11,6 +12,7 @@ const xmlParser = new xml2js.Parser()
 
 const xmlToJs = (xml: string) => {
   return new Promise<any>((resolve, reject) => {
+    // @ts-ignore
     xmlParser.parseString(xml, (err: Error, object: GeneralObject) => {
       if (err) {
         reject(err)
@@ -40,10 +42,12 @@ const determineRoot = (opfPath: string) => {
 
 const parseMetadata = (metadata: GeneralObject[]) => {
   const title = _.get(metadata[0], ['dc:title', 0]) as string
-  let author = _.get(metadata[0], ['dc:creator', 0]) as string
+  let author = _.get(metadata[0], ['dc:creator'])
 
-  if (typeof author === 'object') {
-    author = _.get(author, ['_']) as string
+  if (Array.isArray(author)) {
+    author = author.map((aut) => _.get(aut, ['_']))
+  } else {
+    author = [_.get(author, ['_'])]
   }
 
   const publisher = _.get(metadata[0], ['dc:publisher', 0]) as string
@@ -63,7 +67,8 @@ export class Epub {
   private _manifest?: any[]
   private _spine?: string[] // array of ids defined in manifest
   private _toc?: GeneralObject
-  private _metadata?: GeneralObject
+  private _metadata?: GeneralObject[]
+
   structure?: GeneralObject
   info?: {
     title: string
@@ -76,10 +81,9 @@ export class Epub {
     this._zip = new nodeZip(buffer, { binary: true, base64: false, checkCRC32: true })
   }
 
-  resolve(
-    path: string,
-  ): {
+  resolve(path: string): {
     asText: () => string
+    asNodeBuffer: () => Buffer
   } {
     let _path
     if (path[0] === '/') {
@@ -96,7 +100,7 @@ export class Epub {
     }
   }
 
-  async _resolveXMLAsJsObject(path: string) {
+  async _resolveXMLAsJsObject(path: string): Promise<GeneralObject> {
     const xml = this.resolve(path).asText()
     return xmlToJs(xml)
   }
@@ -104,13 +108,14 @@ export class Epub {
   private async _getOpfPath() {
     const container = await this._resolveXMLAsJsObject('/META-INF/container.xml')
     const opfPath = container.container.rootfiles[0].rootfile[0]['$']['full-path']
-    return opfPath
+    return opfPath as string
   }
 
-  _getManifest(content: GeneralObject) {
-    return _.get(content, ['package', 'manifest', 0, 'item'], []).map(
-      (item: any) => item.$,
-    ) as any[]
+  getManifest(content?: GeneralObject) {
+    return (
+      this._manifest ||
+      (_.get(content, ['package', 'manifest', 0, 'item'], []).map((item: any) => item.$) as any[])
+    )
   }
 
   _resolveIdFromLink(href: string) {
@@ -131,28 +136,28 @@ export class Epub {
   }
 
   _genStructureForHTML(tocObj: GeneralObject) {
-    const tocRoot = tocObj.html.body[0].nav[0]['ol'][0].li;
-    let runningIndex = 1;
+    const tocRoot = tocObj.html.body[0].nav[0]['ol'][0].li
+    let runningIndex = 1
 
     const parseHTMLNavPoints = (navPoint: GeneralObject) => {
-      const element = navPoint.a[0] || {};
-      const path = element['$'].href;
-      let name = element['_'];
-      const prefix = element.span;
+      const element = navPoint.a[0] || {}
+      const path = element['$'].href
+      let name = element['_']
+      const prefix = element.span
       if (prefix) {
-        name = `${prefix.map((p: GeneralObject) => p['_']).join('')}${name}`;
+        name = `${prefix.map((p: GeneralObject) => p['_']).join('')}${name}`
       }
-      const sectionId = this._resolveIdFromLink(path);
+      const sectionId = this._resolveIdFromLink(path)
       const { hash: nodeId } = parseLink(path)
-      const playOrder = runningIndex;
+      const playOrder = runningIndex
 
-      let children = navPoint?.ol?.[0]?.li;
+      let children = navPoint?.ol?.[0]?.li
 
       if (children) {
-        children = parseOuterHTML(children);
+        children = parseOuterHTML(children)
       }
 
-      runningIndex++;
+      runningIndex++
 
       return {
         name,
@@ -161,21 +166,21 @@ export class Epub {
         path,
         playOrder,
         children,
-      };
-    };
+      }
+    }
 
     const parseOuterHTML = (collection: GeneralObject[]) => {
       return collection.map((point) => {
-        return parseHTMLNavPoints(point);
-      });
+        return parseHTMLNavPoints(point)
+      })
     }
 
-    return parseOuterHTML(tocRoot);
+    return parseOuterHTML(tocRoot)
   }
 
   _genStructure(tocObj: GeneralObject, resolveNodeId = false) {
     if (tocObj.html) {
-      return this._genStructureForHTML(tocObj);
+      return this._genStructureForHTML(tocObj)
     }
 
     const rootNavPoints = _.get(tocObj, ['ncx', 'navMap', '0', 'navPoint'], [])
@@ -185,9 +190,9 @@ export class Epub {
       const path = _.get(navPoint, ['content', '0', '$', 'src'], '')
       const name = _.get(navPoint, ['navLabel', '0', 'text', '0'])
       const playOrder = _.get(navPoint, ['$', 'playOrder']) as string
-      const { hash: nodeId } = parseLink(path)
-      let children = navPoint.navPoint
+      const { hash } = parseLink(path)
 
+      let children = navPoint.navPoint
       if (children) {
         // tslint:disable-next-line:no-use-before-declare
         children = parseNavPoints(children)
@@ -198,7 +203,7 @@ export class Epub {
       return {
         name,
         sectionId,
-        nodeId,
+        nodeId: hash || _.get(navPoint, ['$', 'id']),
         path,
         playOrder,
         children,
@@ -231,29 +236,25 @@ export class Epub {
   }
 
   async parse(expand = false) {
-    const opfPath = await this._getOpfPath()
-    this._root = determineRoot(opfPath)
+    this._opfPath = await this._getOpfPath()
+    this._content = await this._resolveXMLAsJsObject('/' + this._opfPath)
 
-    const content = await this._resolveXMLAsJsObject('/' + opfPath)
-    const manifest = this._getManifest(content)
-    const metadata = _.get(content, ['package', 'metadata'], [])
-    const tocID = _.get(content, ['package', 'spine', 0, '$', 'toc'], 'toc.xhtml');
+    this._manifest = this.getManifest(this._content)
+    this._metadata = _.get(this._content, ['package', 'metadata'], []) as GeneralObject[]
+    this._root = determineRoot(this._opfPath)
+
+    const tocID = _.get(this._content, ['package', 'spine', 0, '$', 'toc'], 'toc.xhtml')
     // https://github.com/gaoxiaoliangz/epub-parser/issues/13
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-
-    const tocPath = (_.find(manifest, { id: tocID }) || {}).href
+    const tocPath = (_.find(this._manifest, { id: tocID }) || {}).href
     if (tocPath) {
       const toc = await this._resolveXMLAsJsObject(tocPath)
       this._toc = toc
       this.structure = this._genStructure(toc)
     }
 
-    this._manifest = manifest
-    this._content = content
-    this._opfPath = opfPath
     this._spine = this._getSpine()
-    this._metadata = metadata
-    this.info = parseMetadata(metadata)
+    this.info = parseMetadata(this._metadata)
     this.sections = this._resolveSectionsFromSpine(expand)
 
     return this
@@ -264,6 +265,7 @@ export interface ParserOptions {
   type?: 'binaryString' | 'path' | 'buffer'
   expand?: boolean
 }
+
 export default function parserWrapper(target: string | Buffer, options: ParserOptions = {}) {
   // seems 260 is the length limit of old windows standard
   // so path length is not used to determine whether it's path or binary string

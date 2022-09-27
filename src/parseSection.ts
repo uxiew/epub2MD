@@ -1,10 +1,13 @@
 import path from 'path'
 // @ts-ignore
-import toMarkdown from 'to-markdown'
+import TurndownService from 'turndown'
 import parseLink from './parseLink'
+
 import parseHTML from './parseHTML'
-import * as mdConverters from './mdConverters'
+// import * as mdConverters from './mdConverters'
 import { HtmlNodeObject } from './types'
+
+const turndownService = new TurndownService()
 
 const isInternalUri = (uri: string) => {
   return uri.indexOf('http://') === -1 && uri.indexOf('https://') === -1
@@ -13,9 +16,9 @@ const isInternalUri = (uri: string) => {
 export type ParseSectionConfig = {
   id: string
   htmlString: string
-  resourceResolver: (path: string) => any
-  idResolver: (link: string) => string
-  expand: boolean
+  expand?: boolean
+  resourceResolver?: (path: string) => any
+  idResolver?: (link: string) => string
 }
 
 export class Section {
@@ -35,16 +38,8 @@ export class Section {
     }
   }
 
-  toMarkdown?() {
-    return toMarkdown(this.htmlString, {
-      converters: [
-        mdConverters.h,
-        mdConverters.span,
-        mdConverters.div,
-        mdConverters.img,
-        mdConverters.a,
-      ],
-    })
+  toMarkdown() {
+    return turndownService.turndown(this.htmlString)
   }
 
   toHtmlObjects?() {
@@ -64,7 +59,7 @@ export class Section {
       resolveSrc: (src) => {
         if (isInternalUri(src)) {
           // todo: may have bugs
-          const absolutePath = path.resolve('/', src).substr(1)
+          const absolutePath = path.posix.resolve('/', src).substr(1)
           const buffer = this._resourceResolver?.(absolutePath)?.asNodeBuffer()
           const base64 = buffer.toString('base64')
           return `data:image/png;base64,${base64}`

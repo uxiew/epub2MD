@@ -1,0 +1,89 @@
+Arguments: 
+  /Users/bing/.volta/tools/image/node/16.16.0/bin/node /Users/bing/.volta/tools/image/yarn/1.22.18/bin/yarn.js install
+
+PATH: 
+  /Users/bing/.volta/tools/image/yarn/1.22.18/bin:/Users/bing/.volta/tools/image/node/16.16.0/bin:/Users/bing/.bun/bin:/Users/bing/.volta/bin:/opt/homebrew/opt/gnu-getopt/bin:/opt/homebrew/opt/openjdk/bin:/opt/homebrew/opt/icu4c/sbin:/opt/homebrew/opt/icu4c/bin:/Users/bing/.volta/bin:/Users/bing/bin:/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/bing/.cargo/bin:/Users/bing/.android-sdk-macosx/tools:/Users/bing/.android-sdk-macosx/platform-tools
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  16.16.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: EEXIST: file already exists, mkdir '/Users/bing/Workspace/epub-parser/node_modules/to-markdown/node_modules'
+
+npm manifest: 
+  {
+    "name": "@gxl/epub-parser",
+    "version": "2.0.4",
+    "description": "A powerful yet easy-to-use epub parser",
+    "main": "lib/index.js",
+    "scripts": {
+      "prebuild": "yarn clean",
+      "build": "tsc",
+      "watch": "tsc --watch",
+      "clean": "rimraf lib",
+      "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md,css,scss}\"",
+      "test": "jest",
+      "test-debug": "node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
+      "v": "standard-version --preset angular",
+      "postv": "git push --follow-tags origin master",
+      "prepare": "yarn build"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/gaoxiaoliangz/epub-parser.git"
+    },
+    "keywords": [
+      "epub-parser",
+      "parser",
+      "epub",
+      "easy",
+      "book",
+      "file"
+    ],
+    "author": "gaoxiaoliangz",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/gaoxiaoliangz/epub-parser/issues"
+    },
+    "homepage": "https://github.com/gaoxiaoliangz/epub-parser#readme",
+    "dependencies": {
+      "jsdom": "^15.1.1",
+      "lodash": "^4.17.15",
+      "node-zip": "^1.1.1",
+      "to-markdown": "^3.1.1",
+      "xml2js": "^0.4.19"
+    },
+    "devDependencies": {
+      "@types/express": "^4.17.1",
+      "@types/jest": "^24.0.18",
+      "@types/jsdom": "^12.2.4",
+      "@types/lodash": "^4.14.137",
+      "@types/node": "^12.7.2",
+      "@types/xml2js": "^0.4.4",
+      "cross-env": "^5.2.0",
+      "dotenv": "^8.1.0",
+      "express": "^4.17.1",
+      "jest": "^24.9.0",
+      "prettier": "^2.0.5",
+      "rimraf": "^3.0.0",
+      "source-map-support": "^0.5.13",
+      "standard-version": "^8.0.0",
+      "ts-jest": "^24.0.2",
+      "ts-node": "^8.3.0",
+      "tslint": "^5.19.0",
+      "typescript": "^3.9.6",
+      "vrsource-tslint-rules": "^6.0.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
