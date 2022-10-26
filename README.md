@@ -1,17 +1,10 @@
-# 📖 epub-parser
+# 📖 epub2MD
 
-> A powerful yet easy-to-use epub parser
+> A powerful yet easy-to-use epub parser, also can convert epub to markdown files.
 
-[![npm version](https://badge.fury.io/js/%40gxl%2Fepub-parser.svg)](https://badge.fury.io/js/%40gxl%2Fepub-parser)
-![Test](https://github.com/gaoxiaoliangz/epub-parser/workflows/Test/badge.svg)
-
-The package exports a simple parser function which use epub file as input and output JavaScript object.
-
-As it is written in TypeScript, types are already included in the package.
+the epub2MD repo soucecode from [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)
 
 This repo fixes some issues and adds command line operations。
-
-souce from [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)
 
 ## Install
 
