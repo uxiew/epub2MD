@@ -26,12 +26,6 @@ const flags = args.parse(process.argv, {
   name,
 })
 
-  // args
-  //   .option('info', 'get epub file basic info')
-  //   // .option( "structure", 'get epub file structure')
-  //   .option('sections', 'get epub file sections')
-  //   .option(['c', 'md'], 'convert the epub file to markdown')
-
   ;['info', 'structure', 'sections', 'md'].some((cmd, i) => {
     if (flags[cmd]) {
       run(cmd)
