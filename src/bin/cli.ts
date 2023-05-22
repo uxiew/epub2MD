@@ -48,13 +48,16 @@ function run(cmd: string) {
   }
   if (flags['md'] || flags['c']) {
     // ====== convertToMarkdown ====
-    (new Converter(flags['md'] || flags['c'])).run()
+    console.log(chalk.blueBright(`[${name}]: This book is currently being converted...`));
+    (new Converter(flags['md'] || flags['c'])).run().then(() => {
+      console.log(chalk.yellowBright(`[${name}]: This book be converted done!`));
+    })
     return
   }
 
   parseEpub(flags[cmd])
     .then((res) => {
-      console.log(chalk.greenBright(`[${name}] this book ${cmd}:`))
+      console.log(chalk.greenBright(`[${name}]: This book ${cmd}:`))
       json.log(res[cmd as Command])
     })
     .catch((error) => {
