@@ -1,10 +1,10 @@
 {
-  "name": "epub-parser-mod",
-  "version": "3.0.4",
-  "description": "A powerful yet easy-to-use epub parser",
+  "name": "epub2md",
+  "version": "3.0.5",
+  "description": "A powerful yet easy-to-use epub parser with command line bin",
   "main": "lib/index.js",
   "bin": {
-    "epub-parser": "lib/cli.js"
+    "epub2md": "lib/bin/cli.js"
   },
   "scripts": {
     "prebuild": "yarn clean",
@@ -30,14 +30,12 @@
     "book",
     "file"
   ],
-  "author": "gaoxiaoliangz",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gaoxiaoliangz/epub-parser/issues"
   },
   "homepage": "https://github.com/gaoxiaoliangz/epub-parser#readme",
   "dependencies": {
-    "@types/args": "^5.0.0",
     "args": "^5.0.3",
     "beauty-json": "^1.0.0",
     "jsdom": "^15.1.1",
@@ -49,10 +47,11 @@
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@types/args": "^5.0.0",
     "@types/jest": "^24.0.18",
-    "@types/jsdom": "^12.2.4",
+    "@types/jsdom": "^21.1.1",
     "@types/lodash": "^4.14.137",
-    "@types/node": "^12.7.2",
+    "@types/node": "^20.2.3",
     "@types/xml2js": "^0.4.4",
     "cross-env": "^5.2.0",
     "dotenv": "^8.1.0",
@@ -65,7 +64,7 @@
     "ts-jest": "^24.0.2",
     "ts-node": "^8.3.0",
     "tslint": "^5.19.0",
-    "typescript": "^3.9.6",
+    "typescript": "^5.0.4",
     "vrsource-tslint-rules": "^6.0.0"
   }
 }

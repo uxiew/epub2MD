@@ -1,20 +1,22 @@
-import { writeFile, writeFileSync, Options } from 'write-file-safe'
-import { basename, extname, join } from 'path'
-import { parseEpub } from '.'
-import type { Epub } from './parseEpub'
-import parseSection from './parseSection'
+import { writeFile } from 'write-file-safe'
+import { basename, dirname, extname, join } from 'node:path'
+import { existsSync, mkdirSync } from 'node:fs'
+import { parseEpub } from '..'
+import type { Epub } from '../parseEpub'
 
 export default class Converter {
   epub: Epub | undefined // epub parser result
-  _epubPath: string // epub 's path
-  _saveDir: string = process.cwd() // epub 's original directory to save markdown files
+  epubFilePath: string // current epub 's path
+  outDir: string  // epub 's original directory to save markdown files
   structure: {
     savePath: string
     zipPath: string
   }[] = [] // epub dir structure
 
   constructor(path: string) {
-    this._epubPath = path
+    this.epubFilePath = path
+    this.outDir = dirname(path)
+    if (!existsSync(this.outDir)) mkdirSync(this.outDir)
   }
 
   private _checkFileType(file: string) {
@@ -32,23 +34,24 @@ export default class Converter {
       isHTML,
     }
   }
-  private _savePath(filepath: string) {
+
+  private _makePath(filepath: string) {
     const { isImage, isCss, isHTML } = this._checkFileType(filepath)
     if (isCss) return
     const fileName = basename(filepath)
     return join(
-      this._saveDir,
+      this.outDir,
       isImage ? 'images' : '',
       isHTML ? fileName.replace(/\.x?html$/, '.md') : fileName,
     )
   }
 
   async getManifest() {
-    this.epub = await parseEpub(this._epubPath)
-    this._saveDir = this._epubPath.replace('.epub', '')
+    this.epub = await parseEpub(this.epubFilePath)
+    this.outDir = this.epubFilePath.replace('.epub', '')
     this.epub.getManifest().forEach(({ href: zipPath, id }) => {
       if (id === 'ncx' || id === 'titlepage') return
-      const savePath = this._savePath(zipPath)
+      const savePath = this._makePath(zipPath)
       savePath &&
         this.structure.push({
           savePath,

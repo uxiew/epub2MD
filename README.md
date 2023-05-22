@@ -1,36 +1,31 @@
 # 📖 epub2MD
 
-> A powerful yet easy-to-use epub parser, also can convert epub to markdown files.
-
-the epub2MD repo soucecode from [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)
-
-This repo fixes some issues and adds command line operations。
+A powerful yet easy-to-use epub parser that can also be converted using the command line
 
 ## Install
 
 ```bash
-npm install @gxl/epub-parser --save
-```
-
-or if you prefer yarn
-
-```bash
-yarn add @gxl/epub-parser
+# npm
+npm install @ver5/epub2md --save
+# pnpm
+pnpm add @ver5/epub2md
+# yarn
+yarn add @ver5/epub2md
 ```
 
 ## CLI
-```shell
-$ epub-parser help
-$ epub-parser --md ../../fixtures/zhihu.epub
-$ epub-parser -i ../../fixtures/zhihu.epub
-$ epub-parser -S ../../fixtures/zhihu.epub
-$ epub-parser -s ../../fixtures/zhihu.epub
+```bash
+$ epub2md help
+$ epub2md --md ../../fixtures/zhihu.epub
+$ epub2md -i ../../fixtures/zhihu.epub
+$ epub2md -S ../../fixtures/zhihu.epub
+$ epub2md -s ../../fixtures/zhihu.epub
 ```
 
 ## Usage
 
 ```js
-import { parseEpub } from '@gxl/epub-parser'
+import { parseEpub } from '@ver5/epub2md'
 
 const epubObj = await parseEpub('/path/to/file.epub', {
   type: 'path',
@@ -72,3 +67,7 @@ The output is an object which contains `structure`, `sections`, `info`(private p
 - PRs are the best.
 
 ❤️
+
+
+# Credit
+[gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)
