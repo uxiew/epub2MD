@@ -40,9 +40,9 @@
     "beauty-json": "^1.0.0",
     "jsdom": "^15.1.1",
     "lodash": "^4.17.15",
+    "node-html-markdown": "^1.3.0",
     "node-zip": "^1.1.1",
-    "to-markdown": "^3.1.1",
-    "turndown": "^7.1.1",
+    "turndown": "^7.1.2",
     "write-file-safe": "^1.3.1",
     "xml2js": "^0.4.19"
   },

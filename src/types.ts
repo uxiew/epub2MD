@@ -1,3 +1,12 @@
+export type convertFuncType = (htmlstr: string) => string
+
+export interface ParserOptions {
+  type?: 'binaryString' | 'path' | 'buffer'
+  expand?: boolean,
+  /** use custom convert function, you can use turndown or node-html-markdown etc.*/
+  convertToMarkdown?: convertFuncType
+}
+
 export interface GeneralObject {
   [key: string]: any
 }

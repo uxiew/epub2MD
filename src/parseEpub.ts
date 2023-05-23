@@ -1,44 +1,12 @@
 import fs from 'fs'
-import xml2js from 'xml2js'
 import _ from 'lodash'
 
+import type { ParserOptions, GeneralObject } from './types'
 // @ts-ignore
 import nodeZip from 'node-zip'
 import parseLink from './parseLink'
 import parseSection, { Section } from './parseSection'
-import { GeneralObject } from './types'
-
-const xmlParser = new xml2js.Parser()
-
-const xmlToJs = (xml: string) => {
-  return new Promise<any>((resolve, reject) => {
-    // @ts-ignore
-    xmlParser.parseString(xml, (err: Error, object: GeneralObject) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(object)
-      }
-    })
-  })
-}
-
-const determineRoot = (opfPath: string) => {
-  let root = ''
-  // set the opsRoot for resolving paths
-  if (opfPath.match(/\//)) {
-    // not at top level
-    root = opfPath.replace(/\/([^\/]+)\.opf/i, '')
-    if (!root.match(/\/$/)) {
-      // 以 '/' 结尾，下面的 zip 路径写法会简单很多
-      root += '/'
-    }
-    if (root.match(/^\//)) {
-      root = root.replace(/^\//, '')
-    }
-  }
-  return root
-}
+import { xmlToJs, determineRoot } from './utils'
 
 const parseMetadata = (metadata: GeneralObject[]) => {
   const title = _.get(metadata[0], ['dc:title', 0]) as string
@@ -59,6 +27,8 @@ const parseMetadata = (metadata: GeneralObject[]) => {
   return meta
 }
 
+export const defaultOptions = { type: "path", expand: false } as ParserOptions
+
 export class Epub {
   private _zip: any // nodeZip instance
   private _opfPath?: string
@@ -68,6 +38,7 @@ export class Epub {
   private _spine?: string[] // array of ids defined in manifest
   private _toc?: GeneralObject
   private _metadata?: GeneralObject[]
+  private _options: ParserOptions = defaultOptions
 
   structure?: GeneralObject
   info?: {
@@ -77,8 +48,9 @@ export class Epub {
   }
   sections?: Section[]
 
-  constructor(buffer: Buffer) {
+  constructor(buffer: Buffer, options?: ParserOptions) {
     this._zip = new nodeZip(buffer, { binary: true, base64: false, checkCRC32: true })
+    if (options) this._options = { ...defaultOptions, ...options }
   }
 
   resolve(path: string): {
@@ -219,7 +191,7 @@ export class Epub {
     return parseNavPoints(rootNavPoints)
   }
 
-  _resolveSectionsFromSpine(expand = false) {
+  private _resolveSectionsFromSpine() {
     // no chain
     return _.map(_.union(this._spine), (id) => {
       const path = _.find(this._manifest, { id }).href
@@ -230,12 +202,12 @@ export class Epub {
         htmlString: html,
         resourceResolver: this.resolve.bind(this),
         idResolver: this._resolveIdFromLink.bind(this),
-        expand,
-      })
+        expand: this._options.expand,
+      }).register(this._options.convertToMarkdown)
     })
   }
 
-  async parse(expand = false) {
+  async parse() {
     this._opfPath = await this._getOpfPath()
     this._content = await this._resolveXMLAsJsObject('/' + this._opfPath)
 
@@ -255,26 +227,22 @@ export class Epub {
 
     this._spine = this._getSpine()
     this.info = parseMetadata(this._metadata)
-    this.sections = this._resolveSectionsFromSpine(expand)
+    this.sections = this._resolveSectionsFromSpine()
 
     return this
   }
 }
 
-export interface ParserOptions {
-  type?: 'binaryString' | 'path' | 'buffer'
-  expand?: boolean
-}
 
-export default function parserWrapper(target: string | Buffer, options: ParserOptions = {}) {
+export default function parserWrapper(target: string | Buffer, opts?: ParserOptions) {
   // seems 260 is the length limit of old windows standard
   // so path length is not used to determine whether it's path or binary string
   // the downside here is that if the filepath is incorrect, it will be treated as binary string by default
   // but it can use options to define the target type
-  const { type, expand } = options
+  const options = { ...defaultOptions, ...opts }
   let _target = target
-  if (type === 'path' || (typeof target === 'string' && fs.existsSync(target))) {
+  if (options.type === 'path' || (typeof target === 'string' && fs.existsSync(target))) {
     _target = fs.readFileSync(target as string, 'binary')
   }
-  return new Epub(_target as Buffer).parse(expand)
+  return new Epub(_target as Buffer, options).parse()
 }

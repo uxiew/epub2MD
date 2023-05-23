@@ -1,13 +1,8 @@
 import path from 'path'
-// @ts-ignore
-import TurndownService from 'turndown'
 import parseLink from './parseLink'
-
 import parseHTML from './parseHTML'
-// import * as mdConverters from './mdConverters'
-import { HtmlNodeObject } from './types'
-
-const turndownService = new TurndownService()
+import { convert } from './converter'
+import type { HtmlNodeObject, convertFuncType } from './types'
 
 const isInternalUri = (uri: string) => {
   return uri.indexOf('http://') === -1 && uri.indexOf('https://') === -1
@@ -25,6 +20,7 @@ export class Section {
   id: string
   htmlString: string
   htmlObjects?: HtmlNodeObject[]
+  private _convertToMarkdown?: convertFuncType
   private _resourceResolver?: (path: string) => any
   private _idResolver?: (link: string) => string
 
@@ -38,8 +34,13 @@ export class Section {
     }
   }
 
+  register(convertFunc?: convertFuncType) {
+    this._convertToMarkdown = convertFunc || convert;
+    return this
+  }
+
   toMarkdown() {
-    return turndownService.turndown(this.htmlString)
+    return this._convertToMarkdown?.call(null, this.htmlString);
   }
 
   toHtmlObjects?() {

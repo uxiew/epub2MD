@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { GeneralObject } from './types'
+import xml2js from 'xml2js'
 
 export interface TraverseNestedObject {
   preFilter?: (node: GeneralObject) => boolean
@@ -11,6 +12,38 @@ export interface TraverseNestedObject {
   finalTransformer?: (node: GeneralObject) => any
 
   childrenKey: string
+}
+
+const xmlParser = new xml2js.Parser()
+
+export const xmlToJs = (xml: string) => {
+  return new Promise<any>((resolve, reject) => {
+    // @ts-ignore
+    xmlParser.parseString(xml, (err: Error, object: GeneralObject) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(object)
+      }
+    })
+  })
+}
+
+export const determineRoot = (opfPath: string) => {
+  let root = ''
+  // set the opsRoot for resolving paths
+  if (opfPath.match(/\//)) {
+    // not at top level
+    root = opfPath.replace(/\/([^\/]+)\.opf/i, '')
+    if (!root.match(/\/$/)) {
+      // 以 '/' 结尾，下面的 zip 路径写法会简单很多
+      root += '/'
+    }
+    if (root.match(/^\//)) {
+      root = root.replace(/^\//, '')
+    }
+  }
+  return root
 }
 
 /**

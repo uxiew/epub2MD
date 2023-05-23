@@ -11,14 +11,14 @@ type Command = 'info' | 'structure' | 'sections'
 
 const name = "epub2md"
 const commands = [
+  ["unzip", 'unzip epub file'],
+  ['md', 'convert the epub file to markdown'],
   ["info", 'get epub file basic info'],
   ["structure", 'get epub file structure'],
-  ["sections", 'get epub file sections'],
-  [['c', 'md'], 'convert the epub file to markdown']
+  ["sections", 'get epub file sections']
 ]
 
 // first define options
-// @ts-expect-error  support ['c', 'md']
 commands.forEach((cmd) => args.option(cmd[0], cmd[1]));
 
 // @ts-ignore
@@ -26,25 +26,26 @@ const flags = args.parse(process.argv, {
   name,
 })
 
-  ;['info', 'structure', 'sections', 'md'].some((cmd, i) => {
-    if (flags[cmd]) {
-      run(cmd)
-      return true
-    }
-    else {
-      i === 3 && args.showHelp()
-    }
-  })
+commands.map((cmd) => cmd[0]).some((cmd, i) => {
+  if (flags[cmd]) {
+    run(cmd)
+    return true
+  }
+  else {
+    i === 3 && args.showHelp()
+  }
+})
 
 function run(cmd: string) {
   if (flags[cmd] === true) {
     throw new Error(chalk.red('The command input format is incorrect！'))
   }
-  if (flags['md'] || flags['c']) {
+  const epubPath = flags['md'] || flags['unzip']
+  if (epubPath) {
     // ====== convertToMarkdown ====
     console.log(chalk.blueBright(`[${name}]: This book is currently being converted...`));
-    (new Converter(flags['md'] || flags['c'])).run().then(() => {
-      console.log(chalk.yellowBright(`[${name}]: This book be converted done!`));
+    (new Converter(epubPath)).run(flags['unzip'] && epubPath).then((outDir) => {
+      console.log(chalk.yellowBright(`[${name}]: This conversion complete! output folder: ${outDir}`));
     })
     return
   }
