@@ -1,7 +1,7 @@
 {
   "name": "epub2md",
   "version": "3.0.6",
-  "description": "A powerful yet easy-to-use epub parser with command line bin",
+  "description": "A epub parser that also can convert epub to markdown using the command line",
   "main": "lib/index.js",
   "bin": {
     "epub2md": "lib/bin/cli.js"

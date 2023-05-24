@@ -1,6 +1,6 @@
 # 📖 epub2MD
 
-a epub parser that can convert epub to markdown using the command line
+A epub parser that also can convert epub to markdown using the command line
 
 # Install
 
