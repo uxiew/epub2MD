@@ -1,4 +1,5 @@
 import path from 'path'
+import * as autoSpace from 'autocorrect-node'
 import parseLink from './parseLink'
 import parseHTML from './parseHTML'
 import { convert } from './converter'
@@ -26,7 +27,7 @@ export class Section {
 
   constructor({ id, htmlString, resourceResolver, idResolver, expand }: ParseSectionConfig) {
     this.id = id
-    this.htmlString = htmlString
+    this.htmlString = autoSpace.format(htmlString)
     this._resourceResolver = resourceResolver
     this._idResolver = idResolver
     if (expand) {

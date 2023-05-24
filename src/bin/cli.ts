@@ -32,7 +32,7 @@ commands.map((cmd) => cmd[0]).some((cmd, i) => {
     return true
   }
   else {
-    i === 3 && args.showHelp()
+    i === commands.length - 1 && args.showHelp()
   }
 })
 
