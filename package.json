@@ -1,6 +1,6 @@
 {
   "name": "epub2md",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "A powerful yet easy-to-use epub parser with command line bin",
   "main": "lib/index.js",
   "bin": {
