@@ -1,16 +1,16 @@
 # 📖 epub2MD
 
-A powerful yet easy-to-use epub parser that can also be converted using the command line
+a epub parser that can convert epub to markdown using the command line
 
 # Install
 
 ```bash
 # npm
-npm install @ver5/epub2md --save
+npm install epub2md --save
 # pnpm
-pnpm add @ver5/epub2md
+pnpm add epub2md
 # yarn
-yarn add @ver5/epub2md
+yarn add epub2md
 ```
 
 # CLI
@@ -26,7 +26,7 @@ $ epub2md -s ../../fixtures/zhihu.epub
 # Usage
 
 ```js
-import { parseEpub } from '@v5/epub2md'
+import { parseEpub } from 'epub2md'
 
 const epubObj = await parseEpub('/path/to/file.epub')
 
