@@ -1,9 +1,4 @@
 node_modules
 fixtures
-src
 examples
 .vscode
-jest.config.js
-.prettierrc
-.github
-_config.yml
