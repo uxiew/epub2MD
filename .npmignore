@@ -1,4 +1,8 @@
 node_modules
 fixtures
+src
 examples
 .vscode
+_config.yml
+jest.config.js
+package-lock.json

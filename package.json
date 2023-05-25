@@ -1,6 +1,6 @@
 {
   "name": "epub2md",
-  "version": "3.0.6",
+  "version": "1.0.5",
   "description": "A epub parser that also can convert epub to markdown using the command line",
   "main": "lib/index.js",
   "bin": {
