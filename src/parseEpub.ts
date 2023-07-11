@@ -8,23 +8,41 @@ import parseLink from './parseLink'
 import parseSection, { Section } from './parseSection'
 import { xmlToJs, determineRoot } from './utils'
 
-const parseMetadata = (metadata: GeneralObject[]) => {
-  const title = _.get(metadata[0], ['dc:title', 0]) as string
-  let author = _.get(metadata[0], ['dc:creator'])
 
-  if (Array.isArray(author)) {
-    author = author.map((aut) => _.get(aut, ['_']))
-  } else {
-    author = [_.get(author, ['_'])]
-  }
+type MetaInfo = Partial<{
+  title: string,
+  author: string[],
+  description: string,
+  language: string,
+  publisher: string,
+  rights: string,
+}>
 
-  const publisher = _.get(metadata[0], ['dc:publisher', 0]) as string
-  const meta = {
-    title,
-    author,
-    publisher,
-  }
-  return meta
+const parseMetadata = (metadata: GeneralObject[]): MetaInfo => {
+  const meta = metadata[0];
+  const info: MetaInfo = {};
+
+  (['title', 'author', 'description', 'language', 'publisher', 'rights'] as (keyof MetaInfo)[]).forEach((item: keyof MetaInfo) => {
+    if (item === 'author') {
+      info.author = _.get(meta, ['dc:creator', 0])
+      if (_.isString(info.author)) {
+        info.author = [info.author]
+      } else {
+        info.author = [_.get(info.author!, ['_'])]
+      }
+    }
+    else if (item === 'description') {
+      info.description = _.get(meta, ['description', 0, '_'])
+    }
+    else {
+      info[item] = _.get(meta, ['dc:' + item, 0]) as string
+    }
+  })
+
+  return _.pickBy(info, (v) => {
+    if (Array.isArray(v)) return v.length !== 0 && !_.isUndefined(v[0])
+    return !_.isUndefined(v)
+  })
 }
 
 export const defaultOptions = { type: "path", expand: false } as ParserOptions
@@ -35,17 +53,13 @@ export class Epub {
   private _root?: string
   private _content?: GeneralObject
   private _manifest?: any[]
-  private _spine?: string[] // array of ids defined in manifest
+  private _spine?: Record<string, number> // array of ids defined in manifest
   private _toc?: GeneralObject
   private _metadata?: GeneralObject[]
   private _options: ParserOptions = defaultOptions
 
   structure?: GeneralObject
-  info?: {
-    title: string
-    author: string
-    publisher: string
-  }
+  info?: MetaInfo
   sections?: Section[]
 
   constructor(buffer: Buffer, options?: ParserOptions) {
@@ -100,11 +114,13 @@ export class Epub {
   }
 
   _getSpine() {
-    return _.get(this._content, ['package', 'spine', 0, 'itemref'], []).map(
-      (item: GeneralObject) => {
-        return item.$.idref
+    const spine: Record<string, number> = {}
+    _.get(this._content, ['package', 'spine', 0, 'itemref'], []).map(
+      (item: GeneralObject, i: number) => {
+        return spine[item.$.idref] = i
       },
     )
+    return spine
   }
 
   _genStructureForHTML(tocObj: GeneralObject) {
@@ -193,7 +209,7 @@ export class Epub {
 
   private _resolveSectionsFromSpine() {
     // no chain
-    return _.map(_.union(this._spine), (id) => {
+    return _.map(_.union(Object.keys(this._spine as object)), (id) => {
       const path = _.find(this._manifest, { id }).href
       const html = this.resolve(path).asText()
 
@@ -205,6 +221,13 @@ export class Epub {
         expand: this._options.expand,
       }).register(this._options.convertToMarkdown)
     })
+  }
+
+  getSection(id: string) {
+    let sectionIndex = -1
+    // console.log(id, this.getManifest())
+    if (this._spine) sectionIndex = this._spine[id]
+    return this.sections ? sectionIndex != -1 ? this.sections[sectionIndex] : null : null
   }
 
   async parse() {

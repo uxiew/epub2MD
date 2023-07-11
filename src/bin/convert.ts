@@ -5,16 +5,18 @@ import { parseEpub } from '..'
 import type { Epub } from '../parseEpub'
 import convert from './custom'
 
+type Structure = {
+  id: string,
+  fileOutpath: string
+  filename: string
+}
 
 export default class Converter {
   epub: Epub | undefined // epub parser result
   epubFilePath: string // current epub 's path
   outFileExt: string = '.md' // out file extname
   outDir: string  // epub 's original directory to save markdown files
-  structure: {
-    fileOutpath: string
-    filename: string
-  }[] = [] // epub dir structure
+  structure: Structure[] = [] // epub dir structure
 
   constructor(path: string) {
     this.epubFilePath = path
@@ -38,6 +40,10 @@ export default class Converter {
     }
   }
 
+  private _resolveId(fileName: string, ext: string = '') {
+    return fileName.replace(/\.x?html?$/, ext)
+  }
+
   /**
   * @description Make a path，and fix assets path;markdown maybe dont need those css style files
   */
@@ -48,7 +54,7 @@ export default class Converter {
     return join(
       this.outDir,
       isImage ? 'images' : '', //  isCss ? 'styles' :
-      isHTML ? fileName.replace(/\.x?html?$/, this.outFileExt) : fileName,
+      isHTML ? this._resolveId(fileName, this.outFileExt) : fileName,
     )
   }
 
@@ -59,15 +65,15 @@ export default class Converter {
     this.outDir = this.epubFilePath.replace('.epub', '')
     this.epub.getManifest().forEach(({ href: filename, id }) => {
       let fileOutpath
-      if (unzip) {
-        fileOutpath = join(this.outDir, filename)
-      }
+      if (unzip) fileOutpath = join(this.outDir, filename)
       else {
+        // remove this two file
         if (id === 'ncx' || id === 'titlepage') return
         fileOutpath = this._makePath(filename)
       }
       fileOutpath &&
         this.structure.push({
+          id,
           fileOutpath,
           filename,
         })
@@ -77,12 +83,16 @@ export default class Converter {
   /**
   * Try to obtain a friendly output filename.
   */
-  private _getFileData(index: number, filename: string, outpath: string) {
-    let content: Buffer | string = this.epub!.resolve(filename).asNodeBuffer()
+  private _getFileData(id: string, filename: string, outpath: string) {
+    let content: Buffer | string = ''
+    // Only manipulate files that you want to output in md format
     if ((extname(outpath) === '.md')) {
-      content = this.epub!.sections![index].toMarkdown() as string
+      content = this.epub?.getSection(id)?.toMarkdown() as string
+      // Gets the content title as the file name
       const tempRes = content.match(/#+?\s+(.*?)\n/)
       outpath = join(dirname(outpath), (tempRes && tempRes[1].replace(/\//g, '_')) + this.outFileExt)
+    } else {
+      content = this.epub!.resolve(filename).asNodeBuffer()
     }
 
     return {
@@ -93,12 +103,12 @@ export default class Converter {
 
   async run(unzip?: boolean) {
     await this.getManifest(unzip)
-    this.structure.forEach(({ fileOutpath, filename }, i) => {
+    this.structure.forEach(({ fileOutpath, filename, id }, _i) => {
       console.log(`...[filename]:${filename}...`)
-      const { outFilePath, content } = this._getFileData(i, filename, fileOutpath)
+      const { outFilePath, content } = this._getFileData(id, filename, fileOutpath)
+
       writeFileSync(
         outFilePath,
-        // @ts-ignore-expect
         content
       )
     })
