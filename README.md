@@ -2,7 +2,25 @@
 
 A epub parser that also can convert epub to markdown using the command line
 
-# Install
+# Global Install
+
+```bash
+# npm
+npm install epub2md -g
+```
+
+## CLI
+
+```bash
+$ epub2md help
+$ epub2md -u ../../fixtures/zhihu.epub
+$ epub2md -m ../../fixtures/zhihu.epub
+$ epub2md -i ../../fixtures/zhihu.epub
+$ epub2md -S ../../fixtures/zhihu.epub
+$ epub2md -s ../../fixtures/zhihu.epub
+```
+
+# Development Install
 
 ```bash
 # npm
@@ -11,16 +29,6 @@ npm install epub2md --save
 pnpm add epub2md
 # yarn
 yarn add epub2md
-```
-
-# CLI
-```bash
-$ epub2md help
-$ epub2md -u ../../fixtures/zhihu.epub
-$ epub2md -m ../../fixtures/zhihu.epub
-$ epub2md -i ../../fixtures/zhihu.epub
-$ epub2md -S ../../fixtures/zhihu.epub
-$ epub2md -s ../../fixtures/zhihu.epub
 ```
 
 # Usage
@@ -47,7 +55,7 @@ It can be the path to the file or file's binary string or buffer
 
 It forces the parser to treat supplied target as the defined type, if not defined the parser itself will decide how to treat the file (useful when you are not sure if the path is valid).
 
-* EpubObject
+- EpubObject
 
 The output is an object which contains `structure`, `sections`, `info`(private property names start with `_`. I don't recommend using them, since they are subscribed to change).
 
@@ -60,8 +68,8 @@ The output is an object which contains `structure`, `sections`, `info`(private p
 
 #### expand?: boolean
 
-
 #### convertToMarkdown?: (htmlstr: string) => string
+
 use custom convert function, you can use turndown or node-html-markdown etc.
 
 # How to contribute
@@ -72,4 +80,5 @@ use custom convert function, you can use turndown or node-html-markdown etc.
 ❤️
 
 # Credit
+
 [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)

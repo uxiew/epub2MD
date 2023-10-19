@@ -43,9 +43,9 @@ function run(cmd: string) {
   const epubPath = flags['md'] || flags['unzip']
   if (epubPath) {
     // ====== convertToMarkdown ====
-    console.log(chalk.blueBright(`[${name}]: This book is currently being converted...`));
+    console.log(chalk.blueBright(`[${name}]: converting...`));
     (new Converter(epubPath)).run(flags['unzip'] && epubPath).then((outDir) => {
-      console.log(chalk.yellowBright(`[${name}]: This conversion complete! output folder: ${outDir}`));
+      console.log(chalk.yellowBright(`[${name}]: done! output folder: ${outDir}`));
     })
     return
   }

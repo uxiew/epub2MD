@@ -23,6 +23,7 @@
     "url": "git+https://github.com/chandlerver5/epub2MD.git"
   },
   "keywords": [
+    "epub to markdown",
     "epub-parser",
     "parser",
     "epub",

@@ -68,7 +68,7 @@ export default class Converter {
       if (unzip) fileOutpath = join(this.outDir, filename)
       else {
         // remove this two file
-        if (id === 'ncx' || id === 'titlepage') return
+        if (filename.endsWith('ncx') || id === 'titlepage') return
         fileOutpath = this._makePath(filename)
       }
       fileOutpath &&
@@ -90,7 +90,7 @@ export default class Converter {
       content = this.epub?.getSection(id)?.toMarkdown() as string
       // Gets the content title as the file name
       const tempRes = content.match(/#+?\s+(.*?)\n/)
-      outpath = join(dirname(outpath), (tempRes && tempRes[1].replace(/\//g, '_')) + this.outFileExt)
+      outpath = join(dirname(outpath), ((tempRes ? tempRes[1].replace(/\//g, '_') : id)) + this.outFileExt)
     } else {
       content = this.epub!.resolve(filename).asNodeBuffer()
     }
@@ -109,7 +109,8 @@ export default class Converter {
 
       writeFileSync(
         outFilePath,
-        content
+        content,
+        { overwrite: false }
       )
     })
     return this.outDir

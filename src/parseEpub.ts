@@ -97,12 +97,6 @@ export class Epub {
     return opfPath as string
   }
 
-  getManifest(content?: GeneralObject) {
-    return (
-      this._manifest ||
-      (_.get(content, ['package', 'manifest', 0, 'item'], []).map((item: any) => item.$) as any[])
-    )
-  }
 
   _resolveIdFromLink(href: string) {
     const { name: tarName } = parseLink(href)
@@ -113,8 +107,16 @@ export class Epub {
     return _.get(tarItem, 'id')
   }
 
-  _getSpine() {
+  getManifest(content?: GeneralObject) {
+    return (
+      this._manifest ||
+      (_.get(content, ['package', 'manifest', 0, 'item'], []).map((item: any) => item.$) as any[])
+    )
+  }
+
+  getSpine() {
     const spine: Record<string, number> = {}
+    this.getManifest()
     _.get(this._content, ['package', 'spine', 0, 'itemref'], []).map(
       (item: GeneralObject, i: number) => {
         return spine[item.$.idref] = i
@@ -123,7 +125,8 @@ export class Epub {
     return spine
   }
 
-  _genStructureForHTML(tocObj: GeneralObject) {
+
+  private _genStructureForHTML(tocObj: GeneralObject) {
     const tocRoot = tocObj.html.body[0].nav[0]['ol'][0].li
     let runningIndex = 1
 
@@ -207,9 +210,17 @@ export class Epub {
     return parseNavPoints(rootNavPoints)
   }
 
-  private _resolveSectionsFromSpine() {
+  /**
+   *
+   * @param {String} id
+   */
+  private _resolveSections(id?: string) {
+    let list: any[] = _.union(Object.keys(this._spine!))
     // no chain
-    return _.map(_.union(Object.keys(this._spine as object)), (id) => {
+    if (id) {
+      list = [id];
+    }
+    return list.map((id) => {
       const path = _.find(this._manifest, { id }).href
       const html = this.resolve(path).asText()
 
@@ -227,6 +238,10 @@ export class Epub {
     let sectionIndex = -1
     // console.log(id, this.getManifest())
     if (this._spine) sectionIndex = this._spine[id]
+    // fix other html ont include spine structure
+    if (sectionIndex === undefined) {
+      return this._resolveSections(id)[0]
+    }
     return this.sections ? sectionIndex != -1 ? this.sections[sectionIndex] : null : null
   }
 
@@ -248,9 +263,9 @@ export class Epub {
       this.structure = this._genStructure(toc)
     }
 
-    this._spine = this._getSpine()
+    this._spine = this.getSpine()
     this.info = parseMetadata(this._metadata)
-    this.sections = this._resolveSectionsFromSpine()
+    this.sections = this._resolveSections()
 
     return this
   }
