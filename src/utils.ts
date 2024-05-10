@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import { GeneralObject } from './types'
 import xml2js from 'xml2js'
+import type { TOCItem } from './parseEpub'
+
 
 export interface TraverseNestedObject {
   preFilter?: (node: GeneralObject) => boolean
@@ -15,6 +17,46 @@ export interface TraverseNestedObject {
 }
 
 const xmlParser = new xml2js.Parser()
+
+
+const hasHandledPool: Record<string, TOCItem> = {
+
+}
+
+/**
+ * 根据 toc 对应的标题，修复对应的生成文件名
+ */
+export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | undefined {
+  if (!navs) return;
+  const navChildren: TOCItem[] = [];
+  for (const n of navs) {
+    const { path, children } = n
+    if (hasHandledPool[filePath]) {
+      return hasHandledPool[filePath]
+    }
+    if (path.includes(filePath)) {
+      hasHandledPool[filePath] = n
+      return n
+    }
+    if (children) navChildren.push(...children)
+  }
+  if (navChildren.length > 0) {
+    return findRealPath(filePath, navChildren)
+  }
+}
+// return findRealPath(children, filePath)
+
+
+// 函数用于清理文件名，将非法字符替换为下划线
+function sanitizeFileName(fileName: string, replacementChar = '_') {
+  const invalidCharsPattern = /[\\/:*?"<>|]/g;
+  return fileName.replace(invalidCharsPattern, replacementChar);
+}
+
+// 函数用于清理文件名，将非法字符替换为下划线
+export function getFileName(fileName: string, ext = '') {
+  return sanitizeFileName(fileName).trim() + ext
+}
 
 export const xmlToJs = (xml: string) => {
   return new Promise<any>((resolve, reject) => {

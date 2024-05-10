@@ -12,7 +12,7 @@ type Command = 'info' | 'structure' | 'sections'
 const name = "epub2md"
 const commands = [
   ["unzip", 'unzip epub file'],
-  ['md', 'convert the epub file to markdown'],
+  ['md', 'convert the epub file to markdown format'],
   ["info", 'get epub file basic info'],
   ["structure", 'get epub file structure'],
   ["sections", 'get epub file sections']
@@ -45,7 +45,7 @@ function run(cmd: string) {
     // ====== convertToMarkdown ====
     console.log(chalk.blueBright(`[${name}]: converting...`));
     (new Converter(epubPath)).run(flags['unzip'] && epubPath).then((outDir) => {
-      console.log(chalk.yellowBright(`[${name}]: done! output folder: ${outDir}`));
+      console.log(chalk.greenBright(`[${name}]: success! output: ${outDir}`));
     })
     return
   }

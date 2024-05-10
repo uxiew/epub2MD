@@ -7,7 +7,7 @@
     "epub2md": "lib/bin/cli.js"
   },
   "scripts": {
-    "prebuild": "yarn clean",
+    "prebuild": "pnpm clean",
     "build": "tsc",
     "watch": "tsc --watch",
     "clean": "rimraf lib",
@@ -16,7 +16,7 @@
     "test-debug": "node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
     "v": "standard-version --preset angular",
     "postv": "git push --follow-tags origin master",
-    "prepare": "yarn build"
+    "prepare": "pnpm build"
   },
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
     "lodash": "^4.17.15",
     "node-html-markdown": "^1.3.0",
     "node-zip": "^1.1.1",
-    "turndown": "^7.1.2",
+    "turndown": "^7.1.3",
     "write-file-safe": "^1.3.1",
     "xml2js": "^0.4.19"
   },
@@ -54,7 +54,9 @@
     "@types/jsdom": "^21.1.1",
     "@types/lodash": "^4.14.137",
     "@types/node": "^20.2.3",
+    "@types/turndown": "^5.0.4",
     "@types/xml2js": "^0.4.4",
+    "chalk": "^4.1.2",
     "cross-env": "^5.2.0",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
