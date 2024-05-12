@@ -72,7 +72,6 @@ export default class Mobi {
     pdbHeader.modified = new Date(pdbHeader.modified * 1000)
     pdbHeader.backedUp = new Date(pdbHeader.backedUp * 100)
     bufIndex = 0x4e
-    console.log("pdbHeader", pdbHeader)
 
     for (
       index = _i = 0, _ref1 = pdbHeader.recordCount;
@@ -80,9 +79,9 @@ export default class Mobi {
       index = 0 <= _ref1 ? ++_i : --_i
     ) {
       startPosition = bufIndex + index * 8
-      ;(_ref2 = new Packer('II').unpack_from(buffer, startPosition)),
-        (position = _ref2[0]),
-        (id = _ref2[1])
+        ; (_ref2 = new Packer('II').unpack_from(buffer, startPosition)),
+          (position = _ref2[0]),
+          (id = _ref2[1])
       id = id & 0x00ffffff
       pdbHeader.records.push({
         position: position,
@@ -102,7 +101,7 @@ export default class Mobi {
     mobiHeader.headerLength = _ref3[5]
     mobiHeader.mobiType = _ref3[6]
     mobiHeader.encoding = _ref3[7]
-    
+
     _ref4 = new Packer('3I').unpack_from(header, 0x50)
     mobiHeader.firstNonBookIndex = _ref4[0]
     mobiHeader.fullNameOffset = _ref4[1]
@@ -110,11 +109,11 @@ export default class Mobi {
     mobiHeader.firstImageIndex = new Packer('I').unpack_from(header, 0x6c)[0]
     mobiHeader.exthFlags = new Packer('I').unpack_from(header, 0x80)[0]
     mobiHeader.exthFlags = (mobiHeader.exthFlags & 0x40) === 0x40 ? true : false;
-    
+
     _ref5 = new Packer('2H').unpack_from(header, 0xc2)
     mobiHeader.firstContentRecord = _ref5[0]
-    
-      mobiHeader.lastContentRecord = _ref5[1];
+
+    mobiHeader.lastContentRecord = _ref5[1];
     this.info.title = new Packer(mobiHeader.fullNameLength + 's').unpack_from(
       header,
       mobiHeader.fullNameOffset,
@@ -149,8 +148,8 @@ export default class Mobi {
         throw new Error("LZ77 compression isn't supported... yet.")
       }
     }
-    
-   this.info.content = this.info.content.replace(
+
+    this.info.content = this.info.content.replace(
       /<(head|HEAD)>/g,
       '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>',
     )

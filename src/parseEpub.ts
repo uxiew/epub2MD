@@ -47,6 +47,15 @@ const parseMetadata = (metadata: GeneralObject[]): MetaInfo => {
 
 export const defaultOptions = { type: "path", expand: false } as ParserOptions
 
+export interface TOCItem {
+  name: string
+  sectionId: string
+  nodeId: string
+  path: string
+  playOrder: number | string
+  children?: TOCItem[]
+}
+
 export class Epub {
   private _zip: any // nodeZip instance
   private _opfPath?: string
@@ -58,7 +67,7 @@ export class Epub {
   private _metadata?: GeneralObject[]
   private _options: ParserOptions = defaultOptions
 
-  structure?: GeneralObject
+  structure?: TOCItem[]
   info?: MetaInfo
   sections?: Section[]
 
@@ -67,6 +76,9 @@ export class Epub {
     if (options) this._options = { ...defaultOptions, ...options }
   }
 
+  /**
+   * get specific file from epub book.
+   */
   resolve(path: string): {
     asText: () => string
     asNodeBuffer: () => Buffer
@@ -125,7 +137,7 @@ export class Epub {
     return spine
   }
 
-
+  /** for toc is toc.html  */
   private _genStructureForHTML(tocObj: GeneralObject) {
     const tocRoot = tocObj.html.body[0].nav[0]['ol'][0].li
     let runningIndex = 1
@@ -161,15 +173,13 @@ export class Epub {
     }
 
     const parseOuterHTML = (collection: GeneralObject[]) => {
-      return collection.map((point) => {
-        return parseHTMLNavPoints(point)
-      })
+      return collection.map((point) => parseHTMLNavPoints(point))
     }
 
     return parseOuterHTML(tocRoot)
   }
 
-  _genStructure(tocObj: GeneralObject, resolveNodeId = false) {
+  _genStructure(tocObj: GeneralObject, resolveNodeId = false): TOCItem[] {
     if (tocObj.html) {
       return this._genStructureForHTML(tocObj)
     }
@@ -248,15 +258,14 @@ export class Epub {
   async parse() {
     this._opfPath = await this._getOpfPath()
     this._content = await this._resolveXMLAsJsObject('/' + this._opfPath)
+    this._root = determineRoot(this._opfPath)
 
     this._manifest = this.getManifest(this._content)
     this._metadata = _.get(this._content, ['package', 'metadata'], []) as GeneralObject[]
-    this._root = determineRoot(this._opfPath)
 
-    const tocID = _.get(this._content, ['package', 'spine', 0, '$', 'toc'], 'toc.xhtml')
     // https://github.com/gaoxiaoliangz/epub-parser/issues/13
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-    const tocPath = (_.find(this._manifest, { id: tocID }) || {}).href
+    const tocPath = (_.find(this._manifest, { id: 'ncx' }) || {}).href
     if (tocPath) {
       const toc = await this._resolveXMLAsJsObject(tocPath)
       this._toc = toc

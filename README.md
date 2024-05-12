@@ -51,13 +51,18 @@ It can be the path to the file or file's binary string or buffer
 
 ### options: `ParserOptions`
 
-#### type(optional): 'binaryString' | 'path' | 'buffer'
+- type?: 'binaryString' | 'path' | 'buffer'
 
 It forces the parser to treat supplied target as the defined type, if not defined the parser itself will decide how to treat the file (useful when you are not sure if the path is valid).
 
-- EpubObject
+- expand?: boolean
+- convertToMarkdown?: (htmlstr: string) => string
 
-The output is an object which contains `structure`, `sections`, `info`(private property names start with `_`. I don't recommend using them, since they are subscribed to change).
+use custom convert function, you can use turndown or node-html-markdown .etc.
+
+### EpubObject
+
+The return value is an object which contains `structure`, `sections`, `info`(private property names start with `_`. I don't recommend using them, since they are subscribed to change).
 
 `structure` is the parsed `toc` of epub file, they contain information about how the book is constructed.
 
@@ -65,12 +70,6 @@ The output is an object which contains `structure`, `sections`, `info`(private p
 
 - `Section.prototype.toMarkdown`: convert to markdown object.
 - `Section.prototype.toHtmlObjects`: convert to html object. And a note about `src` and `href`, the `src` and `href` in raw html stay untouched, but the `toHtmlObjects` method resolves `src` to base64 string, and alters `href` so that they make sense in the parsed epub. And the parsed `href` is something like `#{sectionId},{hash}`.
-
-#### expand?: boolean
-
-#### convertToMarkdown?: (htmlstr: string) => string
-
-use custom convert function, you can use turndown or node-html-markdown etc.
 
 # How to contribute
 

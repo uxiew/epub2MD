@@ -2,6 +2,7 @@ node_modules
 fixtures
 src
 examples
+.github
 .vscode
 _config.yml
 jest.config.js
