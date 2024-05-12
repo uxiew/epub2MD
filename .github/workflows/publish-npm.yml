@@ -28,9 +28,3 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           registry: 'https://registry.npmjs.org/'
-
-      - uses: JS-DevTools/npm-publish@v3
-        name: publish to GitHub
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          registry: 'https://npm.pkg.github.com'
