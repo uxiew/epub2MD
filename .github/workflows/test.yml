@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -12,13 +11,13 @@ jobs:
         node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
           version: '8.9.2'
@@ -37,10 +36,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-    - name: install, build, and test
-      run: |
-        pnpm install
-        pnpm build
-        pnpm test
-      env:
-        CI: true
+      - name: install, build, and test
+        run: |
+          pnpm install
+          pnpm build
+          pnpm test
+        env:
+          CI: true
