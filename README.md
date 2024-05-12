@@ -78,6 +78,6 @@ The return value is an object which contains `structure`, `sections`, `info`(pri
 
 ❤️
 
-# Credit
+# Credits
 
 [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)

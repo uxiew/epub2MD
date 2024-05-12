@@ -2,7 +2,7 @@ name: NPM publish
 
 on:
   push:
-    tags: 
+    tags:
       - 'v*'
 
 jobs:
@@ -12,12 +12,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
-      - run: yarn
-      - run: yarn build
-      - run: yarn test
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: '8.9.2'
+
+      - name: Install dependencies
+        run: pnpm install
+      - run: pnpm build
+      - run: pnpm test
       - run: npm publish
       - uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          registry: "https://registry.npmjs.org/"
+          registry: 'https://registry.npmjs.org/'

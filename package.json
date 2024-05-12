@@ -23,6 +23,8 @@
     "url": "git+https://github.com/chandlerver5/epub2MD.git"
   },
   "keywords": [
+    "epub cli",
+    "epub convert",
     "epub to markdown",
     "epub-parser",
     "parser",
@@ -33,9 +35,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gaoxiaoliangz/epub-parser/issues"
+    "url": "https://github.com/chandlerver5/epub2MD/issues"
   },
-  "homepage": "https://github.com/gaoxiaoliangz/epub-parser#readme",
+  "homepage": "https://github.com/chandlerver5/epub2MD#readme",
   "dependencies": {
     "args": "^5.0.3",
     "autocorrect-node": "^2.6.2",
@@ -66,7 +68,7 @@
     "source-map-support": "^0.5.13",
     "standard-version": "^8.0.0",
     "ts-jest": "^29.1.2",
-    "ts-node": "^8.3.0",
+    "ts-node": "^10.9.2",
     "tslint": "^5.19.0",
     "typescript": "^5.0.4",
     "vrsource-tslint-rules": "^6.0.0"
