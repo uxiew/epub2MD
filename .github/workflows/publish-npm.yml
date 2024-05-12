@@ -23,7 +23,6 @@ jobs:
         run: pnpm install
       - run: pnpm build
       - run: pnpm test
-      - run: npm publish
       - uses: JS-DevTools/npm-publish@v3
         name: publish NPM
         with:
@@ -33,5 +32,5 @@ jobs:
       - uses: JS-DevTools/npm-publish@v3
         name: publish to GitHub
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.G_TOKEN }}
           registry: 'https://npm.pkg.github.com'

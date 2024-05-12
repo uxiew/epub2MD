@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
+    if: ${{ github.event_name == 'push' && github.ref_type != 'tag' }}
     runs-on: ubuntu-latest
 
     strategy:
