@@ -24,11 +24,13 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - uses: JS-DevTools/npm-publish@v3
+        name: publish NPM
         with:
           token: ${{ secrets.NPM_TOKEN }}
           registry: 'https://registry.npmjs.org/'
 
       - uses: JS-DevTools/npm-publish@v3
+        name: publish to GitHub
         with:
-          token: ${{ secrets.G_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           registry: 'https://npm.pkg.github.com'
