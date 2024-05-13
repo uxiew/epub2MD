@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { parseEpub } from '..'
 import type { Epub, TOCItem } from '../parseEpub'
 import convert, { fixImagePath, fixMDFilePath } from './parse'
-import { findRealPath, getFileName } from '../utils'
+import { findRealPath, sanitizeFileName } from '../utils'
 import chalk from 'chalk'
 import parseHref from '../parseLink'
 
@@ -48,8 +48,10 @@ export default class Converter {
     return fileName.replace(/\.x?html?(?:.*)/, '')
   }
 
-  private _resolveMDLink(filepath: string) {
-    return filepath.replace(/\s/g, '_')
+
+  // 文件名处理
+  private getCleanFileName(fileName: string, ext = '') {
+    return sanitizeFileName(fileName).trim().replace(/\s/g, '_') + ext
   }
 
   /**
@@ -102,7 +104,7 @@ export default class Converter {
     if ((extname(outpath) === '.md')) {
       content = this.epub?.getSection(id)?.toMarkdown()!
       // Fixed all assets files
-      content = fixImagePath(content, (imgPath) => ('./images/' + basename(imgPath)))
+      content = fixImagePath(content, (link) => ('./images/' + basename(link)))
 
       // Gets the content title as the file name
       // const headTitles = content.match(/#+?\s+(.*?)\n/)
@@ -127,14 +129,20 @@ export default class Converter {
 
       const nav = _matchNav(this.epub?.structure, id);
       /** TODO: folder-level ? */
-      outpath = join(dirname(outpath), getFileName(nav ? getFileName(nav.name, this.MD_FILE_EXT) : getFileName(basename(outpath))))
+      const cleanFilename = this.getCleanFileName(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+      outpath = join(dirname(outpath), cleanFilename)
 
-      content = fixMDFilePath(content, (mdFilePath) => {
-        const { hash, url } = parseHref(mdFilePath)
-        mdFilePath = this._resolveHTMLId(basename(url))
-        const anav = findRealPath(mdFilePath, this.epub?.structure) || { name: mdFilePath }
+      content = fixMDFilePath(content, (link, text) => {
+        const { hash, url } = parseHref(link)
+        // 特殊处理hash链接
+        if (link.startsWith("#")) {
+          return './' + cleanFilename + link
+        }
+
+        link = this._resolveHTMLId(basename(url))
+        const anav = findRealPath(link, this.epub?.structure) || { name: link }
         // 处理 md 的 link 如果文件有空格不能识别
-        return './' + this._resolveMDLink(getFileName(anav.name, this.MD_FILE_EXT)) + `${hash ? '#' + hash : ''}`
+        return './' + this.getCleanFileName(anav.name, this.MD_FILE_EXT) + `${hash ? '#' + hash : ''}`
       })
     } else {
       content = this.epub!.resolve(filepath).asNodeBuffer()
@@ -143,7 +151,7 @@ export default class Converter {
 
     return {
       content,
-      outFilePath: this._resolveMDLink(outpath)
+      outFilePath: outpath
     }
   }
 
@@ -156,7 +164,7 @@ export default class Converter {
       // empty file skipped
       if (content.toString() === '') return
       if (!filterPool[outFilePath] && basename(outFilePath).endsWith('.md')) {
-        console.log(chalk.yellow(`${num++} -[${basename(outFilePath)}]`))
+        console.log(chalk.yellow(`${num++}: [${basename(outFilePath)}]`))
       }
       filterPool[outFilePath] = true
       writeFileSync(

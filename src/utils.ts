@@ -29,6 +29,7 @@ const hasHandledPool: Record<string, TOCItem> = {
 export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | undefined {
   if (!navs) return;
   const navChildren: TOCItem[] = [];
+
   for (const n of navs) {
     const { path, children } = n
     if (hasHandledPool[filePath]) {
@@ -48,14 +49,9 @@ export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | unde
 
 
 // 函数用于清理文件名，将非法字符替换为下划线
-function sanitizeFileName(fileName: string, replacementChar = '_') {
+export const sanitizeFileName = (fileName: string, replacementChar = '_') => {
   const invalidCharsPattern = /[\\/:*?"<>|]/g;
   return fileName.replace(invalidCharsPattern, replacementChar);
-}
-
-// 函数用于清理文件名，将非法字符替换为下划线
-export function getFileName(fileName: string, ext = '') {
-  return sanitizeFileName(fileName).trim() + ext
 }
 
 export const xmlToJs = (xml: string) => {

@@ -17,21 +17,20 @@ export function fixImagePath(markdownContent: string, replaceFn: (imgUrl: string
   });
 }
 
-export function fixMDFilePath(markdownContent: string, replaceFn: (imgUrl: string) => string) {
+export function fixMDFilePath(markdownContent: string, replaceFn: (url: string, text: string) => string) {
   // 匹配 Markdown 中的内联链接语法
   const inlineLinkPattern = /(.?)\[([^\]]*)]\(([^)]+)\)/g;
 
   // 使用 replace 方法和提供的替换函数处理所有匹配项
-  return markdownContent.replace(inlineLinkPattern, (match, imageMark, linkText, linkUrl) => {
+  return markdownContent.replace(inlineLinkPattern, (match, markWord, linkText, linkUrl) => {
     let newLinkUrl = linkUrl
-    if (imageMark !== '!') {
+    if (markWord !== '!') {
       // 替换函数应用逻辑，将原始URL替换为新的路径
-      newLinkUrl = replaceFn(linkUrl);
-      return `[${linkText}](${newLinkUrl})`;
+      newLinkUrl = replaceFn(linkUrl, linkText);
+      return `${markWord}[${linkText}](${newLinkUrl})`;
     } else {
       return `![${linkText}](${newLinkUrl})`;
     }
-
   });
 }
 
@@ -42,7 +41,6 @@ export default function convertHTML(htmlString: string) {
     .replace(/（）/g, '()')
     .replace(/：：/g, '::')
   // .replace(/<pre class="ziti1">([\s\S]*?)<\/pre>/g, '<pre><code class="language-rust">$1</code></pre>')
-  // TODO IMGAE
   // html
   // .replace(/<img.*?src="(.*?)"/, (_, match) => { return `<img src="images/${path.basename(match)}` })
   return convert(prunedHtml)
