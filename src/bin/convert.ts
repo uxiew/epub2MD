@@ -7,6 +7,7 @@ import type { Epub, TOCItem } from '../parseEpub'
 import convert, { fixImagePath, fixMDFilePath } from './parse'
 import { findRealPath, getFileName } from '../utils'
 import chalk from 'chalk'
+import parseHref from '../parseLink'
 
 type Structure = {
   id: string
@@ -45,6 +46,10 @@ export default class Converter {
 
   private _resolveHTMLId(fileName: string) {
     return fileName.replace(/\.x?html?(?:.*)/, '')
+  }
+
+  private _resolveMDLink(filepath: string) {
+    return filepath.replace(/\s/g, '_')
   }
 
   /**
@@ -125,9 +130,11 @@ export default class Converter {
       outpath = join(dirname(outpath), getFileName(nav ? getFileName(nav.name, this.MD_FILE_EXT) : getFileName(basename(outpath))))
 
       content = fixMDFilePath(content, (mdFilePath) => {
-        mdFilePath = this._resolveHTMLId(basename(mdFilePath.replace(/#(?:.*)/, '')))
+        const { hash, url } = parseHref(mdFilePath)
+        mdFilePath = this._resolveHTMLId(basename(url))
         const anav = findRealPath(mdFilePath, this.epub?.structure) || { name: mdFilePath }
-        return './' + getFileName(anav.name, this.MD_FILE_EXT)
+        // 处理 md 的 link 如果文件有空格不能识别
+        return './' + this._resolveMDLink(getFileName(anav.name, this.MD_FILE_EXT)) + `${hash ? '#' + hash : ''}`
       })
     } else {
       content = this.epub!.resolve(filepath).asNodeBuffer()
@@ -136,27 +143,26 @@ export default class Converter {
 
     return {
       content,
-      outFilePath: outpath
+      outFilePath: this._resolveMDLink(outpath)
     }
   }
 
   async run(unzip?: boolean) {
     await this.getManifest(unzip)
     let num = 1, filterPool: Record<string, boolean> = {}
-    console.log(this.structure.length);
     this.structure.forEach((s) => {
 
       const { outFilePath, content } = this._getFileData(s)
       // empty file skipped
       if (content.toString() === '') return
       if (!filterPool[outFilePath] && basename(outFilePath).endsWith('.md')) {
-        console.log(chalk.yellow(`${num++} - [${basename(outFilePath)}]`))
+        console.log(chalk.yellow(`${num++} -[${basename(outFilePath)}]`))
       }
       filterPool[outFilePath] = true
       writeFileSync(
         outFilePath,
         content,
-        { overwrite: false }
+        { overwrite: true }
       )
     })
     return this.outDir
