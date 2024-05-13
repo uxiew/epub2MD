@@ -70,6 +70,7 @@ export class Epub {
   structure?: TOCItem[]
   info?: MetaInfo
   sections?: Section[]
+  tocFile?: string
 
   constructor(buffer: Buffer, options?: ParserOptions) {
     this._zip = new nodeZip(buffer, { binary: true, base64: false, checkCRC32: true })
@@ -265,9 +266,9 @@ export class Epub {
 
     // https://github.com/gaoxiaoliangz/epub-parser/issues/13
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-    const tocPath = (_.find(this._manifest, { id: 'ncx' }) || {}).href
-    if (tocPath) {
-      const toc = await this._resolveXMLAsJsObject(tocPath)
+    this.tocFile = (_.find(this._manifest, { id: 'ncx' }) || {}).href
+    if (this.tocFile) {
+      const toc = await this._resolveXMLAsJsObject(this.tocFile)
       this._toc = toc
       this.structure = this._genStructure(toc)
     }
