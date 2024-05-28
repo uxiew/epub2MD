@@ -3,8 +3,10 @@ import path from "node:path";
 import { convert } from "../converter";
 
 
+/**
+ * Matches the image syntax in Markdown
+ */
 export function fixImagePath(markdownContent: string, replaceFn: (imgUrl: string) => string) {
-  // 匹配 Markdown 中的图片语法
   const imgPattern = /!\[[^\]]*\]\(([^)]+)\)/g;
 
   // 使用 replace 方法和提供的替换函数处理所有匹配项
@@ -17,8 +19,11 @@ export function fixImagePath(markdownContent: string, replaceFn: (imgUrl: string
   });
 }
 
+/**
+ * Matches the inline link syntax in Markdown
+ * 
+ */
 export function fixMDFilePath(markdownContent: string, replaceFn: (url: string, text: string) => string) {
-  // 匹配 Markdown 中的内联链接语法
   const inlineLinkPattern = /(.?)\[([^\]]*)]\(([^)]+)\)/g;
 
   // 使用 replace 方法和提供的替换函数处理所有匹配项

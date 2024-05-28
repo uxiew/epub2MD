@@ -9,17 +9,28 @@ import Converter from './convert'
 
 type Command = 'info' | 'structure' | 'sections'
 
-const name = "epub2md"
-const commands = [
-  ['md', 'convert the epub file to markdown format'],
-  ["unzip", 'unzip epub file'],
-  ["info", 'get epub file basic info'],
-  ["structure", 'get epub file structure'],
-  ["sections", 'get epub file sections']
-]
-const DEFAULT_COMMAND = "md"
+export enum Commands {
+  markdown = 'md',
+  autospace = 'ma',
+  unzip = 'unzip',
+  info = 'info',
+  structure = 'structure',
+  sections = 'sections'
+}
 
-// first define options
+const name = "epub2md"
+const commands: [Commands, string][] = [
+  [Commands.markdown, 'convert the epub file to markdown format'],
+  [Commands.autospace, 'convert the epub file to markdown format with autospace'],
+  [Commands.unzip, 'unzip epub file'],
+  [Commands.info, 'get epub file basic info'],
+  [Commands.structure, 'get epub file structure'],
+  [Commands.sections, 'get epub file sections']
+]
+
+const DEFAULT_COMMAND = Commands.markdown
+
+// define options
 commands.forEach((cmd) => args.option(cmd[0], cmd[1]));
 
 // @ts-ignore
@@ -44,17 +55,22 @@ commands.some(([cmd], i) => {
   }
 })
 
-function run(cmd: string) {
-  const epubPath = flags['md'] || flags['unzip']
+function run(cmd: Commands) {
+  const epubPath = flags[Commands.markdown] || flags[Commands.autospace] || flags[Commands.unzip]
   if (epubPath) {
     // ====== convert to markdown ====
     console.log(chalk.blueBright(`[${name}]: converting...`));
-    (new Converter(epubPath)).run(flags['unzip']).then((outDir) => {
-      console.log(chalk.greenBright(`[${name}]: success! output: ${outDir}`));
-    })
+
+    (new Converter({ eubPath: epubPath, cmd }))
+      .run(flags[Commands.unzip])
+      .then((outDir) => {
+        console.log(chalk.greenBright(`[${name}]: success! output: ${outDir}`));
+      })
+
     return
   }
 
+  // just get some info to display
   parseEpub(flags[cmd])
     .then((res) => {
       console.log(chalk.greenBright(`[${name}]: This book ${cmd}:`))

@@ -12,8 +12,18 @@ npm install epub2md -g
 ## CLI
 
 ```bash
+# show usage
 $ epub2md -h
+
+# Convert directly to markdown format
 $ epub2md ../../fixtures/zhihu.epub
+# or -m
+$ epub2md -m ../../fixtures/zhihu.epub
+
+# Convert directly to markdown format with autospace to handle spacing between CJK and English words and Correct punctuations Only for command line use
+$ epub2md -M ../../fixtures/zhihu.epub
+
+# show other info
 $ epub2md -u ../../fixtures/zhihu.epub
 $ epub2md -i ../../fixtures/zhihu.epub
 $ epub2md -S ../../fixtures/zhihu.epub
@@ -60,7 +70,7 @@ It forces the parser to treat supplied target as the defined type, if not define
 - expand ?: boolean
 - convertToMarkdown ?: (htmlstr: string) => string
 
-  use custom convert function, you can use turndown or node - html - markdown.etc.
+  use custom convert function, you can use turndown or node-html-markdown.etc.
 
 ### EpubObject
 
@@ -81,4 +91,4 @@ The return value is an object which contains`structure`, `sections`, `info`(priv
 
 # Credits
 
-[gaoxiaoliangz / epub - parser](https://github.com/gaoxiaoliangz/epub-parser)
+[gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)

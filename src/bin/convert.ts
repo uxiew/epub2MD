@@ -1,4 +1,4 @@
-import { basename, dirname, extname, join } from 'node:path'
+import { basename, dirname, extname, format, join } from 'node:path'
 import { existsSync, mkdirSync } from 'node:fs'
 import { writeFileSync } from 'write-file-safe'
 import _ from 'lodash'
@@ -7,24 +7,36 @@ import type { Epub, TOCItem } from '../parseEpub'
 import convert, { fixImagePath, fixMDFilePath } from './parse'
 import { findRealPath, sanitizeFileName } from '../utils'
 import chalk from 'chalk'
-import parseHref from '../parseLink'
+import * as autoSpace from 'autocorrect-node'
 
-type Structure = {
+import parseHref from '../parseLink'
+import { Commands } from './cli'
+
+interface Structure {
   id: string
   outpath: string
   filepath: string
 }
 
+interface Options {
+  /** epub file path */
+  eubPath: string
+  /** the command */
+  cmd: Commands
+}
+
 export default class Converter {
   epub: Epub | undefined // epub parser result
   epubFilePath: string // current epub 's path
-  MD_FILE_EXT: '.md' = '.md' as const// out file extname
+  cmd: Commands // current using command flag
+  MD_FILE_EXT: string = '.md' as const// out file extname
   outDir: string  // epub 's original directory to save markdown files
   structure: Structure[] = [] // epub dir structure
 
-  constructor(path: string) {
-    this.epubFilePath = path
-    this.outDir = dirname(path)
+  constructor({ eubPath, cmd }: Options) {
+    this.epubFilePath = eubPath
+    this.cmd = cmd
+    this.outDir = dirname(eubPath)
     if (!existsSync(this.outDir)) mkdirSync(this.outDir)
   }
 
@@ -55,8 +67,8 @@ export default class Converter {
   }
 
   /**
-  * @description Make a path，and fix assets path. markdown dont need those css/js files, so skip them
-  * @return the file's path will be created，like "xxx/xxx.md","xxx/images"
+  * Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
+  * @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
   */
   private _makePath(filepath: string) {
     const { isImage, isHTML } = this._checkFileType(filepath)
@@ -80,7 +92,7 @@ export default class Converter {
       // simply unzip
       if (unzip) outpath = join(this.outDir, filepath)
       else {
-        // remove this two file
+        // remove this two useless file
         if (filepath.endsWith('ncx') || id === 'titlepage') return
         outpath = this._makePath(filepath)
       }
@@ -95,11 +107,15 @@ export default class Converter {
 
 
   /**
-  * Try to obtain a friendly output filename. Otherwise the id is used as the file name.
+  * Try to obtain a friendly output filename.
   */
   private _getFileData(structure: Structure) {
     let { id, filepath, outpath } = structure
     let content: Buffer | string = ''
+
+    // with autospace maybe cause error... issues#5
+    const needAutospace = this.cmd === Commands.autospace
+
     // Only manipulate files that you want to output in md format
     if ((extname(outpath) === '.md')) {
       content = this.epub?.getSection(id)?.toMarkdown()!
@@ -108,8 +124,8 @@ export default class Converter {
 
       // Gets the content title as the file name
       // const headTitles = content.match(/#+?\s+(.*?)\n/)
-      // get the title from toc, and sanitize fileName
-      // @ts-ignore
+
+      // @ts-expect-error get the title from toc, and sanitize fileName
       function _matchNav(tocItems: TOCItem[] | undefined, id: string): TOCItem | undefined {
         if (Array.isArray(tocItems))
           for (let i = 0; i < tocItems.length; i++) {
@@ -144,6 +160,8 @@ export default class Converter {
         // 处理 md 的 link 如果文件有空格不能识别
         return './' + this.getCleanFileName(anav.name, this.MD_FILE_EXT) + `${hash ? '#' + hash : ''}`
       })
+
+      content = needAutospace ? autoSpace.format(content) : content
     } else {
       content = this.epub!.resolve(filepath).asNodeBuffer()
     }
@@ -158,21 +176,25 @@ export default class Converter {
   async run(unzip?: boolean) {
     await this.getManifest(unzip)
     let num = 1, filterPool: Record<string, boolean> = {}
-    this.structure.forEach((s) => {
 
+    this.structure.forEach((s) => {
       const { outFilePath, content } = this._getFileData(s)
+
       // empty file skipped
       if (content.toString() === '') return
       if (!filterPool[outFilePath] && basename(outFilePath).endsWith('.md')) {
+        // log converting info
         console.log(chalk.yellow(`${num++}: [${basename(outFilePath)}]`))
       }
       filterPool[outFilePath] = true
+
       writeFileSync(
         outFilePath,
         content,
         { overwrite: true }
       )
     })
+
     return this.outDir
   }
 }
