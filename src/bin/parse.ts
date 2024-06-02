@@ -3,10 +3,12 @@ import path from "node:path";
 import { convert } from "../converter";
 
 
+
+
 /**
  * Matches the image syntax in Markdown
  */
-export function fixImagePath(markdownContent: string, replaceFn: (imgUrl: string) => string) {
+function handleImagePath(markdownContent: string, replaceFn: (imgUrl: string) => string) {
   const imgPattern = /!\[[^\]]*\]\(([^)]+)\)/g;
 
   // 使用 replace 方法和提供的替换函数处理所有匹配项
@@ -23,32 +25,61 @@ export function fixImagePath(markdownContent: string, replaceFn: (imgUrl: string
  * Matches the inline link syntax in Markdown
  * 
  */
-export function fixMDFilePath(markdownContent: string, replaceFn: (url: string, text: string) => string) {
-  const inlineLinkPattern = /(.?)\[([^\]]*)]\(([^)]+)\)/g;
+function handleFileLinkPath(markdownContent: string, replaceFn: (url: string, text: string) => string) {
+  const inlineLinkPattern = /\[([^\]]*)]\(([^)]+)\)/g;
 
   // 使用 replace 方法和提供的替换函数处理所有匹配项
-  return markdownContent.replace(inlineLinkPattern, (match, markWord, linkText, linkUrl) => {
+  return markdownContent.replace(inlineLinkPattern, (match, linkText, linkUrl) => {
     let newLinkUrl = linkUrl
-    if (markWord !== '!') {
-      // 替换函数应用逻辑，将原始URL替换为新的路径
-      newLinkUrl = replaceFn(linkUrl, linkText);
-      return `${markWord}[${linkText}](${newLinkUrl})`;
-    } else {
-      return `![${linkText}](${newLinkUrl})`;
-    }
+    // 替换函数应用逻辑，将原始URL替换为新的路径
+    newLinkUrl = replaceFn(linkUrl, linkText);
+    return `[${linkText}](${newLinkUrl})`;
   });
 }
 
+/**
+ * Matches the image/link syntax in Markdown
+ */
+export function fixLinkPath(markdownContent: string, replaceFn: (url: string, text?: string) => string) {
+  const linkPattern = /(!?)\[(.*?)\](\(.*?\)\])?\((.*?)\)/g;
+
+  // 使用 replace 方法和提供的替换函数处理所有匹配
+  return markdownContent.replace(linkPattern, (match: string, imgMark: string, internalMatch1: string, internalMatch2: string, linkUrl: string) => {
+
+    // console.log("fixLinkPath", match + '\n', imgMark + '\n', internalMatch1 + '\n', internalMatch2 + '\n', linkUrl + '\n');
+
+    const hasWrappedImg = internalMatch1.startsWith('![')
+    // img, internal img wrapped by a link
+    if (imgMark === '!') {
+      return handleImagePath(match, replaceFn)
+    } else if (hasWrappedImg) {
+      let wrappedImg = internalMatch1 + ']' + internalMatch2.replace(/\)\]$/, ')')
+
+      let m1 = '', m2 = ''
+      const link = handleImagePath(wrappedImg, replaceFn).replace(/(!\[)(.*?)(\]\()/g, (m, mark1, mark, mark2) => {
+        m1 = mark1
+        m2 = mark2
+        return "$$" + mark + "@@"
+      })
+
+      return handleFileLinkPath(link, replaceFn).replace('$$', m1).replace('@@', m2)
+    }
+    else {
+      return handleFileLinkPath(match, replaceFn)
+    }
+  })
+}
 
 // clean some redundant html string
-export default function convertHTML(htmlString: string) {
-  const prunedHtml = htmlString
+export default function convertHTML(prunedHtml: string) {
+  const htmlString = prunedHtml
     .replace(/（）/g, '()')
     .replace(/：：/g, '::')
-  // .replace(/<pre class="ziti1">([\s\S]*?)<\/pre>/g, '<pre><code class="language-rust">$1</code></pre>')
-  // html
-  // .replace(/<img.*?src="(.*?)"/, (_, match) => { return `<img src="images/${path.basename(match)}` })
-  return convert(prunedHtml)
+    .replace(/\s?<\?xml.*?>\s?/g, '')
+    .replace(/\s?<!DOC.*?>\s?/g, '')
+    .replace(/\n+\s?/g, '\n')
+
+  return convert(htmlString)
 }
 
 

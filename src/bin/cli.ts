@@ -11,7 +11,7 @@ type Command = 'info' | 'structure' | 'sections'
 
 export enum Commands {
   markdown = 'md',
-  autospace = 'ma',
+  autocorrect = 'ma',
   unzip = 'unzip',
   info = 'info',
   structure = 'structure',
@@ -21,7 +21,7 @@ export enum Commands {
 const name = "epub2md"
 const commands: [Commands, string][] = [
   [Commands.markdown, 'convert the epub file to markdown format'],
-  [Commands.autospace, 'convert the epub file to markdown format with autospace'],
+  [Commands.autocorrect, 'convert the epub file to markdown format with autocorrect'],
   [Commands.unzip, 'unzip epub file'],
   [Commands.info, 'get epub file basic info'],
   [Commands.structure, 'get epub file structure'],
@@ -56,10 +56,10 @@ commands.some(([cmd], i) => {
 })
 
 function run(cmd: Commands) {
-  const epubPath = flags[Commands.markdown] || flags[Commands.autospace] || flags[Commands.unzip]
+  const epubPath = flags[Commands.markdown] || flags[Commands.autocorrect] || flags[Commands.unzip]
   if (epubPath) {
     // ====== convert to markdown ====
-    console.log(chalk.blueBright(`[${name}]: converting...`));
+    console.log(chalk.blueBright(`[${name}]: converting${cmd === Commands.autocorrect ? ' with AutoCorrect' : ''}...`));
 
     (new Converter({ eubPath: epubPath, cmd }))
       .run(flags[Commands.unzip])

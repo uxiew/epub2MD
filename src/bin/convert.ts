@@ -4,10 +4,9 @@ import { writeFileSync } from 'write-file-safe'
 import _ from 'lodash'
 import { parseEpub } from '..'
 import type { Epub, TOCItem } from '../parseEpub'
-import convert, { fixImagePath, fixMDFilePath } from './parse'
+import convert, { fixLinkPath } from './parse'
 import { findRealPath, sanitizeFileName } from '../utils'
 import chalk from 'chalk'
-import * as autoSpace from 'autocorrect-node'
 
 import parseHref from '../parseLink'
 import { Commands } from './cli'
@@ -40,7 +39,7 @@ export default class Converter {
     if (!existsSync(this.outDir)) mkdirSync(this.outDir)
   }
 
-  private _checkFileType(filepath: string) {
+  private checkFileType(filepath: string) {
     let isImage,
       isCSS,
       isHTML = false
@@ -56,7 +55,7 @@ export default class Converter {
     }
   }
 
-  private _resolveHTMLId(fileName: string) {
+  private resolveHTMLId(fileName: string) {
     return fileName.replace(/\.x?html?(?:.*)/, '')
   }
 
@@ -71,14 +70,14 @@ export default class Converter {
   * @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
   */
   private _makePath(filepath: string) {
-    const { isImage, isHTML } = this._checkFileType(filepath)
+    const { isImage, isHTML } = this.checkFileType(filepath)
     // other files skipped
     if (!isImage && !isHTML) return ''
     const fileName = basename(filepath)
     return join(
       this.outDir,
       isImage ? 'images' : '',
-      isHTML ? this._resolveHTMLId(fileName) + this.MD_FILE_EXT : fileName,
+      isHTML ? this.resolveHTMLId(fileName) + this.MD_FILE_EXT : fileName,
     )
   }
 
@@ -113,14 +112,14 @@ export default class Converter {
     let { id, filepath, outpath } = structure
     let content: Buffer | string = ''
 
-    // with autospace maybe cause error... issues#5
-    const needAutospace = this.cmd === Commands.autospace
+    // with AutoCorrect maybe cause error... issues#5
+    const needAutoCorrect = this.cmd === Commands.autocorrect
 
     // Only manipulate files that you want to output in md format
     if ((extname(outpath) === '.md')) {
       content = this.epub?.getSection(id)?.toMarkdown()!
       // Fixed all assets files
-      content = fixImagePath(content, (link) => ('./images/' + basename(link)))
+      // content = fixImagePath(content, (link) => ('./images/' + basename(link)))
 
       // Gets the content title as the file name
       // const headTitles = content.match(/#+?\s+(.*?)\n/)
@@ -148,20 +147,25 @@ export default class Converter {
       const cleanFilename = this.getCleanFileName(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
       outpath = join(dirname(outpath), cleanFilename)
 
-      content = fixMDFilePath(content, (link, text) => {
-        const { hash, url } = parseHref(link)
-        // 特殊处理hash链接
-        if (link.startsWith("#")) {
-          return './' + cleanFilename + link
-        }
+      content = fixLinkPath(content, (link, text) => {
+        if (text) {
+          const { hash, url } = parseHref(link)
+          //handling of hash links
+          if (link.startsWith("#")) {
+            return './' + cleanFilename + link
+          }
 
-        link = this._resolveHTMLId(basename(url))
-        const anav = findRealPath(link, this.epub?.structure) || { name: link }
-        // 处理 md 的 link 如果文件有空格不能识别
-        return './' + this.getCleanFileName(anav.name, this.MD_FILE_EXT) + `${hash ? '#' + hash : ''}`
+          link = this.resolveHTMLId(basename(url))
+          const anav = findRealPath(link, this.epub?.structure) || { name: link }
+          // md's link is not recognized if there is a space in the file name
+          return './' + this.getCleanFileName(extname(anav.name) ? anav.name : (anav.name + this.MD_FILE_EXT)) + `${hash ? '#' + hash : ''}`
+        }
+        else {
+          return ('./images/' + basename(link))
+        }
       })
 
-      content = needAutospace ? autoSpace.format(content) : content
+      content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
       content = this.epub!.resolve(filepath).asNodeBuffer()
     }

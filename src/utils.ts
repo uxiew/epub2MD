@@ -19,12 +19,11 @@ export interface TraverseNestedObject {
 const xmlParser = new xml2js.Parser()
 
 
-const hasHandledPool: Record<string, TOCItem> = {
-
+const cacheNavPool: Record<string, TOCItem> = {
 }
 
 /**
- * 根据 toc 对应的标题，修复对应的生成文件名
+ * Fix the generated file name according to the title corresponding to toc
  */
 export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | undefined {
   if (!navs) return;
@@ -32,11 +31,11 @@ export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | unde
 
   for (const n of navs) {
     const { path, children } = n
-    if (hasHandledPool[filePath]) {
-      return hasHandledPool[filePath]
+    if (cacheNavPool[filePath]) {
+      return cacheNavPool[filePath]
     }
     if (path.includes(filePath)) {
-      hasHandledPool[filePath] = n
+      cacheNavPool[filePath] = n
       return n
     }
     if (children) navChildren.push(...children)

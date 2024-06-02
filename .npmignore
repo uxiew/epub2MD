@@ -2,6 +2,10 @@ node_modules
 fixtures
 src
 examples
+.prettierrc
+tslint.json
+jest.config.ts
+tsconfig.json
 .github
 .vscode
 _config.yml

@@ -1,16 +1,13 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "es6",
-      "dom"
-    ],
+    "lib": ["es6", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "lib",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
     "allowJs": false,
     "jsx": "react",
@@ -19,7 +16,5 @@
     "preserveWatchOutput": true,
     "strict": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

@@ -20,7 +20,7 @@ $ epub2md ../../fixtures/zhihu.epub
 # or -m
 $ epub2md -m ../../fixtures/zhihu.epub
 
-# Convert directly to markdown format with autospace to handle spacing between CJK and English words and Correct punctuations Only for command line use
+# Convert directly to markdown format with autocorrect to handle spacing between CJK and English words and Correct punctuations Only for command line use
 $ epub2md -M ../../fixtures/zhihu.epub
 
 # show other info
