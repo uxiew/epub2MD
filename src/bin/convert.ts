@@ -1,4 +1,4 @@
-import { basename, dirname, extname, format, join } from 'node:path'
+import { basename, dirname, extname, format, join, parse } from 'node:path'
 import { existsSync, mkdirSync } from 'node:fs'
 import { writeFileSync } from 'write-file-safe'
 import _ from 'lodash'
@@ -181,19 +181,31 @@ export default class Converter {
     await this.getManifest(unzip)
     let num = 1, filterPool: Record<string, boolean> = {}
 
+    // Padding based on size of structure, 100 = 3 digits, 1000 = 4 etc
+    const padding = Math.floor(Math.log10(this.structure.length))
+
     this.structure.forEach((s) => {
       const { outFilePath, content } = this._getFileData(s)
+
+      // Number the md filepaths to keep them in order
+      let numberedOutFilePath: string | null = null
 
       // empty file skipped
       if (content.toString() === '') return
       if (!filterPool[outFilePath] && basename(outFilePath).endsWith('.md')) {
         // log converting info
-        console.log(chalk.yellow(`${num++}: [${basename(outFilePath)}]`))
+        const parsedPath = parse(outFilePath)
+        numberedOutFilePath = format({
+          ...parsedPath,
+          base: `${('0'.repeat(padding) + num).slice(-(padding+1))}-${parsedPath.base}`
+        })
+        console.log(chalk.yellow(`${num++}: [${basename(numberedOutFilePath)}]`))
       }
       filterPool[outFilePath] = true
 
+
       writeFileSync(
-        outFilePath,
+        numberedOutFilePath ?? outFilePath,
         content,
         { overwrite: true }
       )
