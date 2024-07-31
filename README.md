@@ -1,6 +1,7 @@
 # 📖 epub2MD
 
-A epub parser that also can convert epub to markdown using the command line
+The main goal is to convert EPUB to Markdown, but it can also serve as an EPUB parser.
+主要的目标是转换 epub 到 markdown，当然了也可以当做 epub 的解析器 
 
 # Global Install for CLI
 
