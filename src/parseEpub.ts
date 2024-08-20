@@ -1,4 +1,5 @@
-import fs from 'fs'
+import fs from 'node:fs'
+import { Buffer } from 'node:buffer'
 import _ from 'lodash'
 
 import type { ParserOptions, GeneralObject } from './types'
@@ -8,10 +9,9 @@ import parseLink from './parseLink'
 import parseSection, { Section } from './parseSection'
 import { xmlToJs, determineRoot } from './utils'
 
-
 type MetaInfo = Partial<{
   title: string,
-  author: string[],
+  author: string | string[],
   description: string,
   language: string,
   publisher: string,
@@ -26,7 +26,7 @@ const parseMetadata = (metadata: GeneralObject[]): MetaInfo => {
     if (item === 'author') {
       info.author = _.get(meta, ['dc:creator', 0])
       if (_.isString(info.author)) {
-        info.author = [info.author]
+        info.author = [info.author] as string[]
       } else {
         info.author = [_.get(info.author!, ['_'])]
       }
@@ -39,7 +39,7 @@ const parseMetadata = (metadata: GeneralObject[]): MetaInfo => {
     }
   })
 
-  return _.pickBy(info, (v) => {
+  return _.pickBy(info, (v: string | string[]) => {
     if (Array.isArray(v)) return v.length !== 0 && !_.isUndefined(v[0])
     return !_.isUndefined(v)
   })
@@ -56,12 +56,18 @@ export interface TOCItem {
   children?: TOCItem[]
 }
 
+interface Manifest {
+  href: string
+  id: string
+  [k: string]: string
+}
+
 export class Epub {
   private _zip: any // nodeZip instance
   private _opfPath?: string
   private _root?: string
   private _content?: GeneralObject
-  private _manifest?: any[]
+  private _manifest?: Manifest[]
   private _spine?: Record<string, number> // array of ids defined in manifest
   private _toc?: GeneralObject
   private _metadata?: GeneralObject[]
@@ -111,23 +117,23 @@ export class Epub {
   }
 
 
-  _resolveIdFromLink(href: string) {
+  _resolveIdFromLink(href: string): string {
     const { name: tarName } = parseLink(href)
-    const tarItem = _.find(this._manifest, (item) => {
+    const tarItem = _.find(this._manifest, (item: Manifest) => {
       const { name } = parseLink(item.href)
       return name === tarName
     })
-    return _.get(tarItem, 'id')
+    return _.get(tarItem!, 'id')
   }
 
-  getManifest(content?: GeneralObject) {
+  getManifest(content?: GeneralObject): Manifest[] {
     return (
       this._manifest ||
-      (_.get(content, ['package', 'manifest', 0, 'item'], []).map((item: any) => item.$) as any[])
+      (_.get(content, ['package', 'manifest', 0, 'item'], []).map((item: any) => item.$))
     )
   }
 
-  getSpine() {
+  getSpine(): Record<string, number> {
     const spine: Record<string, number> = {}
     this.getManifest()
     _.get(this._content, ['package', 'spine', 0, 'itemref'], []).map(
@@ -232,7 +238,7 @@ export class Epub {
       list = [id];
     }
     return list.map((id) => {
-      const path = _.find(this._manifest, { id }).href
+      const path = _.find(this._manifest, { id })!.href
       const html = this.resolve(path).asText()
 
       return parseSection({
@@ -241,11 +247,11 @@ export class Epub {
         resourceResolver: this.resolve.bind(this),
         idResolver: this._resolveIdFromLink.bind(this),
         expand: this._options.expand,
-      }).register(this._options.convertToMarkdown)
+      })
     })
   }
 
-  getSection(id: string) {
+  getSection(id: string): Section | null {
     let sectionIndex = -1
     // console.log(id, this.getManifest())
     if (this._spine) sectionIndex = this._spine[id]
@@ -256,7 +262,7 @@ export class Epub {
     return this.sections ? sectionIndex != -1 ? this.sections[sectionIndex] : null : null
   }
 
-  async parse() {
+  async parse(): Promise<Epub> {
     this._opfPath = await this._getOpfPath()
     this._content = await this._resolveXMLAsJsObject('/' + this._opfPath)
     this._root = determineRoot(this._opfPath)
@@ -282,7 +288,7 @@ export class Epub {
 }
 
 
-export default function parserWrapper(target: string | Buffer, opts?: ParserOptions) {
+export default function parserWrapper(target: string | Buffer, opts?: ParserOptions): Promise<Epub> {
   // seems 260 is the length limit of old windows standard
   // so path length is not used to determine whether it's path or binary string
   // the downside here is that if the filepath is incorrect, it will be treated as binary string by default

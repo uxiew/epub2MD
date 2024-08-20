@@ -1,19 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": ["es6", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "outDir": "lib",
     "sourceMap": false,
     "declaration": true,
     "allowJs": false,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
     "preserveWatchOutput": true,
+    "noEmit": true,
     "strict": true
   },
   "include": ["src"]

@@ -1,5 +1,5 @@
 // @ts-nocheck  have some Error!
-import fs from 'fs'
+import fs from 'node:fs'
 import Packer from 'pypacker'
 
 export default class Mobi {

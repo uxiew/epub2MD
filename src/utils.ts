@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import { GeneralObject } from './types'
 import xml2js from 'xml2js'
+import { GeneralObject } from './types'
 import type { TOCItem } from './parseEpub'
 
 
@@ -120,7 +120,7 @@ export const traverseNestedObject = (
       result = _.filter(result, preFilter)
     }
 
-    result = _.map(result, (object, index) => {
+    result = _.map(result, (object: any, __: string) => {
       if (object[childrenKey]) {
         const transformedChildren = traverse(object[childrenKey])
         // in parseHTML, if a tag is in unwrap list, like <span>aaa<span>bbb</span></span>

@@ -1,7 +1,8 @@
-# 📖 epub2MD
+# 📖 epub2md
 
-The main goal is to convert EPUB to Markdown, but it can also serve as an EPUB parser.
-主要的目标是转换 epub 到 markdown，当然了也可以当做 epub 的解析器 
+Even though the package is primarily intended for CLI is to convert EPUB to Markdown, but it can be used programmatically.
+
+主要的目标是转换 epub 到 markdown，当然了也可以当做 epub 的解析器库使用.
 
 # Global Install for CLI
 
@@ -35,13 +36,7 @@ $ epub2md -s ../../fixtures/zhihu.epub
 
 ```bash
 # npm
-npm install epub2md --save
-
-# pnpm
-pnpm add epub2md
-
-# yarn
-yarn add epub2md
+npm install epub2md
 ```
 
 # Usage

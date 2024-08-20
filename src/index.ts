@@ -1,4 +1,4 @@
-import { convert } from './converter'
+import convert from './converter'
 import parseEpub from './parseEpub'
 import parseLink from './parseLink'
 import parseHTML from './parseHTML'

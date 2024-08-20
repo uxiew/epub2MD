@@ -1,12 +1,12 @@
 import { basename, dirname, extname, format, join, parse } from 'node:path'
 import { existsSync, mkdirSync } from 'node:fs'
 import { writeFileSync } from 'write-file-safe'
+import chalk from 'chalk'
 import _ from 'lodash'
-import { parseEpub } from '..'
+import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
 import convert, { fixLinkPath } from './parse'
 import { findRealPath, sanitizeFileName } from '../utils'
-import chalk from 'chalk'
 
 import parseHref from '../parseLink'
 import { Commands } from './cli'
@@ -124,7 +124,7 @@ export default class Converter {
       // Gets the content title as the file name
       // const headTitles = content.match(/#+?\s+(.*?)\n/)
 
-      // @ts-expect-error get the title from toc, and sanitize fileName
+      // get the title from toc, and sanitize fileName
       function _matchNav(tocItems: TOCItem[] | undefined, id: string): TOCItem | undefined {
         if (Array.isArray(tocItems))
           for (let i = 0; i < tocItems.length; i++) {
@@ -197,7 +197,7 @@ export default class Converter {
         const parsedPath = parse(outFilePath)
         numberedOutFilePath = format({
           ...parsedPath,
-          base: `${('0'.repeat(padding) + num).slice(-(padding+1))}-${parsedPath.base}`
+          base: `${('0'.repeat(padding) + num).slice(-(padding + 1))}-${parsedPath.base}`
         })
         console.log(chalk.yellow(`${num++}: [${basename(numberedOutFilePath)}]`))
       }

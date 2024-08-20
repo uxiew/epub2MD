@@ -1,9 +1,4 @@
-
-import path from "node:path";
-import { convert } from "../converter";
-
-
-
+import convert from '../converter';
 
 /**
  * Matches the image syntax in Markdown

@@ -2,11 +2,13 @@
 
 import args from 'args'
 import chalk from 'chalk'
-// @ts-ignore
-import { json } from 'beauty-json'
-import { parseEpub } from '..'
+import process from "node:process"
+import parseEpub from '../parseEpub'
 import Converter from './convert'
+// @ts-expect-error no typedef but ok
+import { json } from 'beauty-json'
 
+const name = "epub2md"
 type Command = 'info' | 'structure' | 'sections'
 
 export enum Commands {
@@ -18,7 +20,6 @@ export enum Commands {
   sections = 'sections'
 }
 
-const name = "epub2md"
 const commands: [Commands, string][] = [
   [Commands.markdown, 'convert the epub file to markdown format'],
   [Commands.autocorrect, 'convert the epub file to markdown format with autocorrect'],
@@ -33,7 +34,7 @@ const DEFAULT_COMMAND = Commands.markdown
 // define options
 commands.forEach((cmd) => args.option(cmd[0], cmd[1]));
 
-// @ts-ignore
+// @ts-expect-error typedef error
 const flags = args.parse(process.argv, {
   name,
 })

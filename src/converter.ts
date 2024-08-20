@@ -1,7 +1,10 @@
 // import TurndownService from 'turndown'
 import { NodeHtmlMarkdown } from 'node-html-markdown'
 
-export const convert = (str: string) => NodeHtmlMarkdown.translate(str, {
+/**
+ * Convert html to markdown
+ */
+const convert = (str: string) => NodeHtmlMarkdown.translate(str, {
     useLinkReferenceDefinitions: false
 })
 
@@ -10,3 +13,6 @@ export const convert = (str: string) => NodeHtmlMarkdown.translate(str, {
 //     codeBlockStyle: 'fenced',
 //     bulletListMarker: '-',
 // }).turndown(str)
+
+
+export default convert as (str: string) => string

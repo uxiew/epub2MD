@@ -1,7 +1,7 @@
-import path from 'path'
+import path from 'node:path'
 import parseLink from './parseLink'
 import parseHTML from './parseHTML'
-import { convert } from './converter'
+import convert from './converter'
 import type { HtmlNodeObject, convertFuncType } from './types'
 
 const isInternalUri = (uri: string) => {
@@ -20,9 +20,9 @@ export class Section {
   id: string
   htmlString: string
   htmlObjects?: HtmlNodeObject[]
-  private _convertToMarkdown?: convertFuncType
   private _resourceResolver?: (path: string) => any
   private _idResolver?: (link: string) => string
+  private _convertToMarkdown: convertFuncType = convert
 
   constructor({ id, htmlString, resourceResolver, idResolver, expand }: ParseSectionConfig) {
     this.id = id
@@ -34,16 +34,16 @@ export class Section {
     }
   }
 
-  register(convertFunc?: convertFuncType) {
-    this._convertToMarkdown = convertFunc || convert;
+  register(convertFunc: convertFuncType): Section {
+    this._convertToMarkdown = convertFunc;
     return this
   }
 
-  toMarkdown() {
-    return this._convertToMarkdown?.call(null, this.htmlString);
+  toMarkdown(): string {
+    return this._convertToMarkdown.call(null, this.htmlString);
   }
 
-  toHtmlObjects?() {
+  toHtmlObjects(): HtmlNodeObject[] {
     return parseHTML(this.htmlString, {
       resolveHref: (href) => {
         if (isInternalUri(href)) {

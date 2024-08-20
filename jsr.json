@@ -1,0 +1,16 @@
+{
+  "name": "@xw/epub2md",
+  "version": "1.1.6",
+  "description": "A epub parser that also can convert epub to markdown using the command line",
+  "exports": {
+    ".": "./dist/index.ts",
+    "./mobi": "./dist/parseEpub.ts",
+    "./parseLink": "./dist/parseLink.ts",
+    "./parseEpub": "./dist/parseEpub.ts",
+    "./parseHTML": "./dist/parseHTML.ts"
+  },
+  "publish": {
+    "include": ["README.md", "dist/*.ts"],
+    "exclude": ["!dist"]
+  }
+}
