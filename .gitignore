@@ -3,6 +3,7 @@ fixtures/**/*
 !fixtures/*.epub
 dist
 lib
+temp
 
 # Logs
 logs

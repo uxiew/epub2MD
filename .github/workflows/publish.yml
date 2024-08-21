@@ -32,10 +32,10 @@ jobs:
 
       - name: Prepare for Github Packages
         run: |
-          mkdir -p ${{ github.workspace }}/github
-          cp ${{ github.workspace }}/package.json ${{ github.workspace }}/github
-          awk '{gsub(/"name": "/, "\"name\": \"@uxiew/"); print}' ${{ github.workspace }}/github/package.json > ${{ github.workspace }}/github/package.json.tmp && mv ${{ github.workspace }}/github/package.json.tmp ${{ github.workspace }}/github/package.json
-          # sed -i '' 's/"name": "/&@uxiew\//g' ${{ github.workspace }}/github/package.json
+          mkdir -p ${{ github.workspace }}/temp
+          cp ${{ github.workspace }}/package.json ${{ github.workspace }}/temp
+          awk '{gsub(/"name": "/, "\"name\": \"@uxiew/"); print}' ${{ github.workspace }}/temp/package.json > ${{ github.workspace }}/temp/package.json.tmp && mv ${{ github.workspace }}/temp/package.json.tmp ${{ github.workspace }}/temp/package.json
+          # sed -i '' 's/"name": "/&@uxiew\//g' ${{ github.workspace }}/temp/package.json
 
       - name: Publish to jsr.io
         run: pnpm dlx jsr publish --allow-dirty
@@ -50,5 +50,5 @@ jobs:
         name: Publish to Github Packages
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: ${{ github.workspace }}/github
+          package: ${{ github.workspace }}/temp
           registry: 'https://npm.pkg.github.com'
