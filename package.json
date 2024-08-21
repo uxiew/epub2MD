@@ -63,6 +63,7 @@
     "xml2js": "^0.5.0"
   },
   "devDependencies": {
+    "@jsdevtools/npm-publish": "^3.1.1",
     "@types/args": "^5.0.0",
     "@types/jest": "^24.0.18",
     "@types/jsdom": "^21.1.1",

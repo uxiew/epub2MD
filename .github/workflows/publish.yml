@@ -30,13 +30,6 @@ jobs:
       - run: pnpm build
       - run: pnpm test
 
-      - name: Prepare for Github Packages
-        run: |
-          mkdir -p ${{ github.workspace }}/temp
-          cp ${{ github.workspace }}/package.json ${{ github.workspace }}/temp
-          awk '{gsub(/"name": "/, "\"name\": \"@uxiew/"); print}' ${{ github.workspace }}/temp/package.json > ${{ github.workspace }}/temp/package.json.tmp && mv ${{ github.workspace }}/temp/package.json.tmp ${{ github.workspace }}/temp/package.json
-          # sed -i '' 's/"name": "/&@uxiew\//g' ${{ github.workspace }}/temp/package.json
-
       - name: Publish to jsr.io
         run: pnpm dlx jsr publish --allow-dirty
 
@@ -45,10 +38,3 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           registry: 'https://registry.npmjs.org/'
-
-      - uses: JS-DevTools/npm-publish@v3
-        name: Publish to Github Packages
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          package: ${{ github.workspace }}/temp
-          registry: 'https://npm.pkg.github.com'

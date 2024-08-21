@@ -1,5 +1,6 @@
 .DS_Store
-fixtures/**/*
+fixtures/*
+fixtures/zhihu/images/*
 !fixtures/*.epub
 dist
 lib
