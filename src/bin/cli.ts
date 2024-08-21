@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import args from 'args'
 import chalk from 'chalk'
 import process from "node:process"

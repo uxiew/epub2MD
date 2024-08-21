@@ -1,4 +1,4 @@
-import parser from './parseEpub'
+import parser from '../src/parseEpub'
 import _ from 'lodash'
 import * as path from 'path'
 

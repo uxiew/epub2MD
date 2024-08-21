@@ -5,7 +5,7 @@ import chalk from 'chalk'
 import _ from 'lodash'
 import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
-import convert, { fixLinkPath } from './parse'
+import { convertHTML, fixLinkPath } from './helper'
 import { findRealPath, sanitizeFileName } from '../utils'
 
 import parseHref from '../parseLink'
@@ -83,7 +83,7 @@ export default class Converter {
 
   async getManifest(unzip?: boolean) {
     this.epub = await parseEpub(this.epubFilePath, {
-      convertToMarkdown: convert
+      convertToMarkdown: convertHTML
     })
     this.outDir = this.epubFilePath.replace('.epub', '')
     this.epub.getManifest().forEach(({ href: filepath, id }) => {

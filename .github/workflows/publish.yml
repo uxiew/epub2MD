@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     steps:
@@ -22,15 +22,23 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: '8.9.2'
+          version: '9.7.0'
 
       - name: Install dependencies
         run: pnpm install
+
       - run: pnpm build
       - run: pnpm test
 
+      - name: Prepare for Github Packages
+        run: |
+          mkdir -p ${{ github.workspace }}/github
+          cp ${{ github.workspace }}/package.json ${{ github.workspace }}/github
+          awk '{gsub(/"name": "/, "\"name\": \"@uxiew/"); print}' ${{ github.workspace }}/github/package.json > ${{ github.workspace }}/github/package.json.tmp && mv ${{ github.workspace }}/github/package.json.tmp ${{ github.workspace }}/github/package.json
+          # sed -i '' 's/"name": "/&@uxiew\//g' ${{ github.workspace }}/github/package.json
+
       - name: Publish to jsr.io
-        run: pnpm dlx jsr publish
+        run: pnpm dlx jsr publish --allow-dirty
 
       - uses: JS-DevTools/npm-publish@v3
         name: Publish to NPM
@@ -39,6 +47,8 @@ jobs:
           registry: 'https://registry.npmjs.org/'
 
       - uses: JS-DevTools/npm-publish@v3
+        name: Publish to Github Packages
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          package: ${{ github.workspace }}/github
           registry: 'https://npm.pkg.github.com'

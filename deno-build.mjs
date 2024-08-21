@@ -33,6 +33,7 @@ const walkAndBuild = (/** @type string */ dir) => {
             const nodePath = join(nodeSrcRoot, dir, entry.name);
             const denoPath = join(denoLibRoot, dir, entry.name);
 
+            // skip those files
             if (/\.spec\.ts$/.test(nodePath)) {
                 // console.log(`Skipping ${nodePath}`);
                 continue;
@@ -48,19 +49,14 @@ const walkAndBuild = (/** @type string */ dir) => {
                     const targetNodePathIfFile = targetNodePath + ".ts";
                     const targetNodePathIfDir = join(targetNodePath, "index.ts");
 
-                    console.log(line, "target：" + target, targetNodePath);
+                    if (/\.ts$/.test(targetNodePath)) {
+                        return line
+                    }
 
                     try {
                         if (statSync(targetNodePathIfFile)?.isFile()) {
                             return line.replace(target, target + ".ts");
                         }
-                    } catch (error) {
-                        if (error?.code !== "ENOENT") {
-                            throw error;
-                        }
-                    }
-
-                    try {
                         if (statSync(targetNodePathIfDir)?.isFile()) {
                             return line.replace(target, join(target, "index.ts"));
                         }

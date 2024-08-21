@@ -1,6 +1,7 @@
 {
   "name": "@xw/epub2md",
   "version": "1.1.6",
+  "license": "MIT",
   "description": "A epub parser that also can convert epub to markdown using the command line",
   "exports": {
     ".": "./dist/index.ts",
@@ -10,7 +11,8 @@
     "./parseHTML": "./dist/parseHTML.ts"
   },
   "publish": {
-    "include": ["README.md", "dist/*.ts"],
-    "exclude": ["!dist"]
+    "include": ["README.md", "CHANGELOG.md", "dist/*.ts"],
+    // You can just exclude the specific lockfile, or add the lockfile to your .gitignore. #566
+    "exclude": ["pnpm-lock.yaml", "!dist"]
   }
 }

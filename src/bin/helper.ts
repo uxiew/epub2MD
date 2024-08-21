@@ -66,7 +66,7 @@ export function fixLinkPath(markdownContent: string, replaceFn: (url: string, te
 }
 
 // clean some redundant html string
-export default function convertHTML(prunedHtml: string) {
+export function convertHTML(prunedHtml: string) {
   const htmlString = prunedHtml
     .replace(/（）/g, '()')
     .replace(/：：/g, '::')

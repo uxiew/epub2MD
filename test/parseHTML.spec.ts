@@ -1,4 +1,4 @@
-import parseHTML from './parseHTML'
+import parseHTML from '../src/parseHTML'
 import _ from 'lodash'
 
 describe('parseHTML1', () => {

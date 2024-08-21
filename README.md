@@ -4,11 +4,24 @@ Even though the package is primarily intended for CLI is to convert EPUB to Mark
 
 主要的目标是转换 epub 到 markdown，当然了也可以当做 epub 的解析器库使用.
 
-# Global Install for CLI
+## Global Install for CLI
 
-```bash
-# cli
-npm install epub2md -g
+```sh
+# node global cli
+$ npm install epub2md -g
+```
+
+## Development Install
+
+```sh
+# for node
+$ npm install epub2md
+
+# for deno
+$ deno add @xw/epub2md
+
+# from GitHub Packages Registry
+$ npm install @uxiew/epub2md
 ```
 
 ## CLI
@@ -32,14 +45,7 @@ $ epub2md -S ../../fixtures/zhihu.epub
 $ epub2md -s ../../fixtures/zhihu.epub
 ```
 
-# Development Install
-
-```bash
-# npm
-npm install epub2md
-```
-
-# Usage
+## Usage
 
 ```js
 import { parseEpub } from 'epub2md'
@@ -49,15 +55,15 @@ const epubObj = await parseEpub('/path/to/file.epub')
 console.log('epub content:', epubObj)
 ```
 
-## parseEpub(target: string | buffer, options ?: ParserOptions): EpubObject
+### parseEpub(target: string | buffer, options ?: ParserOptions): EpubObject
 
-### target
+#### target
 
 type: `string` or`buffer`
 
 It can be the path to the file or file's binary string or buffer
 
-### options: `ParserOptions`
+#### options: `ParserOptions`
 
 - type ?: 'binaryString' | 'path' | 'buffer'
 
@@ -68,7 +74,7 @@ It forces the parser to treat supplied target as the defined type, if not define
 
   use custom convert function, you can use turndown or node-html-markdown.etc.
 
-### EpubObject
+#### EpubObject
 
 The return value is an object which contains`structure`, `sections`, `info`(private property names start with `_`.I don't recommend using them, since they are subscribed to change).
 
@@ -80,11 +86,11 @@ The return value is an object which contains`structure`, `sections`, `info`(priv
 
 - `Section.prototype.toHtmlObjects`: convert to html object. And a note about `src` and`href`, the`src` and`href` in raw html stay untouched, but the `toHtmlObjects` method resolves `src` to base64 string, and alters `href` so that they make sense in the parsed epub.And the parsed `href` is something like`#{sectionId},{hash}`.
 
-# How to contribute
+## How to contribute
 
 - Raise an issue in the issue section.
 - PRs are the best. ❤️
 
-# Credits
+## Credits
 
 [gaoxiaoliangz/epub-parser](https://github.com/gaoxiaoliangz/epub-parser)

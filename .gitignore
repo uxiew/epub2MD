@@ -1,6 +1,6 @@
 .DS_Store
+fixtures/**/*
 !fixtures/*.epub
-fixtures/**/
 dist
 lib
 

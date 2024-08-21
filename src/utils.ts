@@ -133,9 +133,7 @@ export const traverseNestedObject = (
         }
         return {
           ...object,
-          ...{
-            [childrenKey]: children,
-          },
+          [childrenKey]: children,
         }
       }
 

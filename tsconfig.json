@@ -12,9 +12,7 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
     "preserveWatchOutput": true,
-    "noEmit": true,
     "strict": true
   },
   "include": ["src"]
