@@ -3,7 +3,7 @@ import args from 'args'
 import chalk from 'chalk'
 import process from "node:process"
 import parseEpub from '../parseEpub'
-import Converter from './convert'
+import { Converter } from './convert'
 // @ts-expect-error no typedef but ok
 import { json } from 'beauty-json'
 

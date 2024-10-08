@@ -15,26 +15,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      - name: Setup node and pnpm
+        uses: uxiew/action-setup-node-pnpm@v1
         with:
-          version: '9.7.0'
+          node-version: 20.x
+          pnpm-version: 9.12.0
+          registry-url: https://registry.npmjs.org/
 
-      - name: Install dependencies
-        run: pnpm install
-
-      - run: pnpm build
       - run: pnpm test
 
       - name: Publish to jsr.io
         run: pnpm dlx jsr publish --allow-dirty
 
-      - uses: JS-DevTools/npm-publish@v3
-        name: Publish to NPM
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          registry: 'https://registry.npmjs.org/'
+      - name: Publish to NPM
+        continue-on-error: true
+        env:
+          # setting the "npm_config_//registry.npmjs.org/:_authToken" env variable directly doesn't work.
+          # probably "pnpm release" doesn't pass auth tokens to child processes
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # pnpm config set is broken
+          npm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}"
+          pnpm publish

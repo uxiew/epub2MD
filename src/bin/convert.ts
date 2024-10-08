@@ -24,7 +24,7 @@ interface Options {
   cmd: Commands
 }
 
-export default class Converter {
+export class Converter {
   epub: Epub | undefined // epub parser result
   epubFilePath: string // current epub 's path
   cmd: Commands // current using command flag

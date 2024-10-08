@@ -21,6 +21,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "prebuild": "pnpm clean",
+    "prepublishOnly": "pnpm run build",
     "build": "unbuild && pnpm run build:deno",
     "build:deno": "node ./deno-build.mjs",
     "watch": "tsc --watch",
