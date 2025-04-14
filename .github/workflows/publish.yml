@@ -25,7 +25,11 @@ jobs:
           pnpm-version: 9.12.0
           registry-url: https://registry.npmjs.org/
 
-      - run: pnpm test
+      - name: install, build, and test
+        run: |
+          pnpm install
+          pnpm build
+          pnpm test
 
       - name: Publish to jsr.io
         run: pnpm dlx jsr publish --allow-dirty
