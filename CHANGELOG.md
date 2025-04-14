@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [1.3.0](https://github.com/uxiew/epub2MD/compare/v1.2.1...v1.3.0) (2025-04-14)
+
+
+### Features
+
+* 🎸 replace xml2js with fast-xml-parser ([3ffde71](https://github.com/uxiew/epub2MD/commit/3ffde71f5cc6168051062bb70bc114a4a28b9902))
+
+
+
 # [1.2.0](https://github.com/uxiew/epub2MD/compare/v1.1.5...v1.2.0) (2024-08-21)
 
 
