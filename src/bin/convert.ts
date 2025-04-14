@@ -158,6 +158,7 @@ export class Converter {
           link = this.resolveHTMLId(basename(url))
           const anav = findRealPath(link, this.epub?.structure) || { name: link }
           // md's link is not recognized if there is a space in the file name
+          // FIXME: numberedOutFilePath cause links not working
           return './' + this.getCleanFileName(extname(anav.name) ? anav.name : (anav.name + this.MD_FILE_EXT)) + `${hash ? '#' + hash : ''}`
         }
         else {
@@ -185,6 +186,7 @@ export class Converter {
     const padding = Math.floor(Math.log10(this.structure.length))
 
     this.structure.forEach((s) => {
+      const numLabel = ('0'.repeat(padding) + num).slice(-(padding + 1))
       const { outFilePath, content } = this._getFileData(s)
 
       // Number the md filepaths to keep them in order
@@ -197,7 +199,7 @@ export class Converter {
         const parsedPath = parse(outFilePath)
         numberedOutFilePath = format({
           ...parsedPath,
-          base: `${('0'.repeat(padding) + num).slice(-(padding + 1))}-${parsedPath.base}`
+          base: `${numLabel}-${parsedPath.base}`
         })
         console.log(chalk.yellow(`${num++}: [${basename(numberedOutFilePath)}]`))
       }

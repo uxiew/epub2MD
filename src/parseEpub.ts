@@ -7,7 +7,7 @@ import type { ParserOptions, GeneralObject } from './types'
 import nodeZip from 'node-zip'
 import parseLink from './parseLink'
 import parseSection, { Section } from './parseSection'
-import { xmlToJs, determineRoot } from './utils'
+import { xmlToJson, determineRoot } from './utils'
 
 type MetaInfo = Partial<{
   title: string,
@@ -18,24 +18,24 @@ type MetaInfo = Partial<{
   rights: string,
 }>
 
-const parseMetadata = (metadata: GeneralObject[]): MetaInfo => {
-  const meta = metadata[0];
+const parseMetadata = (metadata: GeneralObject = {}): MetaInfo => {
+  const meta = metadata;
   const info: MetaInfo = {};
 
   (['title', 'author', 'description', 'language', 'publisher', 'rights'] as (keyof MetaInfo)[]).forEach((item: keyof MetaInfo) => {
     if (item === 'author') {
-      info.author = _.get(meta, ['dc:creator', 0])
-      if (_.isString(info.author)) {
-        info.author = [info.author] as string[]
+      const author = _.get(meta, ['dc:creator'])
+      if (_.isArray(author)) {
+        info.author = author.map((a) => a['#text'])
       } else {
-        info.author = [_.get(info.author!, ['_'])]
+        info.author = [author['#text']]
       }
     }
     else if (item === 'description') {
-      info.description = _.get(meta, ['description', 0, '_'])
+      info.description = _.get(meta, [item, '_'])
     }
     else {
-      info[item] = _.get(meta, ['dc:' + item, 0]) as string
+      info[item] = _.get(meta, ['dc:' + item]) as string
     }
   })
 
@@ -70,7 +70,7 @@ export class Epub {
   private _manifest?: Manifest[]
   private _spine?: Record<string, number> // array of ids defined in manifest
   private _toc?: GeneralObject
-  private _metadata?: GeneralObject[]
+  private _metadata?: GeneralObject
   private _options: ParserOptions = defaultOptions
 
   structure?: TOCItem[]
@@ -105,15 +105,16 @@ export class Epub {
     }
   }
 
-  async _resolveXMLAsJsObject(path: string): Promise<GeneralObject> {
+  _resolveXMLAsJsObject(path: string): GeneralObject {
     const xml = this.resolve(path).asText()
-    return xmlToJs(xml)
+    return xmlToJson(xml)
   }
 
-  private async _getOpfPath() {
-    const container = await this._resolveXMLAsJsObject('/META-INF/container.xml')
-    const opfPath = container.container.rootfiles[0].rootfile[0]['$']['full-path']
-    return opfPath as string
+  /**
+   * 获取EPUB文件中的OPF（Open Packaging Format）文件的路径。
+   */
+  private _getOpfPath(): string {
+    return this._resolveXMLAsJsObject('/META-INF/container.xml').container.rootfiles.rootfile['@full-path']
   }
 
 
@@ -129,16 +130,20 @@ export class Epub {
   getManifest(content?: GeneralObject): Manifest[] {
     return (
       this._manifest ||
-      (_.get(content, ['package', 'manifest', 0, 'item'], []).map((item: any) => item.$))
+      (_.get(content, ['package', 'manifest', 'item'], []).map((item: any) => ({
+        href: item['@href'],
+        id: item['@id'],
+      })
+      ))
     )
   }
 
   getSpine(): Record<string, number> {
     const spine: Record<string, number> = {}
     this.getManifest()
-    _.get(this._content, ['package', 'spine', 0, 'itemref'], []).map(
+    _.get(this._content, ['package', 'spine', 'itemref'], []).map(
       (item: GeneralObject, i: number) => {
-        return spine[item.$.idref] = i
+        return spine[item['@idref']] = i
       },
     )
     return spine
@@ -191,13 +196,14 @@ export class Epub {
       return this._genStructureForHTML(tocObj)
     }
 
-    const rootNavPoints = _.get(tocObj, ['ncx', 'navMap', '0', 'navPoint'], [])
+    // may be GeneralObject or GeneralObject[] or []
+    const rootNavPoints = _.get(tocObj, ['ncx', 'navMap', 'navPoint'], [])
 
     const parseNavPoint = (navPoint: GeneralObject) => {
       // link to section
-      const path = _.get(navPoint, ['content', '0', '$', 'src'], '')
-      const name = _.get(navPoint, ['navLabel', '0', 'text', '0'])
-      const playOrder = _.get(navPoint, ['$', 'playOrder']) as string
+      const path = _.get(navPoint, ['content', '@src'], '')
+      const name = _.get(navPoint, ['navLabel', 'text'])
+      const playOrder = _.get(navPoint, ['@playOrder']) as string
       const { hash } = parseLink(path)
 
       let children = navPoint.navPoint
@@ -211,7 +217,7 @@ export class Epub {
       return {
         name,
         sectionId,
-        nodeId: hash || _.get(navPoint, ['$', 'id']),
+        nodeId: hash || navPoint['@id'],
         path,
         playOrder,
         children,
@@ -219,7 +225,8 @@ export class Epub {
     }
 
     const parseNavPoints = (navPoints: GeneralObject[]) => {
-      return navPoints.map((point) => {
+      // check if it's array or not
+      return (_.isArray(navPoints) ? navPoints : [navPoints]).map((point) => {
         return parseNavPoint(point)
       })
     }
@@ -263,18 +270,18 @@ export class Epub {
   }
 
   async parse(): Promise<Epub> {
-    this._opfPath = await this._getOpfPath()
-    this._content = await this._resolveXMLAsJsObject('/' + this._opfPath)
+    this._opfPath = this._getOpfPath()
+    this._content = this._resolveXMLAsJsObject('/' + this._opfPath)
     this._root = determineRoot(this._opfPath)
 
     this._manifest = this.getManifest(this._content)
-    this._metadata = _.get(this._content, ['package', 'metadata'], []) as GeneralObject[]
+    this._metadata = _.get(this._content, ['package', 'metadata'], {})
 
     // https://github.com/gaoxiaoliangz/epub-parser/issues/13
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
     this.tocFile = (_.find(this._manifest, { id: 'ncx' }) || {}).href
     if (this.tocFile) {
-      const toc = await this._resolveXMLAsJsObject(this.tocFile)
+      const toc = this._resolveXMLAsJsObject(this.tocFile)
       this._toc = toc
       this.structure = this._genStructure(toc)
     }

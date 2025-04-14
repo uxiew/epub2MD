@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import xml2js from 'xml2js'
+import { XMLParser } from 'fast-xml-parser'
 import { GeneralObject } from './types'
 import type { TOCItem } from './parseEpub'
 
@@ -16,8 +16,11 @@ export interface TraverseNestedObject {
   childrenKey: string
 }
 
-const xmlParser = new xml2js.Parser()
-
+const xmlParser = new XMLParser({
+  attributeNamePrefix: '@',
+  ignoreAttributes: false,
+  parseAttributeValue: true,
+});
 
 const cacheNavPool: Record<string, TOCItem> = {
 }
@@ -53,17 +56,17 @@ export const sanitizeFileName = (fileName: string, replacementChar = '_') => {
   return fileName.replace(invalidCharsPattern, replacementChar);
 }
 
-export const xmlToJs = (xml: string) => {
-  return new Promise<any>((resolve, reject) => {
-    // @ts-ignore
-    xmlParser.parseString(xml, (err: Error, object: GeneralObject) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(object)
-      }
-    })
-  })
+export const xmlToJson = (xml: string) => {
+  return xmlParser.parse(xml)
+  // new Promise<any>((resolve, reject) => {
+  //   xmlParser.parse(xml, (err: Error, object: GeneralObject) => {
+  //     if (err) {
+  //       reject(err)
+  //     } else {
+  //       resolve(object)
+  //     }
+  //   })
+  // })
 }
 
 export const determineRoot = (opfPath: string) => {
