@@ -30,6 +30,20 @@ All notable changes to this project will be documented in this file. See [commit
 
 
 
+# [1.4.0](https://github.com/uxiew/epub2MD/compare/v1.3.0...v1.4.0) (2025-04-29)
+
+
+### Bug Fixes
+
+* update default merge behavior and test stability ([bf21e5a](https://github.com/uxiew/epub2MD/commit/bf21e5a4ec56ccca80032b5ec5c539475ece943f))
+
+
+### Features
+
+* 🎸 v1.4.0 ([42e9bf1](https://github.com/uxiew/epub2MD/commit/42e9bf1a66510432d4389431f81a60406241cca4))
+
+
+
 # [1.4.0](https://github.com/uxiew/epub2MD/compare/v1.3.0...v1.4.0) (2024-08-21)
 
 ### Bug Fixes
