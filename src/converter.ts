@@ -4,8 +4,9 @@ import { NodeHtmlMarkdown } from 'node-html-markdown'
 /**
  * Convert html to markdown
  */
-const convert = (str: string) => NodeHtmlMarkdown.translate(str, {
-    useLinkReferenceDefinitions: false
+const convert = (htmlString: string, options?: Parameters<typeof NodeHtmlMarkdown.translate>[1]) => NodeHtmlMarkdown.translate(htmlString, {
+    useLinkReferenceDefinitions: false,
+    ...options
 })
 
 // export const convert = (str: string) => new TurndownService({
@@ -15,4 +16,4 @@ const convert = (str: string) => NodeHtmlMarkdown.translate(str, {
 // }).turndown(str)
 
 
-export default convert as (str: string) => string
+export default convert as (htmlString: string) => string

@@ -35,34 +35,24 @@ function handleFileLinkPath(markdownContent: string, replaceFn: (url: string, te
 /**
  * Matches the image/link syntax in Markdown
  */
-export function fixLinkPath(markdownContent: string, replaceFn: (url: string, text?: string) => string) {
-  const linkPattern = /(!?)\[(.*?)\](\(.*?\)\])?\((.*?)\)/g;
-
-  // 使用 replace 方法和提供的替换函数处理所有匹配
-  return markdownContent.replace(linkPattern, (match: string, imgMark: string, internalMatch1: string, internalMatch2: string, linkUrl: string) => {
-
-    // console.log("fixLinkPath", match + '\n', imgMark + '\n', internalMatch1 + '\n', internalMatch2 + '\n', linkUrl + '\n');
-
-    const hasWrappedImg = internalMatch1.startsWith('![')
-    // img, internal img wrapped by a link
-    if (imgMark === '!') {
-      return handleImagePath(match, replaceFn)
-    } else if (hasWrappedImg) {
-      let wrappedImg = internalMatch1 + ']' + internalMatch2.replace(/\)\]$/, ')')
-
-      let m1 = '', m2 = ''
-      const link = handleImagePath(wrappedImg, replaceFn).replace(/(!\[)(.*?)(\]\()/g, (m, mark1, mark, mark2) => {
-        m1 = mark1
-        m2 = mark2
-        return "$$" + mark + "@@"
-      })
-
-      return handleFileLinkPath(link, replaceFn).replace('$$', m1).replace('@@', m2)
-    }
-    else {
-      return handleFileLinkPath(match, replaceFn)
-    }
-  })
+export function fixLinkPath(result: string, replaceFn: (url: string, isText?: boolean) => string) {
+  if (!result || typeof result !== 'string') {
+    return '';
+  }
+  
+  // 首先处理图片标签 ![text](url)
+  result = result.replace(/!\[(.*?)\]\(([^)]+)\)/g, (match, alt, url) => {
+    const newUrl = replaceFn(url, false);
+    return `![${alt}](${newUrl})`;
+  });
+  
+  // 然后处理普通链接，使用否定前瞻确保不匹配图片链接
+  result = result.replace(/(?<!!)\[(.*?)\]\(([^)]+)\)/g, (match, text, url) => {
+    const newUrl = replaceFn(url, true);
+    return `[${text}](${newUrl})`;
+  });
+  
+  return result;
 }
 
 // clean some redundant html string
@@ -70,8 +60,8 @@ export function convertHTML(prunedHtml: string) {
   const htmlString = prunedHtml
     .replace(/（）/g, '()')
     .replace(/：：/g, '::')
-    .replace(/\s?<\?xml.*?>\s?/g, '')
-    .replace(/\s?<!DOC.*?>\s?/g, '')
+    .replace(/\s?<\?xml[^>]*\?>\s?/g, '') // 移除 XML 声明
+    .replace(/\s?<!DOCTYPE[^>]*>\s?/g, '') // 移除 DOCTYPE 声明
     .replace(/\n+\s?/g, '\n')
 
   return convert(htmlString)

@@ -248,13 +248,18 @@ export class Epub {
       const path = _.find(this._manifest, { id })!.href
       const html = this.resolve(path).asText()
 
-      return parseSection({
+      const section = parseSection({
         id,
         htmlString: html,
         resourceResolver: this.resolve.bind(this),
         idResolver: this._resolveIdFromLink.bind(this),
         expand: this._options.expand,
       })
+      
+      if(this._options.convertToMarkdown) {
+        section.register(this._options.convertToMarkdown)
+      }
+      return section
     })
   }
 
