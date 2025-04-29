@@ -173,7 +173,6 @@ export class Converter {
   private async getFileDataAsync(structure: Structure, handleContent?: (content: string) => string) {
     let { id, filepath, outpath } = structure
     let content: Buffer | string = '',
-        clearFilename = '',
         nav:TOCItem | undefined,
         // content inline links
         links: { url: string, hash: string, id: string, toId: string }[] = []
@@ -204,14 +203,14 @@ export class Converter {
       }
 
       nav = _matchNav(this.epub?.structure, id);
-      clearFilename = this.getCearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+      const clearFilename = this.getCearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
       // clear readable filename
       outpath = join(dirname(outpath), clearFilename)
 
       // resources links
       const resLinks: string[] = []
       // When merging into a single file, perform link processing.
-      const linkSep = this.shouldMerge ? '#' :'./'
+      const linkStartSep = this.shouldMerge ? '#' :'./'
 
       // First, synchronously replace the internal images of the epub with those in./images/xxx
       content = fixLinkPath(content, (link, isText) => {
@@ -219,26 +218,26 @@ export class Converter {
           const { hash = '', url } = parseHref(link)
           
           if (link.startsWith("#")) {
-            return linkSep + this.shouldMerge ? id : clearFilename + link
+            return linkStartSep + this.shouldMerge ? id : clearFilename + link
           }
 
           link = this.resolveHTMLId(basename(url))
           // inline link
-          const inlineNav = findRealPath(link, this.epub?.structure) || { name: link, sectionId: this.getCearFilename(basename(link))}
+          const internalNav = findRealPath(link, this.epub?.structure) || { name: link, sectionId: this.getCearFilename(basename(link))}
           
-          const realOutpath = linkSep 
-          + this.getCearFilename(extname(inlineNav.name) ? inlineNav.name : (inlineNav.name + this.MD_FILE_EXT)) 
-          + `${hash ? '#' + hash : ''}`
+          const realOutpath = linkStartSep 
+            + this.getCearFilename(extname(internalNav.name) ? internalNav.name : (internalNav.name + this.MD_FILE_EXT)) 
+            + `${hash ? '#' + hash : ''}`
 
-          const toId =  this.epub!._resolveIdFromLink(join(dirname(filepath), decodeURIComponent('text/'+url)))
+          const toId =  this.epub!._resolveIdFromLink(join(dirname(filepath), decodeURIComponent(url)))
           links.push({
             url,
             hash,
-            id: inlineNav.sectionId,
+            id: internalNav.sectionId,
             toId
           })
 
-          return this.shouldMerge ? '#'+toId+(hash ? '#'+hash : '') :realOutpath
+          return this.shouldMerge ? linkStartSep+toId+(hash ? '#'+hash : '') :realOutpath
         } else {
           if (link.startsWith('http')){
             resLinks.push(link)
@@ -266,7 +265,6 @@ export class Converter {
       id,
       filepath,
       nav,
-      clearFilename:clearFilename.replace(new RegExp(this.MD_FILE_EXT + '$', 'g'), ''),
       content,
       links,
       outFilePath: outpath
@@ -327,17 +325,14 @@ export class Converter {
    */
   private async generateMergedFile() {
     // Save markdown content and sorting information
-    const mdContents: Array<{ num: number; section: string; content: string }> = []
-    let num = 1
-    let hasNav = false
-    let mergedContent = ''
+    let num = 1, mergedContent = ''
     // Process all chapters
     for (const s of this.structure) {
       let { id, filepath, outFilePath, content} = await this.getFileDataAsync(s)
       // console.log(id, filepath, nav)
       const { isHTML } = this.checkFileType(filepath)
       if(isHTML){
-        content = (`<a id="${id}"></a>\n`) + content
+        content = (`<a role="toc_link" id="${id}"></a>\n`) + content
       }
       if (extname(outFilePath) === '.md' && content.toString() !== '') {
         num++

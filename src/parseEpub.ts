@@ -310,8 +310,6 @@ export class Epub {
       this.structure = this._genStructure(toc)
     }
 
-    console.log(`toc:`, this._toc)
-
     this._spine = this.getSpine()
     this.info = parseMetadata(this._metadata)
     this.sections = this._resolveSections()
