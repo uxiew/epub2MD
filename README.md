@@ -2,7 +2,18 @@
 
 Even though the package is primarily intended for CLI is to convert EPUB to Markdown, but it can be used programmatically.
 
-主要的目标是转换 epub 到 markdown，当然了也可以当做 epub 的解析器库使用.
+主要的目标是转换 epub 为 多个 markdown 文件，或者合并为 单个 markdown 文件，可以处理其中的远程图片资源；当然了也可以当做 epub 的解析器库使用.
+
+## Main Functions
+
+- **Convert EPUB to Markdown**: Convert EPUB e-books to Multiple markdown files by default.
+- **Autocorrection**: Have option to Handle spaces and punctuation between Chinese and English as You Need.
+- **Merge Chapters**: Optionally merge all markdown files into a single Markdown file, Support link jumping.
+- **Image Processing**:
+  - Retain the original online image links.
+  - Download and localize online images (save remote images locally).
+- **View Information**: Easy to View the basic information, structure, and chapters of the EPUB.
+- **Extraction Function**: Dont need convert, just extract the useful contents of the EPUB file.
 
 ## Global Install for CLI
 
@@ -46,6 +57,8 @@ $ epub2md ../../fixtures/zhihu.epub --merge
 # Use --merge=filename.md
 $ epub2md ../../fixtures/zhihu.epub --merge="merged-book.md"
 
+# By default, DONT downloaded. Basically, the images in the epub are already included, so there is no need to download. 
+# However, some epub image links are remote, You will see some warning，maybe they need to be downloaded.
 # Download and localize online images (download remote images to local) (need node > 18.0)
 $ epub2md ../../fixtures/zhihu.epub --localize
 
@@ -102,17 +115,6 @@ The return value is an object which contains`structure`, `sections`, `info`(priv
 - `Section.prototype.toMarkdown`: convert to markdown object.
 
 - `Section.prototype.toHtmlObjects`: convert to html object. And a note about `src` and`href`, the`src` and`href` in raw html stay untouched, but the `toHtmlObjects` method resolves `src` to base64 string, and alters `href` so that they make sense in the parsed epub.And the parsed `href` is something like`#{sectionId},{hash}`.
-
-## 主要功能
-
-- **转换EPUB到Markdown**: 将EPUB电子书转换为Markdown格式
-- **自动校正**: 自动处理中英文之间的空格和标点符号
-- **合并章节**: 选择性地将所有章节合并为单个Markdown文件
-- **图片处理**:
-  - 保留原始在线图片链接
-  - 下载并本地化在线图片（将远程图片保存到本地）
-- **查看信息**: 查看EPUB的基本信息、结构和章节
-- **解压功能**: 解压EPUB文件内容
 
 ## How to contribute
 

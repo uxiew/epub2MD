@@ -235,8 +235,27 @@ export class Epub {
   }
 
   /**
-   *
-   * @param {String} id
+   * Resolves and parses sections of an EPUB document.
+   * 
+   * @param {string} [id] - Optional specific section ID to resolve. If not provided, resolves all sections.
+   * @returns {Section[]} An array of parsed document sections.
+   * ```example
+   * Section {
+   *  id: "chapter_104",
+   *  htmlString: "...",
+   *  htmlObjects: [
+   *    {
+   *      tag: "p",
+   *      content: "...",
+   *      attributes: {
+   *        class: "paragraph"
+   *      }
+   *    }
+   *  ]
+   *  ...
+   * }[]
+   * ```
+   * @private
    */
   private _resolveSections(id?: string) {
     let list: any[] = _.union(Object.keys(this._spine!))
@@ -290,6 +309,8 @@ export class Epub {
       this._toc = toc
       this.structure = this._genStructure(toc)
     }
+
+    console.log(`toc:`, this._toc)
 
     this._spine = this.getSpine()
     this.info = parseMetadata(this._metadata)

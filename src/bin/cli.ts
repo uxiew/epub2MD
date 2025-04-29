@@ -5,7 +5,7 @@ import process from "node:process"
 import fs from "node:fs"
 import parseEpub from '../parseEpub'
 import { Converter } from './convert'
-import { mergeMarkdowns } from './mergeMarkdowns'
+import { mergeMarkdowns } from './merge'
 // @ts-expect-error no typedef but ok
 import { json } from 'beauty-json'
 

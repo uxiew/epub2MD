@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
-import { mergeMarkdowns } from '../src/bin/mergeMarkdowns'
+import { mergeMarkdowns } from '../src/bin/merge'
 import { promisify } from 'node:util'
 
 const mkdtemp = promisify(fs.mkdtemp)

@@ -85,7 +85,7 @@ export class Converter {
 
 
   // 文件名处理
-  private getCleanFileName(fileName: string, ext = '') {
+  private getCearFilename(fileName: string, ext = '') {
     return sanitizeFileName(fileName).trim().replace(/\s/g, '_') + ext
   }
 
@@ -159,28 +159,33 @@ export class Converter {
   /**
    * 本地化 markdown 内容中的所有 http/https 图片链接
    */
-  private async localizeImagesInMarkdown(links: string[], outDir: string) {
-    // 匹配 ![alt](url) 形式的图片
-    const imgDir = join(outDir, this.IMAGE_DIR)
-    if (!existsSync(imgDir)) mkdirSync(imgDir)
+  private async localizeImages(links: string[], outDir: string) {
+    if (!existsSync(outDir)) mkdirSync(outDir)
     const downloadTasks: Promise<void>[] = []
     for (const link of links) {
       const imgName = basename(link.split('?')[0])
-      const localPath = join(imgDir, imgName)
+      const localPath = join(outDir, imgName)
       downloadTasks.push(this.downloadImage(link, localPath))
     }
     if (downloadTasks.length) await Promise.all(downloadTasks)
   }
 
-  private async _getFileDataAsync(structure: Structure) {
+  private async getFileDataAsync(structure: Structure, handleContent?: (content: string) => string) {
     let { id, filepath, outpath } = structure
-    let content: Buffer | string = ''
+    let content: Buffer | string = '',
+        clearFilename = '',
+        nav:TOCItem | undefined,
+        // content inline links
+        links: { url: string, hash: string, id: string, toId: string }[] = []
+
     const needAutoCorrect = this.cmd === Commands.autocorrect
+
     if (extname(outpath) === '.md') {
       const section = this.epub?.getSection(id)
       if (section) {
         content = section.toMarkdown()
       }
+
       function _matchNav(tocItems: TOCItem[] | undefined, id: string): TOCItem | undefined {
         if (Array.isArray(tocItems))
           for (let i = 0; i < tocItems.length; i++) {
@@ -197,24 +202,46 @@ export class Converter {
           }
         return undefined;
       }
-      const nav = _matchNav(this.epub?.structure, id);
-      const cleanFilename = this.getCleanFileName(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
-      outpath = join(dirname(outpath), cleanFilename)
-      const links: string[] = []
+
+      nav = _matchNav(this.epub?.structure, id);
+      clearFilename = this.getCearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+      // clear readable filename
+      outpath = join(dirname(outpath), clearFilename)
+
+      // resources links
+      const resLinks: string[] = []
+      // When merging into a single file, perform link processing.
+      const linkSep = this.shouldMerge ? '#' :'./'
 
       // First, synchronously replace the internal images of the epub with those in./images/xxx
       content = fixLinkPath(content, (link, isText) => {
         if (isText) {
-          const { hash, url } = parseHref(link)
+          const { hash = '', url } = parseHref(link)
+          
           if (link.startsWith("#")) {
-            return './' + cleanFilename + link
+            return linkSep + this.shouldMerge ? id : clearFilename + link
           }
+
           link = this.resolveHTMLId(basename(url))
-          const anav = findRealPath(link, this.epub?.structure) || { name: link }
-          return './' + this.getCleanFileName(extname(anav.name) ? anav.name : (anav.name + this.MD_FILE_EXT)) + `${hash ? '#' + hash : ''}`
+          // inline link
+          const inlineNav = findRealPath(link, this.epub?.structure) || { name: link, sectionId: this.getCearFilename(basename(link))}
+          
+          const realOutpath = linkSep 
+          + this.getCearFilename(extname(inlineNav.name) ? inlineNav.name : (inlineNav.name + this.MD_FILE_EXT)) 
+          + `${hash ? '#' + hash : ''}`
+
+          const toId =  this.epub!._resolveIdFromLink(join(dirname(filepath), decodeURIComponent('text/'+url)))
+          links.push({
+            url,
+            hash,
+            id: inlineNav.sectionId,
+            toId
+          })
+
+          return this.shouldMerge ? '#'+toId+(hash ? '#'+hash : '') :realOutpath
         } else {
           if (link.startsWith('http')){
-            links.push(link)
+            resLinks.push(link)
           }
           return './' + this.IMAGE_DIR + '/' + basename(link)
         }
@@ -223,19 +250,25 @@ export class Converter {
       // Asynchronously localize http/https images again
       if (this.localize) {
         try {
-          await this.localizeImagesInMarkdown(links, this.outDir)
+          this.localizeImages(resLinks, join(this.outDir, this.IMAGE_DIR))
         } catch (error) {
           console.log(chalk.red('Failed to localize the image!', error))
         }
-      } else if(links.length > 0){
+      } else if(resLinks.length > 0){
         console.log(chalk.yellow('Remote images are detected, you can set --localize to true to localize the remote images')) 
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
       content = this.epub!.resolve(filepath).asNodeBuffer()
     }
+
     return {
+      id,
+      filepath,
+      nav,
+      clearFilename:clearFilename.replace(new RegExp(this.MD_FILE_EXT + '$', 'g'), ''),
       content,
+      links,
       outFilePath: outpath
     }
   }
@@ -268,7 +301,7 @@ export class Converter {
     for (const s of this.structure) {
       const numLabel = ('0'.repeat(padding) + num).slice(-(padding + 1))
       // 使用异步版本
-      const { outFilePath, content } = await this._getFileDataAsync(s)
+      const { outFilePath, content } = await this.getFileDataAsync(s)
       let numberedOutFilePath: string | null = null
       if (content.toString() === '') continue;
       if (!filterPool[outFilePath] && basename(outFilePath).endsWith('.md')) {
@@ -293,43 +326,34 @@ export class Converter {
    * Directly generate a single merged Markdown file
    */
   private async generateMergedFile() {
-    // 保存 markdown 内容和排序信息
+    // Save markdown content and sorting information
     const mdContents: Array<{ num: number; section: string; content: string }> = []
     let num = 1
-    // 处理所有的章节
+    let hasNav = false
+    let mergedContent = ''
+    // Process all chapters
     for (const s of this.structure) {
-      const { outFilePath, content } = await this._getFileDataAsync(s)
-      // 只处理 markdown 文件
+      let { id, filepath, outFilePath, content} = await this.getFileDataAsync(s)
+      // console.log(id, filepath, nav)
+      const { isHTML } = this.checkFileType(filepath)
+      if(isHTML){
+        content = (`<a id="${id}"></a>\n`) + content
+      }
       if (extname(outFilePath) === '.md' && content.toString() !== '') {
-        // 提取章节名称（用于记录顺序）
-        const section = basename(outFilePath)
-        // 记录顺序和内容
-        mdContents.push({
-          num: num++,
-          section,
-          content: content.toString()
-        })
-        // 输出转换信息
-        console.log(chalk.green(`${mdContents.length}: [${section}]`))
+        num++
+        mergedContent += content.toString() + '\n\n---\n\n'
+        // Output conversion information
+        console.log(chalk.green(`${num}: [${basename(outFilePath)}]`))
       } else if (extname(outFilePath) !== '.md') {
-        // 对于非markdown文件（如图片），仍然需要输出
+        //For non-Markdown files (such as images), output is still required.
         writeFileSync(outFilePath, content, { overwrite: true })
       }
     }
-    // 按顺序合并内容
-    let mergedContent = ''
-    mdContents
-      .sort((a, b) => a.num - b.num)
-      .forEach((item, index) => {
-        if (index > 0) {
-          mergedContent += '\n\n---\n\n'
-        }
-        mergedContent += item.content
-      })
-    // 生成合并文件名
+
+    // Generate merged file name
     const finalOutputFile = this.outputFilename || `${basename(this.outDir)}-merged.md`
     const outputPath = join(this.outDir, finalOutputFile)
-    // 写入合并后的内容
+    // Write merged content
     writeFileSync(outputPath, mergedContent, { overwrite: true })
     return outputPath
   }
