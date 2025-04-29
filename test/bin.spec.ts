@@ -18,13 +18,14 @@ function safeExecSync(command: string, options?: { timeout?: number }): string {
   }
 }
 
+const cli = './lib/bin/cli.cjs'
+
 describe(`Global CLI runner`, () => {
 
     it('Run CLI good running', () => {
-        const cli = './lib/bin/cli.cjs'
         const res = safeExecSync(`node ${cli} ./fixtures/zhihu.epub`)
 
-        expect(res).toMatch('Merging successful!')
+        expect(res).toMatch('Conversion successful!')
     })
 
     it('Run CLI merge command', async () => {
@@ -37,7 +38,6 @@ describe(`Global CLI runner`, () => {
             await writeFile(path.join(tempDir, '02-test2.md'), '测试内容2')
             
             // 执行合并命令
-            const cli = './lib/bin/cli.cjs'
             const res = safeExecSync(`node ${cli} --merge="${tempDir}"`)
             
             // 验证结果
@@ -69,7 +69,6 @@ describe(`Global CLI runner`, () => {
             }
             
             // 执行命令（使用简化的命令格式）
-            const cli = './lib/bin/cli.cjs'
             const res = safeExecSync(`node ${cli} ${epubPath} --merge`)
             
             // 验证结果
@@ -104,7 +103,6 @@ describe(`Global CLI runner`, () => {
             }
             
             // 执行命令
-            const cli = './lib/bin/cli.cjs'
             const res = safeExecSync(`node ${cli} ${epubPath} --merge=${customOutputName}`)
             
             // 验证结果
@@ -137,7 +135,6 @@ describe(`Global CLI runner`, () => {
             }
             
             // 执行命令
-            const cli = './lib/bin/cli.cjs'
             const res = safeExecSync(`node ${cli} ${epubPath} --merge`)
             
             // 验证结果
