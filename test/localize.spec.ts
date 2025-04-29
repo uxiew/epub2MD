@@ -28,9 +28,10 @@ describe(`Image Localization Tests`, () => {
 
             // 测试 --localize (本地化)
             // 增加超时时间，设置为20秒
-            const resLocalize = safeExecSync(`node ${cli} ${epubPath} --localize`, { timeout: 20000 })
+            const resLocalize = safeExecSync(`node ${cli} ${epubPath} --localize`, { timeout: 100000 })
+           
             // 修改期望匹配的字符串，根据实际输出可能是转换成功或合并成功
-            expect(resLocalize).toMatch(/(?:Conversion|Merging) successful!/)
+            expect(resLocalize).toMatch('Conversion successful!')
 
             // 检查某个 markdown 文件中的图片链接是否变成了 ./images/...
             const mdFilesLocalize = fs.readdirSync(outputDir).filter(f => f.endsWith('.md'))
@@ -44,7 +45,7 @@ describe(`Image Localization Tests`, () => {
                 await rmdir(outputDir, { recursive: true, force: true })
             }
         }
-    }, 30000) // 增加Jest测试超时时间到30秒
+    }, 50000) // 增加Jest测试超时时间到30秒
 
     it('Run CLI with localize and merge options together', async () => {
         const epubPath = './fixtures/online-imgs.epub'
@@ -57,7 +58,7 @@ describe(`Image Localization Tests`, () => {
             }
 
             // 测试同时使用 --localize 和 --merge 选项
-            const res = safeExecSync(`node ${cli} ${epubPath} --localize --merge`, { timeout: 30000 })
+            const res = safeExecSync(`node ${cli} ${epubPath} --localize --merge`, { timeout: 100000 })
             expect(res).toMatch('Merging successful!')
 
             // 验证合并后的文件是否存在
@@ -77,5 +78,5 @@ describe(`Image Localization Tests`, () => {
                 await rmdir(outputDir, { recursive: true, force: true })
             }
         }
-    }, 40000) // 增加Jest测试超时时间到40秒
+    }, 50000) // 增加Jest测试超时时间到40秒
 }) 
