@@ -40,15 +40,23 @@ interface RunOptions {
 export class Converter {
   epub: Epub | undefined // epub parser object
   epubFilePath: string // current epub 's path
-  MD_FILE_EXT: string = '.md' as const // out file extname
+
   outDir: string  // epub 's original directory to save markdown files
+  outputFilename?: string // The merged file name
+
   structure: Structure[] = [] // epub dir structure
-
-  outputFilename?: string // 合并后的文件名
+  
   cmd: CommandType = 'convert' // current using command flag
-  shouldMerge: boolean = false // 是否直接生成合并文件
-  localize: boolean = false // 是否保留原始的线上图片链接
+  shouldMerge: boolean = false// Whether to directly generate the merged file
+  localize: boolean = false // Whether to retain the original online image link
 
+  IMAGE_DIR: string = 'images' // The directory to save images
+  MD_FILE_EXT: string = '.md' as const // out file extname
+
+  /**
+   * Constructor
+   * @param epubPath - The path to the EPUB file
+   */
   constructor(epubPath: string) {
     this.epubFilePath = epubPath
     this.outDir = dirname(epubPath)
@@ -92,7 +100,7 @@ export class Converter {
     const fileName = basename(filepath)
     return join(
       this.outDir,
-      isImage ? 'images' : '',
+      isImage ? this.IMAGE_DIR : '',
       isHTML ? this.resolveHTMLId(fileName) + this.MD_FILE_EXT : fileName,
     )
   }
@@ -131,12 +139,12 @@ export class Converter {
   }
 
   /**
-   * 下载远程图片到本地 images 目录
+   * Download remote images to the local images directory
    */
   private async downloadImage(url: string, dest: string): Promise<void> {
     if (existsSync(dest)) return // 已存在则跳过
     
-    // 使用原生 fetch 替代 node-fetch
+    // fetch  > node 18
     const res = await fetch(url)
     if (!res.ok) throw new Error(`Failed to download image: ${url}`)
     
@@ -151,21 +159,17 @@ export class Converter {
   /**
    * 本地化 markdown 内容中的所有 http/https 图片链接
    */
-  private async localizeImagesInMarkdown(md: string, outDir: string): Promise<string> {
+  private async localizeImagesInMarkdown(links: string[], outDir: string) {
     // 匹配 ![alt](url) 形式的图片
-    const imgDir = join(outDir, 'images')
+    const imgDir = join(outDir, this.IMAGE_DIR)
     if (!existsSync(imgDir)) mkdirSync(imgDir)
-    const imgRegex = /!\[[^\]]*\]\((https?:\/\/[^)]+)\)/g
     const downloadTasks: Promise<void>[] = []
-    const replaced = md.replace(imgRegex, (match, url) => {
-      const imgName = basename(url.split('?')[0])
-      const localPath = './images/' + imgName
-      const absPath = join(imgDir, imgName)
-      downloadTasks.push(this.downloadImage(url, absPath))
-      return match.replace(url, localPath)
-    })
+    for (const link of links) {
+      const imgName = basename(link.split('?')[0])
+      const localPath = join(imgDir, imgName)
+      downloadTasks.push(this.downloadImage(link, localPath))
+    }
     if (downloadTasks.length) await Promise.all(downloadTasks)
-    return replaced
   }
 
   private async _getFileDataAsync(structure: Structure) {
@@ -196,7 +200,9 @@ export class Converter {
       const nav = _matchNav(this.epub?.structure, id);
       const cleanFilename = this.getCleanFileName(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
       outpath = join(dirname(outpath), cleanFilename)
-      // 先同步替换 epub 内部图片为 ./images/xxx
+      const links: string[] = []
+
+      // First, synchronously replace the internal images of the epub with those in./images/xxx
       content = fixLinkPath(content, (link, isText) => {
         if (isText) {
           const { hash, url } = parseHref(link)
@@ -207,20 +213,22 @@ export class Converter {
           const anav = findRealPath(link, this.epub?.structure) || { name: link }
           return './' + this.getCleanFileName(extname(anav.name) ? anav.name : (anav.name + this.MD_FILE_EXT)) + `${hash ? '#' + hash : ''}`
         } else {
-          if (this.localize) {
-            if (link.startsWith('http://') || link.startsWith('https://')) {
-              // 先临时保留，后续批量下载并替换
-              return link
-            }
-            return './images/' + basename(link)
-          } else {
-            return link
+          if (link.startsWith('http')){
+            links.push(link)
           }
+          return './' + this.IMAGE_DIR + '/' + basename(link)
         }
       })
-      // 再异步本地化 http/https 图片
+      
+      // Asynchronously localize http/https images again
       if (this.localize) {
-        content = await this.localizeImagesInMarkdown(content, this.outDir)
+        try {
+          await this.localizeImagesInMarkdown(links, this.outDir)
+        } catch (error) {
+          console.log(chalk.red('Failed to localize the image!', error))
+        }
+      } else if(links.length > 0){
+        console.log(chalk.yellow('Remote images are detected, you can set --localize to true to localize the remote images')) 
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
@@ -269,7 +277,7 @@ export class Converter {
           ...parsedPath,
           base: `${numLabel}-${parsedPath.base}`
         })
-        console.log(chalk.yellow(`${num++}: [${basename(numberedOutFilePath)}]`))
+        console.log(chalk.green(`${num++}: [${basename(numberedOutFilePath)}]`))
       }
       filterPool[outFilePath] = true
       writeFileSync(
@@ -302,7 +310,7 @@ export class Converter {
           content: content.toString()
         })
         // 输出转换信息
-        console.log(chalk.yellow(`${mdContents.length}: [${section}]`))
+        console.log(chalk.green(`${mdContents.length}: [${section}]`))
       } else if (extname(outFilePath) !== '.md') {
         // 对于非markdown文件（如图片），仍然需要输出
         writeFileSync(outFilePath, content, { overwrite: true })
