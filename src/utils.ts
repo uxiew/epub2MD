@@ -28,7 +28,7 @@ const cacheNavPool: Record<string, TOCItem> = {
 /**
  * Fix the generated file name according to the title corresponding to toc
  */
-export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | undefined {
+export function matchRealPath(filePath: string, navs?: TOCItem[]): TOCItem | undefined {
   if (!navs) return;
   const navChildren: TOCItem[] = [];
 
@@ -44,10 +44,10 @@ export function findRealPath(filePath: string, navs?: TOCItem[]): TOCItem | unde
     if (children) navChildren.push(...children)
   }
   if (navChildren.length > 0) {
-    return findRealPath(filePath, navChildren)
+    return matchRealPath(filePath, navChildren)
   }
 }
-// return findRealPath(children, filePath)
+// return matchRealPath(children, filePath)
 
 
 // 函数用于清理文件名，将非法字符替换为下划线

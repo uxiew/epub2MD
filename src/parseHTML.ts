@@ -114,4 +114,4 @@ const parseHTML = (HTMLString: string, config: ParseHTMLConfig = {}) => {
   }) as HtmlNodeObject[]
 }
 
-export default parseHTML as (HTMLString: string, config?: ParseHTMLConfig) => HtmlNodeObject[]
+export default parseHTML

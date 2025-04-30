@@ -1,18 +1,20 @@
 import { basename, dirname, extname, format, join, parse } from 'node:path'
-import { existsSync, mkdirSync } from 'node:fs'
-import logger from '../logger'
+import { existsSync, mkdirSync, readv } from 'node:fs'
+import logger, { name } from '../logger'
 import _ from 'lodash'
 import { writeFileSync } from 'write-file-safe'
 
 import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
-import { convertHTML, fixLinkPath } from './helper'
-import { findRealPath, sanitizeFileName } from '../utils'
+import { checkFileType, convertHTML, fixLinkPath, getCearFilename, resolveHTMLId } from './helper'
+import { matchRealPath } from '../utils'
 import parseHref from '../parseLink'
 import { Commands, type CommandType } from './cli'
 
 interface Structure {
   id: string
+  type: 'md' | 'img' | ''
+  orderLabel: string
   outpath: string
   filepath: string
 }
@@ -31,6 +33,7 @@ export class Converter {
   outDir: string  // epub 's original directory to save markdown files
   mergedFilename?: string // The merged file name
 
+  // include images/html/css/js in the epub file
   structure: Structure[] = [] // epub dir structure
 
   cmd: CommandType = 'convert' // current using command flag
@@ -50,46 +53,62 @@ export class Converter {
     if (!existsSync(this.outDir)) mkdirSync(this.outDir)
   }
 
-  private checkFileType(filepath: string) {
-    let isImage,
-      isCSS,
-      isHTML = false
-    const ext = extname(filepath)
-    if (',.jpg,.jpeg,.png,.gif,.webp,.svg'.includes(ext)) isImage = true
-    if (',.css'.includes(ext)) isCSS = true
-    if ('.htm,.html,.xhtml'.includes(ext)) isHTML = true
 
-    return {
-      isImage,
-      isCSS,
-      isHTML,
+  private clearOutpath({ id, outpath }: Structure) {
+    /*get readable name from toc items*/
+    function _matchNav(id: Structure['id'], tocItems?: TOCItem[]): TOCItem | undefined {
+      if (Array.isArray(tocItems))
+        for (let i = 0; i < tocItems.length; i++) {
+          const item = tocItems[i];
+          if (item.sectionId === id) {
+            return item;
+          }
+          if (item.children) {
+            const childMatch = _matchNav(id, item.children);
+            if (childMatch) {
+              return childMatch;
+            }
+          }
+        }
+      return undefined;
     }
-  }
 
-  private resolveHTMLId(fileName: string) {
-    return fileName.replace(/\.x?html?(?:.*)/, '')
-  }
-
-
-  // 文件名处理
-  private getCearFilename(fileName: string, ext = '') {
-    return sanitizeFileName(fileName).trim().replace(/\s/g, '_') + ext
+    const nav = _matchNav(id, this.epub?.structure);
+    const fileName = getCearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+    // clear readable filename
+    return {
+      fileName,
+      outDir: dirname(outpath),
+    }
   }
 
   /**
   * Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
   * @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
   */
-  private makePath(filepath: string) {
-    const { isImage, isHTML } = this.checkFileType(filepath)
+  parseFileInfo(filepath: string): {
+    type: Structure['type']
+    name: string
+    path: string
+  } {
+    const { isImage, isHTML } = checkFileType(filepath)
     // other files skipped
-    if (!isImage && !isHTML) return ''
-    const fileName = basename(filepath)
-    return join(
+    const name = basename(filepath)
+    const path = (!isImage && !isHTML) ? join(
+      this.outDir,
+      'static',
+      isHTML ? resolveHTMLId(name) + this.MD_FILE_EXT : name,
+    ) : join(
       this.outDir,
       isImage ? this.IMAGE_DIR : '',
-      isHTML ? this.resolveHTMLId(fileName) + this.MD_FILE_EXT : fileName,
+      isHTML ? resolveHTMLId(name) + this.MD_FILE_EXT : name,
     )
+    return {
+      // html => md
+      type: isHTML ? 'md' : isImage ? 'img' : '',
+      name,
+      path
+    }
   }
 
   /**
@@ -107,21 +126,35 @@ export class Converter {
       convertToMarkdown: convertHTML
     })
     this.outDir = this.epubFilePath.replace('.epub', '')
+
+    // for numbered output,and file's internal link
+    let num = 0
+    const padding = Math.floor(
+      Math.log10(this.epub?.sections?.length ?? 0)
+    );
     for (const { href: filepath, id } of this.epub.getManifest()) {
-      let outpath: string
+      let outpath = '', type: Structure['type'] = ''
       // simply unzip
       if (unzip) outpath = join(this.outDir, filepath)
       else {
         // remove those useless file, keep other files,like img/css/js etc.
         if (filepath.endsWith('ncx') || id === 'titlepage') continue
-        outpath = this.makePath(filepath)
+        const file = this.parseFileInfo(filepath)
+        outpath = file.path
+        type = file.type
       }
-      if (outpath !== '')
+      if (type !== '') {
         this.structure.push({
+          // current only label markdown file
+          orderLabel: type === 'md'
+            ? (num++, ('0'.repeat(padding) + num).slice(-(padding + 1))) : '',
           id,
+          type,
           outpath,
           filepath
         })
+
+      }
     }
   }
 
@@ -158,42 +191,23 @@ export class Converter {
   }
 
   private async getFileDataAsync(structure: Structure, handleContent?: (content: string) => string) {
-    let { id, filepath, outpath } = structure
+    let { id, type, filepath, outpath, orderLabel } = structure
     let content: Buffer | string = '',
-      nav: TOCItem | undefined,
+      // nav: TOCItem | undefined,
       // current content's internal links
       links: { url: string, hash: string, id: string, toId: string }[] = []
 
     const needAutoCorrect = this.cmd === Commands.autocorrect
 
-    if (extname(outpath) === '.md') {
+    if (type === 'md') {
       const section = this.epub?.getSection(id)
       if (section) {
         content = section.toMarkdown()
       }
 
-      /*get readable name from toc items*/
-      function _matchNav(tocItems: TOCItem[] | undefined, id: string): TOCItem | undefined {
-        if (Array.isArray(tocItems))
-          for (let i = 0; i < tocItems.length; i++) {
-            const item = tocItems[i];
-            if (item.sectionId === id) {
-              return item;
-            }
-            if (item.children) {
-              const childMatch = _matchNav(item.children, id);
-              if (childMatch) {
-                return childMatch;
-              }
-            }
-          }
-        return undefined;
-      }
-
-      nav = _matchNav(this.epub?.structure, id);
-      const clearFilename = this.getCearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
       // clear readable filename
-      outpath = join(dirname(outpath), clearFilename)
+      const { outDir, fileName } = this.clearOutpath(structure)
+      outpath = join(outDir, orderLabel + '-' + fileName)
 
       // resources links
       const resLinks: string[] = []
@@ -206,23 +220,23 @@ export class Converter {
           const { hash = '', url } = parseHref(link, true)
 
           if (link.startsWith("#")) {
-            return linkStartSep + this.shouldMerge ? id : clearFilename + link
+            return linkStartSep + this.shouldMerge ? id : fileName + link
           }
 
-          link = this.resolveHTMLId(basename(url))
+          link = resolveHTMLId(basename(url))
 
-          const internalNav = findRealPath(link, this.epub?.structure)
-            || { name: link, sectionId: this.getCearFilename(basename(link)) }
+          const internalNav = matchRealPath(link, this.epub?.structure)
+            || { name: link, sectionId: getCearFilename(basename(link)) }
 
           // fix link's path
           const realOutpath = linkStartSep
-            + this.getCearFilename(extname(internalNav.name)
+            + getCearFilename(extname(internalNav.name)
               ? internalNav.name : (internalNav.name + this.MD_FILE_EXT))
             + `${hash ? '#' + hash : ''}`
 
           // content's id
           const toId = this.epub!._resolveIdFromLink(
-            join(dirname(filepath), decodeURIComponent(url))
+            join(dirname(filepath), url)
           )
 
           links.push({
@@ -258,11 +272,11 @@ export class Converter {
 
     return {
       id,
+      type,
       filepath,
-      nav,
       content,
       links,
-      outFilePath: outpath
+      outFilePath: outpath,
     }
   }
 
@@ -288,34 +302,24 @@ export class Converter {
       return this.generateMergedFile()
     }
 
+    // Process all chapters
     let num = 1
-    const padding = Math.floor(Math.log10(this.structure.length))
-
     for (const s of this.structure) {
-      const numLabel = ('0'.repeat(padding) + num).slice(-(padding + 1))
-
       // 使用异步版本
-      const { outFilePath, content } = await this.getFileDataAsync(s)
-      let numberedOutFilePath: string | null = null
+      const { type, outFilePath, content } = await this.getFileDataAsync(s)
       if (content.toString() === '') continue;
 
-      if ((/\.md$/).test(outFilePath)) {
-        const parsedPath = parse(outFilePath)
-        numberedOutFilePath = format({
-          ...parsedPath,
-          base: `${numLabel}-${parsedPath.base}`
-        })
-        logger.success(`${num++}: [${basename(numberedOutFilePath)}]`)
+      if (type === 'md') {
+        logger.success(`${num++}: [${basename(outFilePath)}]`)
       }
 
       writeFileSync(
-        numberedOutFilePath ?? outFilePath,
+        outFilePath,
         content,
         { overwrite: true }
       )
     }
 
-    // 内部链接的文件名需要等全部转换完成后再重命名
     return this.outDir
   }
 
@@ -328,8 +332,7 @@ export class Converter {
     // Process all chapters
     for (const s of this.structure) {
       let { id, filepath, outFilePath, content } = await this.getFileDataAsync(s)
-      // console.log(id, filepath, nav)
-      const { isHTML } = this.checkFileType(filepath)
+      const { isHTML } = checkFileType(filepath)
       if (isHTML) {
         content = (`<a role="toc_link" id="${id}"></a>\n`) + content
       }

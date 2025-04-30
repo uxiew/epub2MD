@@ -1,4 +1,6 @@
+import { extname } from 'node:path';
 import convert from '../converter';
+import { sanitizeFileName } from '../utils';
 
 /**
  * Matches the image syntax in Markdown
@@ -18,7 +20,7 @@ function handleImagePath(markdownContent: string, replaceFn: (imgUrl: string) =>
 
 /**
  * Matches the inline link syntax in Markdown
- * 
+ *
  */
 function handleFileLinkPath(markdownContent: string, replaceFn: (url: string, text: string) => string) {
   const inlineLinkPattern = /\[([^\]]*)]\(([^)]+)\)/g;
@@ -39,21 +41,48 @@ export function fixLinkPath(result: string, replaceFn: (url: string, isText?: bo
   if (!result || typeof result !== 'string') {
     return '';
   }
-  
+
   // 首先处理图片标签 ![text](url)
   result = result.replace(/!\[(.*?)\]\(([^)]+)\)/g, (match, alt, url) => {
     const newUrl = replaceFn(url, false);
     return `![${alt}](${newUrl})`;
   });
-  
+
   // 然后处理普通链接，使用否定前瞻确保不匹配图片链接
   result = result.replace(/(?<!!)\[(.*?)\]\(([^)]+)\)/g, (match, text, url) => {
     const newUrl = replaceFn(url, true);
     return `[${text}](${newUrl})`;
   });
-  
+
   return result;
 }
+
+export function checkFileType(filepath: string) {
+  let isImage,
+    isCSS,
+    isHTML = false
+  const ext = extname(filepath)
+  if (',.jpg,.jpeg,.png,.gif,.webp,.svg'.includes(ext)) isImage = true
+  if (',.css'.includes(ext)) isCSS = true
+  if ('.htm,.html,.xhtml'.includes(ext)) isHTML = true
+
+  return {
+    isImage,
+    isCSS,
+    isHTML,
+  }
+}
+
+export function resolveHTMLId(fileName: string) {
+  return fileName.replace(/\.x?html?(?:.*)/, '')
+}
+
+
+// 文件名处理
+export function getCearFilename(fileName: string, ext = '') {
+  return sanitizeFileName(fileName).trim().replace(/\s/g, '_') + ext
+}
+
 
 // clean some redundant html string
 export function convertHTML(prunedHtml: string) {

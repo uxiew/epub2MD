@@ -68,7 +68,9 @@ export class Epub {
   private _root?: string
   private _content?: GeneralObject
   private _manifest?: Manifest[]
+  // only for html/xhtml, not include images/css/js
   private _spine?: Record<string, number> // array of ids defined in manifest
+
   private _toc?: GeneralObject
   private _metadata?: GeneralObject
   private _options: ParserOptions = defaultOptions
@@ -202,6 +204,7 @@ export class Epub {
       // link to section
       const path = _.get(navPoint, ['content', '@src'], '')
       const name = _.get(navPoint, ['navLabel', 'text'])
+
       const playOrder = _.get(navPoint, ['@playOrder']) as string
       const { hash } = parseLink(path)
 
