@@ -5,9 +5,7 @@ import fs from "node:fs"
 import parseEpub from '../parseEpub'
 import { Converter } from './convert'
 import { mergeMarkdowns } from './merge'
-// @ts-expect-error no typedef but ok
-import { json } from 'beauty-json'
-import pc from 'picocolors'
+import logger from '../logger'
 
 const name = "epub2md"
 
@@ -80,7 +78,7 @@ if (!hasRun && flags[Commands.unzip]) {
     (unprocessedArgs.length > 0 ? unprocessedArgs[0] : null);
 
   if (epubPath) {
-    console.log(pc.blue(`[${name}]: unzipping...`));
+    logger.info('unzipping...');
 
     (new Converter(epubPath))
       .run({
@@ -90,15 +88,15 @@ if (!hasRun && flags[Commands.unzip]) {
         localize: false,
       })
       .then((outDir) => {
-        console.log(pc.green(`[${name}]: Unzip successful! output: ${outDir}`));
+        logger.info(`Unzip successful! output: ${outDir}`);
       })
       .catch((error) => {
-        console.log(pc.red(error))
+        logger.error(error)
       })
 
     hasRun = true
   } else {
-    console.log(pc.red(`[${name}]: No valid epub file path provided for unzip command`))
+    logger.error('No valid epub file path provided for unzip command')
   }
 }
 
@@ -108,15 +106,15 @@ if (!hasRun) {
   if (flags.merge && typeof flags.merge === 'string' && flags.merge !== '') {
     // Check if it's a directory path
     if (fs.existsSync(flags.merge) && fs.statSync(flags.merge).isDirectory()) {
-      console.log(pc.blue(`[${name}]: merging markdown files in directory...`))
+      logger.info('merging markdown files in directory...')
 
       // Call mergeMarkdowns function to merge markdown files in the directory
       mergeMarkdowns(flags.merge)
         .then((outputPath) => {
-          console.log(pc.green(`[${name}]: Merging successful! Output file: ${outputPath}`))
+          logger.info(`Merging successful! Output file: ${outputPath}`)
         })
         .catch((error) => {
-          console.log(chalk.red(`[${name}]: Merging failed: ${error}`))
+          logger.info(`Merging failed: ${error}`)
         })
 
       hasRun = true
@@ -158,16 +156,16 @@ function run(cmd: CommandType) {
     const epubPath = typeof flags[cmd] === 'string' ? flags[cmd] : null;
 
     if (!epubPath) {
-      console.log(pc.red(`[${name}]: No valid epub file path provided`))
+      logger.error('No valid epub file path provided')
       return
     }
 
     // ====== convert to markdown ====
-    console.log(pc.blue(
-      `[${name}]: converting${cmd === Commands.autocorrect ? ' with autocorrect' : ''
+    logger.info(
+      `converting${cmd === Commands.autocorrect ? ' with autocorrect' : ''
       }${flags[Commands.merge] ? ' and merging' : ''
       }...`
-    ));
+    );
 
     // Check if direct merge is needed
     const shouldMerge = flags.merge === true || (typeof flags.merge === 'string' && flags.merge !== '');
@@ -191,13 +189,13 @@ function run(cmd: CommandType) {
       .then((outDir) => {
         // If direct merge, return value is the merged file path
         if (shouldMerge) {
-          console.log(pc.green(`[${name}]: Merging successful! Output file: ${outDir}`));
+          logger.info(`Merging successful! Output file: ${outDir}`);
         } else {
-          console.log(pc.green(`[${name}]: Conversion successful! output: ${outDir}`));
+          logger.info(`Conversion successful! output: ${outDir}`);
         }
       })
       .catch((error) => {
-        console.log(pc.red(error))
+        logger.error(error)
       })
 
     return
@@ -208,13 +206,13 @@ function run(cmd: CommandType) {
   if (typeof cmdPath === 'string') {
     parseEpub(cmdPath)
       .then((res) => {
-        console.log(pc.green(`[${name}]: This book ${cmd}:`))
-        json.log(res[cmd as 'info' | 'structure' | 'sections'])
+        logger.success(`This book ${cmd}:`)
+        logger.json(res[cmd as 'info' | 'structure' | 'sections'])
       })
       .catch((error) => {
-        console.log(pc.red(error))
+        logger.error(error)
       })
   } else {
-    console.log(pc.red(`[${name}]: Path must be a string, got ${typeof cmdPath}`))
+    logger.error(`Path must be a string, got ${typeof cmdPath}`)
   }
 }

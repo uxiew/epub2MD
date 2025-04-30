@@ -198,7 +198,6 @@ export class Epub {
 
     // may be GeneralObject or GeneralObject[] or []
     const rootNavPoints = _.get(tocObj, ['ncx', 'navMap', 'navPoint'], [])
-
     const parseNavPoint = (navPoint: GeneralObject) => {
       // link to section
       const path = _.get(navPoint, ['content', '@src'], '')
@@ -226,9 +225,8 @@ export class Epub {
 
     const parseNavPoints = (navPoints: GeneralObject[]) => {
       // check if it's array or not
-      return (_.isArray(navPoints) ? navPoints : [navPoints]).map((point) => {
-        return parseNavPoint(point)
-      })
+      return (Array.isArray(navPoints) ? navPoints : [navPoints])
+        .map((point) => parseNavPoint(point))
     }
 
     return parseNavPoints(rootNavPoints)
@@ -236,7 +234,7 @@ export class Epub {
 
   /**
    * Resolves and parses sections of an EPUB document.
-   * 
+   *
    * @param {string} [id] - Optional specific section ID to resolve. If not provided, resolves all sections.
    * @returns {Section[]} An array of parsed document sections.
    * ```example
@@ -274,8 +272,8 @@ export class Epub {
         idResolver: this._resolveIdFromLink.bind(this),
         expand: this._options.expand,
       })
-      
-      if(this._options.convertToMarkdown) {
+
+      if (this._options.convertToMarkdown) {
         section.register(this._options.convertToMarkdown)
       }
       return section

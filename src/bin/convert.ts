@@ -1,6 +1,6 @@
 import { basename, dirname, extname, format, join, parse } from 'node:path'
 import { existsSync, mkdirSync } from 'node:fs'
-import pc from 'picocolors'
+import logger from '../logger'
 import _ from 'lodash'
 import { writeFileSync } from 'write-file-safe'
 
@@ -32,7 +32,7 @@ export class Converter {
   mergedFilename?: string // The merged file name
 
   structure: Structure[] = [] // epub dir structure
-  
+
   cmd: CommandType = 'convert' // current using command flag
   shouldMerge: boolean = false// Whether to directly generate the merged file
   localize: boolean = false // Whether to retain the original online image link
@@ -94,12 +94,12 @@ export class Converter {
 
   /**
    * Retrieves and processes the manifest of an EPUB file.
-   * 
+   *
    * @param unzip - Optional flag to indicate whether to simply unzip the file contents
    * @returns Populates the structure array with manifest items, either unzipped or converted
-   * 
+   *
    * This method parses the EPUB file, extracts its manifest, and creates a structure
-   * representing the file contents. When unzip is false, it skips certain files like 
+   * representing the file contents. When unzip is false, it skips certain files like
    * the NCX file and title page, and generates appropriate output paths for other files.
    */
   async getManifest(unzip?: boolean) {
@@ -112,7 +112,7 @@ export class Converter {
       // simply unzip
       if (unzip) outpath = join(this.outDir, filepath)
       else {
-        // remove this two useless file
+        // remove those useless file, keep other files,like img/css/js etc.
         if (filepath.endsWith('ncx') || id === 'titlepage') continue
         outpath = this.makePath(filepath)
       }
@@ -130,15 +130,15 @@ export class Converter {
    */
   private async downloadImage(url: string, dest: string): Promise<void> {
     if (existsSync(dest)) return // 已存在则跳过
-    
+
     // fetch  > node 18
     const res = await fetch(url)
     if (!res.ok) throw new Error(`Failed to download image: ${url}`)
-    
+
     // 获取响应的二进制数据
     const arrayBuffer = await res.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-    
+
     // 写入文件
     writeFileSync(dest, buffer, { overwrite: true })
   }
@@ -160,9 +160,9 @@ export class Converter {
   private async getFileDataAsync(structure: Structure, handleContent?: (content: string) => string) {
     let { id, filepath, outpath } = structure
     let content: Buffer | string = '',
-        nav:TOCItem | undefined,
-        // content inline links
-        links: { url: string, hash: string, id: string, toId: string }[] = []
+      nav: TOCItem | undefined,
+      // current content's internal links
+      links: { url: string, hash: string, id: string, toId: string }[] = []
 
     const needAutoCorrect = this.cmd === Commands.autocorrect
 
@@ -172,6 +172,7 @@ export class Converter {
         content = section.toMarkdown()
       }
 
+      /*get readable name from toc items*/
       function _matchNav(tocItems: TOCItem[] | undefined, id: string): TOCItem | undefined {
         if (Array.isArray(tocItems))
           for (let i = 0; i < tocItems.length; i++) {
@@ -197,26 +198,33 @@ export class Converter {
       // resources links
       const resLinks: string[] = []
       // When merging into a single file, perform link processing.
-      const linkStartSep = this.shouldMerge ? '#' :'./'
+      const linkStartSep = this.shouldMerge ? '#' : './'
 
       // First, synchronously replace the internal images of the epub with those in./images/xxx
       content = fixLinkPath(content, (link, isText) => {
         if (isText) {
-          const { hash = '', url } = parseHref(link)
-          
+          const { hash = '', url } = parseHref(link, true)
+
           if (link.startsWith("#")) {
             return linkStartSep + this.shouldMerge ? id : clearFilename + link
           }
 
           link = this.resolveHTMLId(basename(url))
-          // inline link
-          const internalNav = findRealPath(link, this.epub?.structure) || { name: link, sectionId: this.getCearFilename(basename(link))}
-          
-          const realOutpath = linkStartSep 
-            + this.getCearFilename(extname(internalNav.name) ? internalNav.name : (internalNav.name + this.MD_FILE_EXT)) 
+
+          const internalNav = findRealPath(link, this.epub?.structure)
+            || { name: link, sectionId: this.getCearFilename(basename(link)) }
+
+          // fix link's path
+          const realOutpath = linkStartSep
+            + this.getCearFilename(extname(internalNav.name)
+              ? internalNav.name : (internalNav.name + this.MD_FILE_EXT))
             + `${hash ? '#' + hash : ''}`
 
-          const toId =  this.epub!._resolveIdFromLink(join(dirname(filepath), decodeURIComponent(url)))
+          // content's id
+          const toId = this.epub!._resolveIdFromLink(
+            join(dirname(filepath), decodeURIComponent(url))
+          )
+
           links.push({
             url,
             hash,
@@ -224,24 +232,24 @@ export class Converter {
             toId
           })
 
-          return this.shouldMerge ? linkStartSep+toId+(hash ? '#'+hash : '') :realOutpath
+          return this.shouldMerge ? linkStartSep + toId + (hash ? '#' + hash : '') : realOutpath
         } else {
-          if (link.startsWith('http')){
+          if (link.startsWith('http')) {
             resLinks.push(link)
           }
           return './' + this.IMAGE_DIR + '/' + basename(link)
         }
       })
-      
+
       // Asynchronously localize http/https images again
       if (this.localize) {
         try {
           this.localizeImages(resLinks, join(this.outDir, this.IMAGE_DIR))
         } catch (error) {
-          console.log(pc.red('Failed to localize the image!'), error)
+          logger.error('Failed to localize the image!', error)
         }
-      } else if(resLinks.length > 0){
-        console.log(pc.yellow('Remote images are detected, you can set --localize to true to localize the remote images')) 
+      } else if (resLinks.length > 0) {
+        logger.warn('Remote images are detected, you can set --localize to true to localize the remote images')
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
@@ -260,7 +268,7 @@ export class Converter {
 
   /**
    * Runs the conversion process for an EPUB file.
-   * 
+   *
    * @param RunOptions - Configuration options or boolean (backward compatibility)
    * @returns A promise resolving to the output directory or the result of generating a merged file
    */
@@ -275,14 +283,14 @@ export class Converter {
     }
 
     await this.getManifest(isUnzipOnly)
-    
+
     if (this.shouldMerge && !isUnzipOnly) {
       return this.generateMergedFile()
     }
-    
+
     let num = 1
     const padding = Math.floor(Math.log10(this.structure.length))
-    
+
     for (const s of this.structure) {
       const numLabel = ('0'.repeat(padding) + num).slice(-(padding + 1))
 
@@ -297,7 +305,7 @@ export class Converter {
           ...parsedPath,
           base: `${numLabel}-${parsedPath.base}`
         })
-        console.log(pc.green(`${num++}: [${basename(numberedOutFilePath)}]`))
+        logger.success(`${num++}: [${basename(numberedOutFilePath)}]`)
       }
 
       writeFileSync(
@@ -310,7 +318,7 @@ export class Converter {
     // 内部链接的文件名需要等全部转换完成后再重命名
     return this.outDir
   }
-  
+
   /**
    * Directly generate a single merged Markdown file
    */
@@ -319,17 +327,17 @@ export class Converter {
     let num = 1, mergedContent = ''
     // Process all chapters
     for (const s of this.structure) {
-      let { id, filepath, outFilePath, content} = await this.getFileDataAsync(s)
+      let { id, filepath, outFilePath, content } = await this.getFileDataAsync(s)
       // console.log(id, filepath, nav)
       const { isHTML } = this.checkFileType(filepath)
-      if(isHTML){
+      if (isHTML) {
         content = (`<a role="toc_link" id="${id}"></a>\n`) + content
       }
       if (extname(outFilePath) === '.md' && content.toString() !== '') {
         num++
         mergedContent += content.toString() + '\n\n---\n\n'
         // Output conversion information
-        console.log(pc.green(`${num}: [${basename(outFilePath)}]`))
+        logger.success(`${num}: [${basename(outFilePath)}]`)
       } else if (extname(outFilePath) !== '.md') {
         //For non-Markdown files (such as images), output is still required.
         writeFileSync(outFilePath, content, { overwrite: true })
@@ -338,9 +346,9 @@ export class Converter {
 
     // Generate merged file name
     const outputPath = join(
-        this.outDir,
-        this.mergedFilename || `${basename(this.outDir)}-merged.md`
-      )
+      this.outDir,
+      this.mergedFilename || `${basename(this.outDir)}-merged.md`
+    )
     // Write merged content
     writeFileSync(outputPath, mergedContent, { overwrite: true })
     return outputPath
