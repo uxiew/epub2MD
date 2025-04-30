@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { promisify } from 'node:util'
-import chalk from 'chalk'
+import pc from 'picocolors'
 
 const readdir = promisify(fs.readdir)
 const readFile = promisify(fs.readFile)
@@ -66,7 +66,7 @@ export async function mergeMarkdowns(directory: string, outputFile?: string | un
     
     return outputPath
   } catch (error) {
-    console.error(chalk.red(`Failed to merge Markdown files: ${error}`))
+    console.error(pc.red(`Failed to merge Markdown files: ${error}`))
     throw error
   }
-} 
+}

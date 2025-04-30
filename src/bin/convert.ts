@@ -1,6 +1,6 @@
 import { basename, dirname, extname, format, join, parse } from 'node:path'
 import { existsSync, mkdirSync } from 'node:fs'
-import chalk from 'chalk'
+import pc from 'picocolors'
 import _ from 'lodash'
 import { writeFileSync } from 'write-file-safe'
 
@@ -238,10 +238,10 @@ export class Converter {
         try {
           this.localizeImages(resLinks, join(this.outDir, this.IMAGE_DIR))
         } catch (error) {
-          console.log(chalk.red('Failed to localize the image!', error))
+          console.log(pc.red('Failed to localize the image!'), error)
         }
       } else if(resLinks.length > 0){
-        console.log(chalk.yellow('Remote images are detected, you can set --localize to true to localize the remote images')) 
+        console.log(pc.yellow('Remote images are detected, you can set --localize to true to localize the remote images')) 
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
@@ -297,7 +297,7 @@ export class Converter {
           ...parsedPath,
           base: `${numLabel}-${parsedPath.base}`
         })
-        console.log(chalk.green(`${num++}: [${basename(numberedOutFilePath)}]`))
+        console.log(pc.green(`${num++}: [${basename(numberedOutFilePath)}]`))
       }
 
       writeFileSync(
@@ -329,7 +329,7 @@ export class Converter {
         num++
         mergedContent += content.toString() + '\n\n---\n\n'
         // Output conversion information
-        console.log(chalk.green(`${num}: [${basename(outFilePath)}]`))
+        console.log(pc.green(`${num}: [${basename(outFilePath)}]`))
       } else if (extname(outFilePath) !== '.md') {
         //For non-Markdown files (such as images), output is still required.
         writeFileSync(outFilePath, content, { overwrite: true })

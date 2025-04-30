@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import args from 'args'
-import chalk from 'chalk'
 import process from "node:process"
 import fs from "node:fs"
 import parseEpub from '../parseEpub'
@@ -8,6 +7,7 @@ import { Converter } from './convert'
 import { mergeMarkdowns } from './merge'
 // @ts-expect-error no typedef but ok
 import { json } from 'beauty-json'
+import pc from 'picocolors'
 
 const name = "epub2md"
 
@@ -24,7 +24,7 @@ export const Commands = {
 
 export type CommandType = typeof Commands[keyof typeof Commands];
 
-const commands: [CommandType, string, (boolean|string)?][] = [
+const commands: [CommandType, string, (boolean | string)?][] = [
   [Commands.convert, 'convert the epub file to markdown format'],
   [Commands.autocorrect, 'convert the epub file to markdown format with autocorrect'],
   [Commands.unzip, 'unzip epub file'],
@@ -65,7 +65,7 @@ for (const cmd of [Commands.info, Commands.structure, Commands.sections]) {
         flags[cmd] = unprocessedArgs[0]
       }
     }
-    
+
     if (typeof flags[cmd] === 'string') {
       run(cmd)
       hasRun = true
@@ -76,29 +76,29 @@ for (const cmd of [Commands.info, Commands.structure, Commands.sections]) {
 
 // If no information query command has been run, check if it's an unzip command
 if (!hasRun && flags[Commands.unzip]) {
-  const epubPath = typeof flags[Commands.unzip] === 'string' ? flags[Commands.unzip] : 
-                 (unprocessedArgs.length > 0 ? unprocessedArgs[0] : null);
-                   
+  const epubPath = typeof flags[Commands.unzip] === 'string' ? flags[Commands.unzip] :
+    (unprocessedArgs.length > 0 ? unprocessedArgs[0] : null);
+
   if (epubPath) {
-    console.log(chalk.blueBright(`[${name}]: unzipping...`));
-    
+    console.log(pc.blue(`[${name}]: unzipping...`));
+
     (new Converter(epubPath))
       .run({
         cmd: Commands.unzip,  // Use cmd to indicate unzip only
         mergedFilename: undefined,
-        shouldMerge: false, 
+        shouldMerge: false,
         localize: false,
       })
       .then((outDir) => {
-        console.log(chalk.greenBright(`[${name}]: Unzip successful! output: ${outDir}`));
+        console.log(pc.green(`[${name}]: Unzip successful! output: ${outDir}`));
       })
       .catch((error) => {
-        console.log(chalk.red(error))
+        console.log(pc.red(error))
       })
-    
+
     hasRun = true
   } else {
-    console.log(chalk.red(`[${name}]: No valid epub file path provided for unzip command`))
+    console.log(pc.red(`[${name}]: No valid epub file path provided for unzip command`))
   }
 }
 
@@ -108,21 +108,21 @@ if (!hasRun) {
   if (flags.merge && typeof flags.merge === 'string' && flags.merge !== '') {
     // Check if it's a directory path
     if (fs.existsSync(flags.merge) && fs.statSync(flags.merge).isDirectory()) {
-      console.log(chalk.blueBright(`[${name}]: merging markdown files in directory...`))
-      
+      console.log(pc.blue(`[${name}]: merging markdown files in directory...`))
+
       // Call mergeMarkdowns function to merge markdown files in the directory
       mergeMarkdowns(flags.merge)
         .then((outputPath) => {
-          console.log(chalk.greenBright(`[${name}]: Merging successful! Output file: ${outputPath}`))
+          console.log(pc.green(`[${name}]: Merging successful! Output file: ${outputPath}`))
         })
         .catch((error) => {
           console.log(chalk.red(`[${name}]: Merging failed: ${error}`))
         })
-      
+
       hasRun = true
     }
   }
-  
+
   // If still not run, check for conversion-related commands
   if (!hasRun) {
     // Check for conversion-related commands
@@ -135,17 +135,17 @@ if (!hasRun) {
             flags[cmd] = unprocessedArgs[0]
           }
         }
-        
+
         run(cmd)
         hasRun = true
         break
       }
     }
-    
+
     // If no command has been executed and there are unprocessed arguments
     if (!hasRun && unprocessedArgs.length > 0) {
       run(DEFAULT_COMMAND)
-    } 
+    }
     // If no command has been executed and no unprocessed arguments
     else if (!hasRun) {
       args.showHelp()
@@ -156,24 +156,22 @@ if (!hasRun) {
 function run(cmd: CommandType) {
   if (cmd === Commands.convert || cmd === Commands.autocorrect) {
     const epubPath = typeof flags[cmd] === 'string' ? flags[cmd] : null;
-    
+
     if (!epubPath) {
-      console.log(chalk.red(`[${name}]: No valid epub file path provided`))
+      console.log(pc.red(`[${name}]: No valid epub file path provided`))
       return
     }
-    
+
     // ====== convert to markdown ====
-    console.log(chalk.blueBright(
-      `[${name}]: converting${
-        cmd === Commands.autocorrect ? ' with autocorrect' : ''
-      }${
-        flags[Commands.merge] ? ' and merging' : ''
+    console.log(pc.blue(
+      `[${name}]: converting${cmd === Commands.autocorrect ? ' with autocorrect' : ''
+      }${flags[Commands.merge] ? ' and merging' : ''
       }...`
     ));
 
     // Check if direct merge is needed
     const shouldMerge = flags.merge === true || (typeof flags.merge === 'string' && flags.merge !== '');
-    
+
     // merge parameter can be true (boolean) or string (output filename)
     // Prioritize using merge parameter as filename, if boolean then use output parameter
     let mergedFilename;
@@ -193,13 +191,13 @@ function run(cmd: CommandType) {
       .then((outDir) => {
         // If direct merge, return value is the merged file path
         if (shouldMerge) {
-          console.log(chalk.greenBright(`[${name}]: Merging successful! Output file: ${outDir}`));
+          console.log(pc.green(`[${name}]: Merging successful! Output file: ${outDir}`));
         } else {
-          console.log(chalk.greenBright(`[${name}]: Conversion successful! output: ${outDir}`));
+          console.log(pc.green(`[${name}]: Conversion successful! output: ${outDir}`));
         }
       })
       .catch((error) => {
-        console.log(chalk.red(error))
+        console.log(pc.red(error))
       })
 
     return
@@ -210,13 +208,13 @@ function run(cmd: CommandType) {
   if (typeof cmdPath === 'string') {
     parseEpub(cmdPath)
       .then((res) => {
-        console.log(chalk.greenBright(`[${name}]: This book ${cmd}:`))
+        console.log(pc.green(`[${name}]: This book ${cmd}:`))
         json.log(res[cmd as 'info' | 'structure' | 'sections'])
       })
       .catch((error) => {
-        console.log(chalk.red(error))
+        console.log(pc.red(error))
       })
   } else {
-    console.log(chalk.red(`[${name}]: Path must be a string, got ${typeof cmdPath}`))
+    console.log(pc.red(`[${name}]: Path must be a string, got ${typeof cmdPath}`))
   }
 }
