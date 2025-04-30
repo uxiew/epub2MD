@@ -85,7 +85,7 @@ if (!hasRun && flags[Commands.unzip]) {
     (new Converter(epubPath))
       .run({
         cmd: Commands.unzip,  // Use cmd to indicate unzip only
-        outputFilename: undefined,
+        mergedFilename: undefined,
         shouldMerge: false, 
         localize: false,
       })
@@ -176,9 +176,9 @@ function run(cmd: CommandType) {
     
     // merge parameter can be true (boolean) or string (output filename)
     // Prioritize using merge parameter as filename, if boolean then use output parameter
-    let outputFilename = undefined;
+    let mergedFilename;
     if (typeof flags.merge === 'string' && flags.merge !== '') {
-      outputFilename = flags.merge;
+      mergedFilename = flags.merge;
     }
     // Check whether to retain original image links
     const localize = flags.localize === true;
@@ -186,7 +186,7 @@ function run(cmd: CommandType) {
     (new Converter(epubPath))
       .run({
         cmd,
-        outputFilename,
+        mergedFilename,
         shouldMerge,
         localize
       })

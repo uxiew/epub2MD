@@ -17,24 +17,11 @@ interface Structure {
   filepath: string
 }
 
-interface Options {
-  /** epub file path */
-  epubPath: string
-  /** command */
-  cmd: CommandType
-  /** Whether to directly generate the merged file */
-  shouldMerge: boolean
-  /** Whether to retain the original online link */
-  localize: boolean
-  /** merged file name */
-  outputFilename?: string
-}
-
 interface RunOptions {
   cmd: CommandType
   shouldMerge: boolean
   localize: boolean
-  outputFilename?: string
+  mergedFilename?: string
 }
 
 export class Converter {
@@ -42,7 +29,7 @@ export class Converter {
   epubFilePath: string // current epub 's path
 
   outDir: string  // epub 's original directory to save markdown files
-  outputFilename?: string // The merged file name
+  mergedFilename?: string // The merged file name
 
   structure: Structure[] = [] // epub dir structure
   
@@ -274,7 +261,7 @@ export class Converter {
   /**
    * Runs the conversion process for an EPUB file.
    * 
-   * @param options - Configuration options or boolean (backward compatibility)
+   * @param RunOptions - Configuration options or boolean (backward compatibility)
    * @returns A promise resolving to the output directory or the result of generating a merged file
    */
   async run(options?: RunOptions): Promise<string> {
@@ -284,7 +271,7 @@ export class Converter {
       this.cmd = options.cmd
       this.shouldMerge = options.shouldMerge
       this.localize = options.localize
-      if (options.outputFilename) this.outputFilename = options.outputFilename
+      this.mergedFilename = options.mergedFilename
     }
 
     await this.getManifest(isUnzipOnly)
@@ -293,16 +280,18 @@ export class Converter {
       return this.generateMergedFile()
     }
     
-    let num = 1, filterPool: Record<string, boolean> = {}
+    let num = 1
     const padding = Math.floor(Math.log10(this.structure.length))
     
     for (const s of this.structure) {
       const numLabel = ('0'.repeat(padding) + num).slice(-(padding + 1))
+
       // 使用异步版本
       const { outFilePath, content } = await this.getFileDataAsync(s)
       let numberedOutFilePath: string | null = null
       if (content.toString() === '') continue;
-      if (!filterPool[outFilePath] && basename(outFilePath).endsWith('.md')) {
+
+      if ((/\.md$/).test(outFilePath)) {
         const parsedPath = parse(outFilePath)
         numberedOutFilePath = format({
           ...parsedPath,
@@ -310,13 +299,15 @@ export class Converter {
         })
         console.log(chalk.green(`${num++}: [${basename(numberedOutFilePath)}]`))
       }
-      filterPool[outFilePath] = true
+
       writeFileSync(
         numberedOutFilePath ?? outFilePath,
         content,
         { overwrite: true }
       )
     }
+
+    // 内部链接的文件名需要等全部转换完成后再重命名
     return this.outDir
   }
   
@@ -346,8 +337,10 @@ export class Converter {
     }
 
     // Generate merged file name
-    const finalOutputFile = this.outputFilename || `${basename(this.outDir)}-merged.md`
-    const outputPath = join(this.outDir, finalOutputFile)
+    const outputPath = join(
+        this.outDir,
+        this.mergedFilename || `${basename(this.outDir)}-merged.md`
+      )
     // Write merged content
     writeFileSync(outputPath, mergedContent, { overwrite: true })
     return outputPath

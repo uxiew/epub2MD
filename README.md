@@ -6,7 +6,7 @@ Even though the package is primarily intended for CLI is to convert EPUB to Mark
 
 ## Main Functions
 
-- **Convert EPUB to Markdown**: Convert EPUB e-books to Multiple markdown files by default.
+- **Convert EPUB to Markdown**: By default, convert and output numbered markdown files in sequence.
 - **Autocorrection**: Have option to Handle spaces and punctuation between Chinese and English as You Need.
 - **Merge Chapters**: Optionally merge all markdown files into a single Markdown file, Support link jumping.
 - **Image Processing**:
