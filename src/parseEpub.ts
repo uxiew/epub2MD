@@ -113,14 +113,19 @@ export class Epub {
   }
 
   /**
-   * 获取EPUB文件中的OPF（Open Packaging Format）文件的路径。
+   * Get the path of the OPF (Open Packaging Format) file in the EPUB file.
    */
   private _getOpfPath(): string {
     return this._resolveXMLAsJsObject('/META-INF/container.xml').container.rootfiles.rootfile['@full-path']
   }
 
 
-  _resolveIdFromLink(href: string): string {
+  /**
+   * Parse the corresponding ID according to the link.
+   * @param {string} href - The link to be resolved.
+   * @return {string} The ID of the item.
+   */
+  private _resolveIdFromLink(href: string): string {
     const { name: tarName } = parseLink(href)
     const tarItem = _.find(this._manifest, (item: Manifest) => {
       const { name } = parseLink(item.href)
@@ -129,6 +134,21 @@ export class Epub {
     return _.get(tarItem!, 'id')
   }
 
+  /**
+   * Resolves the item ID from a given href link in the EPUB manifest.
+   *
+   * @param {string} href - The href link to resolve the item ID for.
+   * @returns {string} The corresponding item ID from the manifest.
+   */
+  getItemId(href: string): string {
+    return this._resolveIdFromLink(href)
+  }
+
+  /**
+   * Get the manifest of the EPUB file.
+   *
+   * @returns {Manifest[]} An array of manifest items.
+   */
   getManifest(content?: GeneralObject): Manifest[] {
     return (
       this._manifest ||
@@ -193,6 +213,13 @@ export class Epub {
     return parseOuterHTML(tocRoot)
   }
 
+  /**
+   * Generates a structured table of contents from the EPUB's navigation data
+   * @param tocObj - The table of contents object from the EPUB file
+   * @param resolveNodeId - Optional flag to resolve node IDs
+   * @returns Array of TOCItem objects representing the hierarchical structure
+   * @internal
+   */
   _genStructure(tocObj: GeneralObject, resolveNodeId = false): TOCItem[] {
     if (tocObj.html) {
       return this._genStructureForHTML(tocObj)

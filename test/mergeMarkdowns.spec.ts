@@ -21,6 +21,7 @@ describe('mergeMarkdowns', () => {
   afterEach(async () => {
     // 清理临时目录
     await rmdir(tempDir, { recursive: true, force: true })
+    await rmdir('./fixtures/merge', { recursive: true, force: true })
   })
 
   it('应该按照数字顺序合并markdown文件', async () => {
@@ -91,4 +92,4 @@ describe('mergeMarkdowns', () => {
     // 验证分隔符存在
     expect(merged).toBe('内容1\n\n---\n\n内容2')
   })
-}) 
+})

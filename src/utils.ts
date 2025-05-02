@@ -28,27 +28,15 @@ const cacheNavPool: Record<string, TOCItem> = {
 /**
  * Fix the generated file name according to the title corresponding to toc
  */
-export function matchRealPath(filePath: string, navs?: TOCItem[]): TOCItem | undefined {
-  if (!navs) return;
-  const navChildren: TOCItem[] = [];
-
-  for (const n of navs) {
-    const { path, children } = n
-    if (cacheNavPool[filePath]) {
-      return cacheNavPool[filePath]
+export function matchTOC(id: string, navs?: TOCItem[]): TOCItem | undefined {
+  // Adjust internal link adjustment, files with numbers in the name
+  if (!navs) return
+  for (const s of navs) {
+    if (id === s.sectionId) {
+      return s
     }
-    if (path.includes(filePath)) {
-      cacheNavPool[filePath] = n
-      return n
-    }
-    if (children) navChildren.push(...children)
-  }
-  if (navChildren.length > 0) {
-    return matchRealPath(filePath, navChildren)
   }
 }
-// return matchRealPath(children, filePath)
-
 
 // 函数用于清理文件名，将非法字符替换为下划线
 export const sanitizeFileName = (fileName: string, replacementChar = '_') => {

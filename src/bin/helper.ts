@@ -79,7 +79,7 @@ export function resolveHTMLId(fileName: string) {
 
 
 // 文件名处理
-export function getCearFilename(fileName: string, ext = '') {
+export function getClearFilename(fileName: string, ext = '') {
   return sanitizeFileName(fileName).trim().replace(/\s/g, '_') + ext
 }
 

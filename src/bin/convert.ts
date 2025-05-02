@@ -6,8 +6,8 @@ import { writeFileSync } from 'write-file-safe'
 
 import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
-import { checkFileType, convertHTML, fixLinkPath, getCearFilename, resolveHTMLId } from './helper'
-import { matchRealPath } from '../utils'
+import { checkFileType, convertHTML, fixLinkPath, getClearFilename, resolveHTMLId } from './helper'
+import { matchTOC } from '../utils'
 import parseHref from '../parseLink'
 import { Commands, type CommandType } from './cli'
 
@@ -54,7 +54,7 @@ export class Converter {
   }
 
 
-  private clearOutpath({ id, outpath }: Structure) {
+  private clearOutpath({ id, outpath, orderLabel }: Structure) {
     /*get readable name from toc items*/
     function _matchNav(id: Structure['id'], tocItems?: TOCItem[]): TOCItem | undefined {
       if (Array.isArray(tocItems))
@@ -73,12 +73,15 @@ export class Converter {
       return undefined;
     }
 
-    const nav = _matchNav(id, this.epub?.structure);
-    const fileName = getCearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
-    // clear readable filename
+    const nav = _matchNav(id, this.epub!.structure);
+
+    const fileName = getClearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+    const outDir = dirname(outpath)
+
     return {
       fileName,
-      outDir: dirname(outpath),
+      outDir,
+      outPath: join(outDir, orderLabel + '-' + fileName)
     }
   }
 
@@ -206,8 +209,8 @@ export class Converter {
       }
 
       // clear readable filename
-      const { outDir, fileName } = this.clearOutpath(structure)
-      outpath = join(outDir, orderLabel + '-' + fileName)
+      const { outPath, fileName } = this.clearOutpath(structure)
+      outpath = outPath
 
       // resources links
       const resLinks: string[] = []
@@ -225,17 +228,25 @@ export class Converter {
 
           link = resolveHTMLId(basename(url))
 
-          const internalNav = matchRealPath(link, this.epub?.structure)
-            || { name: link, sectionId: getCearFilename(basename(link)) }
+          const sectionId = this.epub!.getItemId(url)
+
+          const internalNav = matchTOC(sectionId, this.epub?.structure)
+            || { name: link, sectionId: getClearFilename(basename(link)) }
 
           // fix link's path
-          const realOutpath = linkStartSep
-            + getCearFilename(extname(internalNav.name)
-              ? internalNav.name : (internalNav.name + this.MD_FILE_EXT))
-            + `${hash ? '#' + hash : ''}`
+          let validPath = getClearFilename(extname(internalNav.name)
+            ? internalNav.name : (internalNav.name + this.MD_FILE_EXT))
+
+          // Adjust internal link adjustment, files with numbers in the name
+          for (const sfile of this.structure) {
+            if (sectionId === sfile.id) {
+              validPath = basename(this.clearOutpath(sfile).outPath)
+              break;
+            }
+          }
 
           // content's id
-          const toId = this.epub!._resolveIdFromLink(
+          const toId = this.epub!.getItemId(
             join(dirname(filepath), url)
           )
 
@@ -246,7 +257,9 @@ export class Converter {
             toId
           })
 
-          return this.shouldMerge ? linkStartSep + toId + (hash ? '#' + hash : '') : realOutpath
+          return this.shouldMerge
+            ? linkStartSep + toId + (hash ? '#' + hash : '')
+            : linkStartSep + validPath + `${hash ? '#' + hash : ''}`
         } else {
           if (link.startsWith('http')) {
             resLinks.push(link)
