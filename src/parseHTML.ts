@@ -40,7 +40,7 @@ export interface ParseHTMLConfig {
   resolveSrc?: (src: string) => string
   resolveHref?: (href: string) => string
 }
-const parseHTML = (HTMLString: string, config: ParseHTMLConfig = {}) => {
+const parseHTML = (HTMLString: string, config: ParseHTMLConfig = {}): HtmlNodeObject[] => {
   const rootNode = new JSDOM(HTMLString).window.document.documentElement
   const { resolveHref, resolveSrc } = config
 
@@ -114,4 +114,4 @@ const parseHTML = (HTMLString: string, config: ParseHTMLConfig = {}) => {
   }) as HtmlNodeObject[]
 }
 
-export default parseHTML
+export default parseHTML as (HTMLString: string, config?: ParseHTMLConfig) => HtmlNodeObject[]
