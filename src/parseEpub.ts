@@ -24,7 +24,7 @@ const parseMetadata = (metadata: GeneralObject = {}): MetaInfo => {
 
   (['title', 'author', 'description', 'language', 'publisher', 'rights'] as (keyof MetaInfo)[]).forEach((item: keyof MetaInfo) => {
     if (item === 'author') {
-      const author = _.get(meta, ['dc:creator'])
+      const author = _.get(meta, ['dc:creator'], [])
       if (_.isArray(author)) {
         info.author = author.map((a) => a['#text'])
       } else {
@@ -163,7 +163,10 @@ export class Epub {
   getSpine(): Record<string, number> {
     const spine: Record<string, number> = {}
     this.getManifest()
-    _.get(this._content, ['package', 'spine', 'itemref'], []).map(
+    console.log(_.get(this._content, ['package', 'spine'], []))
+    let itemRefs = _.get(this._content, ['package', 'spine', 'itemref'], [])
+    if (!Array.isArray(itemRefs)) itemRefs = [itemRefs]
+    itemRefs.map(
       (item: GeneralObject, i: number) => {
         return spine[item['@idref']] = i
       },
