@@ -28,7 +28,7 @@ const parseMetadata = (metadata: GeneralObject = {}): MetaInfo => {
       if (_.isArray(author)) {
         info.author = author.map((a) => a['#text'])
       } else {
-        info.author = [author['#text']]
+        info.author = [author?.['#text']]
       }
     }
     else if (item === 'description') {
