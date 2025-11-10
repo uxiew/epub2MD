@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import args from 'args'
-import process from "node:process"
-import fs from "node:fs"
+import process from 'node:process'
+import fs from 'node:fs'
+import fg from 'fast-glob'
 import parseEpub from '../parseEpub'
 import { Converter } from './convert'
 import { mergeMarkdowns } from './merge'
 import logger from '../logger'
 
-const name = "epub2md"
+const name = 'epub2md'
 
 export const Commands = {
   convert: 'convert',
@@ -17,10 +18,10 @@ export const Commands = {
   structure: 'structure',
   sections: 'sections',
   merge: 'merge',
-  localize: 'localize'
-} as const;
+  localize: 'localize',
+} as const
 
-export type CommandType = typeof Commands[keyof typeof Commands];
+export type CommandType = (typeof Commands)[keyof typeof Commands]
 
 const commands: [CommandType, string, (boolean | string)?][] = [
   [Commands.convert, 'convert the epub file to markdown format'],
@@ -29,14 +30,45 @@ const commands: [CommandType, string, (boolean | string)?][] = [
   [Commands.info, 'get epub file basic info'],
   [Commands.structure, 'get epub file structure'],
   [Commands.sections, 'get epub file sections'],
-  [Commands.merge, 'merge all markdown files into a single file, can also specify output filename with --merge=filename.md'],
-  [Commands.localize, 'Retain the original online link and do not convert it to a local path', false]
+  [
+    Commands.merge,
+    'merge all markdown files into a single file, can also specify output filename with --merge=filename.md',
+  ],
+  [
+    Commands.localize,
+    'Retain the original online link and do not convert it to a local path',
+    false,
+  ],
 ]
 
 const DEFAULT_COMMAND = Commands.convert
 
+/**
+ * Expands wildcard patterns to actual file paths
+ * @param pattern - File path or glob pattern (e.g., "*.epub", "books/*.epub")
+ * @returns Array of matching file paths
+ */
+async function expandWildcard(pattern: string): Promise<string[]> {
+  // Check if pattern contains wildcard characters
+  if (pattern.includes('*') || pattern.includes('?') || pattern.includes('[')) {
+    try {
+      const files = await fg(pattern, {
+        onlyFiles: true,
+        absolute: false,
+        cwd: process.cwd(),
+      })
+      return files
+    } catch (error) {
+      logger.error(`Failed to expand pattern "${pattern}": ${error}`)
+      return []
+    }
+  }
+  // Not a wildcard, return as-is
+  return [pattern]
+}
+
 // define options
-commands.forEach((cmd) => args.option(cmd[0], cmd[1], cmd[2]));
+commands.forEach((cmd) => args.option(cmd[0], cmd[1], cmd[2]))
 
 // @ts-expect-error typedef error
 const flags = args.parse(process.argv, {
@@ -44,7 +76,9 @@ const flags = args.parse(process.argv, {
 })
 
 // Check for unprocessed arguments (possibly file paths)
-const unprocessedArgs = process.argv.slice(2).filter(arg => !arg.startsWith('--') && !arg.startsWith('-'))
+const unprocessedArgs = process.argv
+  .slice(2)
+  .filter((arg) => !arg.startsWith('--') && !arg.startsWith('-'))
 
 // If there are unprocessed arguments, use them as input for the convert command by default
 if (unprocessedArgs.length > 0) {
@@ -52,7 +86,7 @@ if (unprocessedArgs.length > 0) {
 }
 
 // Try to run the command
-let hasRun = false;
+let hasRun = false
 
 // Priority handling of information query related commands (info, structure, sections) - these commands should not trigger conversion
 for (const cmd of [Commands.info, Commands.structure, Commands.sections]) {
@@ -65,6 +99,8 @@ for (const cmd of [Commands.info, Commands.structure, Commands.sections]) {
     }
 
     if (typeof flags[cmd] === 'string') {
+      // Note: Info commands currently don't support wildcards to keep output manageable
+      // If wildcard support is needed, the run function would need to handle it
       run(cmd)
       hasRun = true
       break
@@ -74,21 +110,25 @@ for (const cmd of [Commands.info, Commands.structure, Commands.sections]) {
 
 // If no information query command has been run, check if it's an unzip command
 if (!hasRun && flags[Commands.unzip]) {
-  const epubPath = typeof flags[Commands.unzip] === 'string' ? flags[Commands.unzip] :
-    (unprocessedArgs.length > 0 ? unprocessedArgs[0] : null);
+  const epubPath =
+    typeof flags[Commands.unzip] === 'string'
+      ? flags[Commands.unzip]
+      : unprocessedArgs.length > 0
+      ? unprocessedArgs[0]
+      : null
 
   if (epubPath) {
-    logger.info('unzipping...');
+    logger.info('unzipping...')
 
-    (new Converter(epubPath))
+    new Converter(epubPath)
       .run({
-        cmd: Commands.unzip,  // Use cmd to indicate unzip only
+        cmd: Commands.unzip, // Use cmd to indicate unzip only
         mergedFilename: undefined,
         shouldMerge: false,
         localize: false,
       })
       .then((outDir) => {
-        logger.info(`Unzip successful! output: ${outDir}`);
+        logger.info(`Unzip successful! output: ${outDir}`)
       })
       .catch((error) => {
         logger.error(error)
@@ -151,52 +191,84 @@ if (!hasRun) {
   }
 }
 
-function run(cmd: CommandType) {
+async function run(cmd: CommandType) {
   if (cmd === Commands.convert || cmd === Commands.autocorrect) {
-    const epubPath = typeof flags[cmd] === 'string' ? flags[cmd] : null;
+    const epubPath = typeof flags[cmd] === 'string' ? flags[cmd] : null
 
     if (!epubPath) {
       logger.error('No valid epub file path provided')
       return
     }
 
-    // ====== convert to markdown ====
-    logger.info(
-      `converting${cmd === Commands.autocorrect ? ' with autocorrect' : ''
-      }${flags[Commands.merge] ? ' and merging' : ''
-      }...`
-    );
+    // Expand wildcard patterns
+    const epubFiles = await expandWildcard(epubPath)
+
+    if (epubFiles.length === 0) {
+      logger.error(`No files found matching pattern: ${epubPath}`)
+      return
+    }
 
     // Check if direct merge is needed
-    const shouldMerge = flags.merge === true || (typeof flags.merge === 'string' && flags.merge !== '');
+    const shouldMerge =
+      flags.merge === true || (typeof flags.merge === 'string' && flags.merge !== '')
 
     // merge parameter can be true (boolean) or string (output filename)
     // Prioritize using merge parameter as filename, if boolean then use output parameter
-    let mergedFilename;
+    let mergedFilename
     if (typeof flags.merge === 'string' && flags.merge !== '') {
-      mergedFilename = flags.merge;
+      mergedFilename = flags.merge
     }
-    // Check whether to retain original image links
-    const localize = flags.localize === true;
 
-    (new Converter(epubPath))
-      .run({
-        cmd,
-        mergedFilename,
-        shouldMerge,
-        localize
-      })
-      .then((outDir) => {
+    // Warn if user specified a custom merge filename with wildcards
+    if (mergedFilename && epubFiles.length > 1) {
+      logger.warn(
+        `Warning: Using custom merge filename "${mergedFilename}" with multiple files. Each file will overwrite the previous merged output.`,
+      )
+      logger.warn(
+        `Consider using --merge (without filename) to generate separate merged files for each epub.`,
+      )
+    }
+
+    // Check whether to retain original image links
+    const localize = flags.localize === true
+
+    // Process multiple files if wildcards were expanded
+    if (epubFiles.length > 1) {
+      logger.info(`Found ${epubFiles.length} files matching pattern "${epubPath}"`)
+    }
+
+    // ====== convert to markdown ====
+    for (let i = 0; i < epubFiles.length; i++) {
+      const currentFile = epubFiles[i]
+
+      logger.info(
+        `[${i + 1}/${epubFiles.length}] Converting ${currentFile}${
+          cmd === Commands.autocorrect ? ' with autocorrect' : ''
+        }${flags[Commands.merge] ? ' and merging' : ''}...`,
+      )
+
+      try {
+        const outDir = await new Converter(currentFile).run({
+          cmd,
+          mergedFilename,
+          shouldMerge,
+          localize,
+        })
+
         // If direct merge, return value is the merged file path
         if (shouldMerge) {
-          logger.info(`Merging successful! Output file: ${outDir}`);
+          logger.info(`[${i + 1}/${epubFiles.length}] Merging successful! Output file: ${outDir}`)
         } else {
-          logger.info(`Conversion successful! output: ${outDir}`);
+          logger.info(`[${i + 1}/${epubFiles.length}] Conversion successful! output: ${outDir}`)
         }
-      })
-      .catch((error) => {
-        logger.error(error)
-      })
+      } catch (error) {
+        logger.error(`[${i + 1}/${epubFiles.length}] Failed to convert ${currentFile}:`, error)
+      }
+    }
+
+    if (epubFiles.length > 1) {
+      logger.success(`Completed processing ${epubFiles.length} files`)
+    }
 
     return
   }

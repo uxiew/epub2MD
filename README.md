@@ -46,6 +46,16 @@ $ epub2md ../../fixtures/zhihu.epub
 # or use -m
 $ epub2md -m ../../fixtures/zhihu.epub
 
+# Convert multiple files using wildcards
+$ epub2md "fixtures/*.epub"
+$ epub2md "books/fiction-*.epub"
+$ epub2md "library/file-[123].epub"
+
+# Convert multiple files with merge (each file gets its own merged output)
+$ epub2md "fixtures/*.epub" --merge
+
+# Note: Quotes are required around patterns with wildcards to prevent shell expansion
+
 # Convert to markdown and automatically correct spaces and punctuation between Chinese and English (CLI only)
 $ epub2md -M ../../fixtures/zhihu.epub
 
@@ -57,7 +67,7 @@ $ epub2md ../../fixtures/zhihu.epub --merge
 # Use --merge=filename.md
 $ epub2md ../../fixtures/zhihu.epub --merge="merged-book.md"
 
-# By default, DONT downloaded. Basically, the images in the epub are already included, so there is no need to download. 
+# By default, DONT downloaded. Basically, the images in the epub are already included, so there is no need to download.
 # However, some epub image links are remote, You will see some warning，maybe they need to be downloaded.
 # Download and localize online images (download remote images to local) (need node > 18.0)
 $ epub2md ../../fixtures/zhihu.epub --localize
