@@ -1,28 +1,20 @@
 import { defineBuildConfig } from "unbuild";
 import fs from 'node:fs';
-import { writeFileSync } from 'write-file-safe';
 
 export default defineBuildConfig({
     entries: [
         {
-            input: "src/bin/",
-            outDir: 'lib/bin/',
-            format: 'cjs',
-            ext: 'cjs',
-            declaration: false,
-        },
-        {
             input: "src/",
             outDir: "lib/",
+            pattern: "**/*.ts",
             declaration: true,
-            pattern: "*.ts",
             format: "esm",
         },
         {
             input: "src/",
-            pattern: "*.ts",
-            declaration: true,
             outDir: "lib/",
+            pattern: "**/*.ts",
+            declaration: true,
             format: "cjs",
             ext: "cjs",
         },
@@ -31,11 +23,8 @@ export default defineBuildConfig({
         "build:done"(ctx) {
             const cliDir = './lib/bin/'
             fs.readdirSync(cliDir).forEach((file) => {
-                if (file.endsWith('.cjs')) {
-                    const t = fs.readFileSync(cliDir + file, 'utf8').replace('// #!', '#!').replace(/require\(['"]\.{2}[^'"]*/g, (a, v) => {
-                        return a + '.cjs'
-                    });
-                    writeFileSync(cliDir + file, t)
+                if (file.match(/.(mjs|ts)$/)) {
+                    fs.rmSync(cliDir + file)
                 }
             });
         }
