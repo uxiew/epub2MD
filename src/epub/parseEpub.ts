@@ -92,7 +92,7 @@ export class Epub {
     return file
   }
 
-  _resolveXMLAsJsObject(path: string): GeneralObject {
+  private getXmlFile(path: string): GeneralObject {
     const xml = this.getFile(path).asText()
     return xmlToJson(xml)
   }
@@ -101,7 +101,7 @@ export class Epub {
    * Get the path of the OPF (Open Packaging Format) file in the EPUB file.
    */
   private _getOpfPath(): string {
-    return this._resolveXMLAsJsObject('/META-INF/container.xml').container.rootfiles.rootfile['@full-path']
+    return this.getXmlFile('/META-INF/container.xml').container.rootfiles.rootfile['@full-path']
   }
 
 
@@ -308,7 +308,7 @@ export class Epub {
 
   parse() {
     this._opfPath = this._getOpfPath()
-    this._content = this._resolveXMLAsJsObject('/' + this._opfPath)
+    this._content = this.getXmlFile('/' + this._opfPath)
     this._root = determineRoot(this._opfPath)
 
     this._manifest = this.getManifest(this._content)
@@ -318,7 +318,7 @@ export class Epub {
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
     this.tocFile = (_.find(this._manifest, { id: 'ncx' }) || {}).href
     if (this.tocFile) {
-      const toc = this._resolveXMLAsJsObject(this.tocFile)
+      const toc = this.getXmlFile(this.tocFile)
       this._toc = toc
       this.structure = this._genStructure(toc)
     }
