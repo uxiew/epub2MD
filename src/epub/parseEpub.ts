@@ -5,9 +5,10 @@ import _ from 'lodash'
 import type { GeneralObject } from '../types'
 import parseLink from '../parseLink'
 import parseSection, { Section } from '../parseSection'
-import { xmlToJson, determineRoot } from '../utils'
+import { determineRoot } from '../utils'
 import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
+import { parseXml } from '../xml/parseXml'
 
 type MetaInfo = Partial<{
   title: string,
@@ -118,7 +119,7 @@ export class Epub {
 
   private getXmlFile(path: string): GeneralObject {
     const xml = this.getFile(path).asText()
-    return xmlToJson(xml)
+    return parseXml(xml)
   }
 
   /**

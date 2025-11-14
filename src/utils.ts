@@ -1,6 +1,5 @@
 import nodePath from 'node:path'
 import _ from 'lodash'
-import { XMLParser } from 'fast-xml-parser'
 import { GeneralObject } from './types'
 import { TOCItem } from './epub/parseEpub'
 
@@ -17,11 +16,6 @@ export interface TraverseNestedObject {
   childrenKey: string
 }
 
-const xmlParser = new XMLParser({
-  attributeNamePrefix: '@',
-  ignoreAttributes: false,
-});
-
 /**
  * Fix the generated file name according to the title corresponding to toc
  */
@@ -35,17 +29,10 @@ export function matchTOC(id: string, navs?: TOCItem[]): TOCItem | undefined {
   }
 }
 
-export const xmlToJson = (xml: string) => {
-  return xmlParser.parse(xml)
-  // new Promise<any>((resolve, reject) => {
-  //   xmlParser.parse(xml, (err: Error, object: GeneralObject) => {
-  //     if (err) {
-  //       reject(err)
-  //     } else {
-  //       resolve(object)
-  //     }
-  //   })
-  // })
+// 函数用于清理文件名，将非法字符替换为下划线
+export const sanitizeFileName = (fileName: string, replacementChar = '_') => {
+  const invalidCharsPattern = /[\\/:*?"<>|]/g;
+  return fileName.replace(invalidCharsPattern, replacementChar);
 }
 
 export const determineRoot = (opfPath: string) => {
