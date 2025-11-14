@@ -5,12 +5,13 @@ import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
 iteratorHelpersPolyfill.installIntoGlobal()
 
 import parseEpub from '../epub/parseEpub'
-import { Epub, TOCItem } from '../epub/parseEpub'
+import { Epub } from '../epub/parseEpub'
 import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName } from './helper'
 import { matchTOC, Path } from '../utils'
 import parseHref from '../parseLink'
 import { type CommandType } from '../bin/cli'
 import { downloadRemoteImages } from './download-images'
+import { TocItem } from '../xml'
 
 interface Structure {
   id: string
@@ -74,7 +75,7 @@ export class Converter {
         content = section.toMarkdown()
 
       // clear readable filename
-      const { outPath, fileName } = clearOutpath(this.epub.structure, structure)
+      const { outPath, fileName } = clearOutpath(structure, this.epub.structure)
       outpath = outPath
 
       // resources links
@@ -98,7 +99,7 @@ export class Converter {
           // Adjust internal link adjustment, files with numbers in the name
           const file = structures.find(file => file.id === sectionId)
           if (file)
-            validPath = basename(clearOutpath(this.epub.structure, file).outPath)
+            validPath = basename(clearOutpath(file, this.epub.structure).outPath)
 
           // content's id
           const toId = this.epub.getItemId(
@@ -200,9 +201,9 @@ class OrderPrefix {
   }
 }
 
-function clearOutpath(toc: TOCItem[], { id, outpath, orderPrefix }: Structure) {
+function clearOutpath({ id, outpath, orderPrefix }: Structure, toc?: TocItem[]) {
   /*get readable name from toc items*/
-  function _matchNav(id: Structure['id'], tocItems?: TOCItem[]): TOCItem | undefined {
+  function _matchNav(id: Structure['id'], tocItems?: TocItem[]): TocItem | undefined {
     if (Array.isArray(tocItems))
       for (let i = 0; i < tocItems.length; i++) {
         const item = tocItems[i];

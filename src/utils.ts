@@ -1,7 +1,7 @@
 import nodePath from 'node:path'
 import _ from 'lodash'
 import { GeneralObject } from './types'
-import { TOCItem } from './epub/parseEpub'
+import { TocItem } from './xml'
 
 
 export interface TraverseNestedObject {
@@ -19,7 +19,7 @@ export interface TraverseNestedObject {
 /**
  * Fix the generated file name according to the title corresponding to toc
  */
-export function matchTOC(id: string, navs?: TOCItem[]): TOCItem | undefined {
+export function matchTOC(id: string, navs?: TocItem[]): TocItem | undefined {
   // Adjust internal link adjustment, files with numbers in the name
   if (!navs) return
   for (const s of navs) {
