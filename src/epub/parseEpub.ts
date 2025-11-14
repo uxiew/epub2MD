@@ -8,43 +8,8 @@ import parseSection, { Section } from '../parseSection'
 import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
 import { parseXml } from '../xml/parseXml'
-import xml from '../xml'
+import xml, { Opf } from '../xml'
 
-type MetaInfo = Partial<{
-  title: string,
-  author: string | string[],
-  description: string,
-  language: string,
-  publisher: string,
-  rights: string,
-}>
-
-const parseMetadata = (metadata: GeneralObject = {}): MetaInfo => {
-  const meta = metadata;
-  const info: MetaInfo = {};
-
-  (['title', 'author', 'description', 'language', 'publisher', 'rights'] as (keyof MetaInfo)[]).forEach((item: keyof MetaInfo) => {
-    if (item === 'author') {
-      const author = _.get(meta, ['dc:creator'], [])
-      if (_.isArray(author)) {
-        info.author = author.map((a) => a['#text'])
-      } else {
-        info.author = [author?.['#text']]
-      }
-    }
-    else if (item === 'description') {
-      info.description = _.get(meta, [item, '_'])
-    }
-    else {
-      info[item] = _.get(meta, ['dc:' + item]) as string
-    }
-  })
-
-  return _.pickBy(info, (v: string | string[]) => {
-    if (Array.isArray(v)) return v.length !== 0 && !_.isUndefined(v[0])
-    return !_.isUndefined(v)
-  })
-}
 
 export const defaultOptions = { type: "path", expand: false } as ParserOptions
 
@@ -57,24 +22,15 @@ export interface TOCItem {
   children?: TOCItem[]
 }
 
-interface Manifest {
-  href: string
-  id: string
-  [k: string]: string
-}
-
 export class Epub {
   private zip: Zip
-  private _content?: GeneralObject
-  private _manifest?: Manifest[]
   // only for html/xhtml, not include images/css/js
   private _spine?: Record<string, number> // array of ids defined in manifest
   private contentRoot!: string
   private _toc?: GeneralObject
-  private _metadata?: GeneralObject
-
+  opf!: Opf
   structure!: TOCItem[]
-  info?: MetaInfo
+  info?: Opf['metadata']
   sections!: Section[]
   tocFile?: string
 
@@ -85,22 +41,19 @@ export class Epub {
   parse() {
     const { opfPath, contentRoot } = this.parseMetaContainer()
     this.contentRoot = contentRoot
-    this._content = this.getXmlFile('/' + opfPath)
-
-    this._manifest = this.getManifest(this._content)
-    this._metadata = _.get(this._content, ['package', 'metadata'], {})
+    const opf = this.opf = this.parseOpf(opfPath)
+    this.info = opf.metadata
+    this._spine = opf.spine
 
     // https://github.com/gaoxiaoliangz/epub-parser/issues/13
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-    this.tocFile = (_.find(this._manifest, { id: 'ncx' }) || {}).href
+    this.tocFile = (_.find(opf.manifest, { id: 'ncx' }) || {}).href
     if (this.tocFile) {
       const toc = this.getXmlFile(this.tocFile)
       this._toc = toc
       this.structure = this._genStructure(toc)
     }
 
-    this._spine = this.getSpine()
-    this.info = parseMetadata(this._metadata)
     this.sections = this._resolveSections()
 
     return this
@@ -109,6 +62,11 @@ export class Epub {
   parseMetaContainer() {
     const fileText = this.getFile('/META-INF/container.xml').asText()
     return xml.parseMetaContainer(fileText)
+  }
+
+  parseOpf(path: string) {
+    const fileText = this.getFile('/' + path).asText()
+    return xml.parseOpf(fileText)
   }
 
   getFile(filePath: string) {
@@ -126,45 +84,18 @@ export class Epub {
   }
 
   /**
-   * Parse the corresponding ID according to the link.
-   * @param {string} href - The link to be resolved.
-   * @return {string} The ID of the item.
+   * Resolves the item ID from a given href link in the EPUB manifest.
+   *
+   * @param {string} href - The href link to resolve the item ID for.
+   * @returns {string} The corresponding item ID from the manifest.
    */
   getItemId(href: string) {
     const { name: tarName } = parseLink(href)
-    const tarItem = _.find(this._manifest, (item: Manifest) => {
+    const tarItem = this.opf.manifest.find(item => {
       const { name } = parseLink(item.href)
       return name === tarName
     })
-    return _.get(tarItem!, 'id')
-  }
-
-  /**
-   * Get the manifest of the EPUB file.
-   *
-   * @returns {Manifest[]} An array of manifest items.
-   */
-  getManifest(content?: GeneralObject): Manifest[] {
-    return (
-      this._manifest ||
-      (_.get(content, ['package', 'manifest', 'item'], []).map((item: any) => ({
-        href: item['@href'],
-        id: item['@id'],
-      })
-      ))
-    )
-  }
-
-  getSpine(): Record<string, number> {
-    const spine: Record<string, number> = {}
-    let itemRefs = _.get(this._content, ['package', 'spine', 'itemref'], [])
-    if (!Array.isArray(itemRefs)) itemRefs = [itemRefs]
-    itemRefs.map(
-      (item: GeneralObject, i: number) => {
-        return spine[item['@idref']] = i
-      },
-    )
-    return spine
+    return tarItem?.id!
   }
 
   /** for toc is toc.html  */
@@ -282,15 +213,14 @@ export class Epub {
    * @private
    */
   private _resolveSections(id?: string) {
-    let list: any[] = _.union(Object.keys(this._spine!))
+    let list: any[] = _.union(Object.keys(this.opf.spine!))
     // no chain
     if (id) {
       list = [id];
     }
     return list.map((id) => {
-      const path = _.find(this._manifest, { id })!.href
+      const path = this.opf.manifest.find(item => item.id === id)!.href
       const html = this.getFile(path).asText()
-
       const section = parseSection({
         id,
         htmlString: html,
@@ -308,7 +238,7 @@ export class Epub {
 
   getSection(id: string): Section | null {
     let sectionIndex = -1
-    if (this._spine) sectionIndex = this._spine[id]
+    if (this.opf.spine) sectionIndex = this.opf.spine[id]
     // fix other html ont include spine structure
     if (sectionIndex === undefined) {
       return this._resolveSections(id)[0]

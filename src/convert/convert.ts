@@ -173,7 +173,7 @@ function processManifest(epub: Epub, unzip: boolean, outDir: string) {
   const orderPrefix = new OrderPrefix({
     maximum: epub.sections.length
   })
-  for (const { href: filepath, id } of epub.getManifest()) {
+  for (const { href: filepath, id } of epub.opf.manifest) {
     if (filepath.endsWith('ncx') || id === 'titlepage') continue
     const { type, path: outpath } = parseFileInfo(filepath, outDir)
     if (type === '' && unzip) continue
