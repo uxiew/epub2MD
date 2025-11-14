@@ -275,8 +275,8 @@ export class Epub {
       const section = parseSection({
         id,
         htmlString: html,
-        resourceResolver: this.getFile.bind(this),
-        idResolver: this.getItemId.bind(this),
+        getFile: this.getFile.bind(this),
+        getItemId: this.getItemId.bind(this),
         expand: this.options.expand,
       })
 

@@ -13,25 +13,25 @@ export type ParseSectionConfig = {
   id: string
   htmlString: string
   expand?: boolean
-  resourceResolver?: (path: string) => any
-  idResolver?: (link: string) => string
+  getFile: (path: string) => any
+  getItemId: (link: string) => string
 }
 
 export class Section {
   id: string
   htmlString: string
   htmlObjects?: HtmlNodeObject[]
-  private _resourceResolver?: (path: string) => any
-  private _idResolver?: (link: string) => string
+  private _getFile: (path: string) => any
+  private _getItemId: (link: string) => string
   private _convertToMarkdown: ConvertToMarkdown = convert
 
-  constructor({ id, htmlString, resourceResolver, idResolver, expand }: ParseSectionConfig) {
+  constructor({ id, htmlString, getFile, getItemId, expand }: ParseSectionConfig) {
     this.id = id
     this.htmlString = htmlString
-    this._resourceResolver = resourceResolver
-    this._idResolver = idResolver
+    this._getFile = getFile
+    this._getItemId = getItemId
     if (expand) {
-      this.htmlObjects = this.toHtmlObjects?.()
+      this.htmlObjects = this.toHtmlObjects()
     }
   }
 
@@ -50,7 +50,7 @@ export class Section {
         if (isInternalUri(href)) {
           const { hash } = parseLink(href)
           // todo: what if a link only contains hash part?
-          const sectionId = this._idResolver?.(href)
+          const sectionId = this._getItemId(href)
           if (hash) {
             return `#${sectionId},${hash}`
           }
@@ -62,7 +62,7 @@ export class Section {
         if (isInternalUri(src)) {
           // todo: may have bugs
           const absolutePath = path.posix.resolve('/', src).substr(1)
-          const buffer = this._resourceResolver?.(absolutePath)?.asNodeBuffer()
+          const buffer = this._getFile(absolutePath).asNodeBuffer()
           const base64 = buffer.toString('base64')
           return `data:image/png;base64,${base64}`
         }
