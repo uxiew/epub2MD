@@ -83,6 +83,30 @@ export class Epub {
     this.zip = new Zip(fileContent)
   }
 
+  parse() {
+    this._opfPath = this._getOpfPath()
+    this._content = this.getXmlFile('/' + this._opfPath)
+    this._root = determineRoot(this._opfPath)
+
+    this._manifest = this.getManifest(this._content)
+    this._metadata = _.get(this._content, ['package', 'metadata'], {})
+
+    // https://github.com/gaoxiaoliangz/epub-parser/issues/13
+    // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
+    this.tocFile = (_.find(this._manifest, { id: 'ncx' }) || {}).href
+    if (this.tocFile) {
+      const toc = this.getXmlFile(this.tocFile)
+      this._toc = toc
+      this.structure = this._genStructure(toc)
+    }
+
+    this._spine = this.getSpine()
+    this.info = parseMetadata(this._metadata)
+    this.sections = this._resolveSections()
+
+    return this
+  }
+
   getFile(filePath: string) {
     const isAbsolute = filePath.startsWith('/')
     const absolutePath = isAbsolute
@@ -295,30 +319,6 @@ export class Epub {
       return this._resolveSections(id)[0]
     }
     return this.sections ? sectionIndex != -1 ? this.sections[sectionIndex] : null : null
-  }
-
-  parse() {
-    this._opfPath = this._getOpfPath()
-    this._content = this.getXmlFile('/' + this._opfPath)
-    this._root = determineRoot(this._opfPath)
-
-    this._manifest = this.getManifest(this._content)
-    this._metadata = _.get(this._content, ['package', 'metadata'], {})
-
-    // https://github.com/gaoxiaoliangz/epub-parser/issues/13
-    // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-    this.tocFile = (_.find(this._manifest, { id: 'ncx' }) || {}).href
-    if (this.tocFile) {
-      const toc = this.getXmlFile(this.tocFile)
-      this._toc = toc
-      this.structure = this._genStructure(toc)
-    }
-
-    this._spine = this.getSpine()
-    this.info = parseMetadata(this._metadata)
-    this.sections = this._resolveSections()
-
-    return this
   }
 }
 
