@@ -35,23 +35,6 @@ export const sanitizeFileName = (fileName: string, replacementChar = '_') => {
   return fileName.replace(invalidCharsPattern, replacementChar);
 }
 
-export const determineRoot = (opfPath: string) => {
-  let root = ''
-  // set the opsRoot for resolving paths
-  if (opfPath.match(/\//)) {
-    // not at top level
-    root = opfPath.replace(/\/([^\/]+)\.opf/i, '')
-    if (!root.match(/\/$/)) {
-      // 以 '/' 结尾，下面的 zip 路径写法会简单很多
-      root += '/'
-    }
-    if (root.match(/^\//)) {
-      root = root.replace(/^\//, '')
-    }
-  }
-  return root
-}
-
 /**
  * traverseNestedObject
  * a note about config.transformer

@@ -5,10 +5,10 @@ import _ from 'lodash'
 import type { GeneralObject } from '../types'
 import parseLink from '../parseLink'
 import parseSection, { Section } from '../parseSection'
-import { determineRoot } from '../utils'
 import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
 import { parseXml } from '../xml/parseXml'
+import xml from '../xml'
 
 type MetaInfo = Partial<{
   title: string,
@@ -65,13 +65,11 @@ interface Manifest {
 
 export class Epub {
   private zip: Zip
-  private _opfPath?: string
-  private _root!: string
   private _content?: GeneralObject
   private _manifest?: Manifest[]
   // only for html/xhtml, not include images/css/js
   private _spine?: Record<string, number> // array of ids defined in manifest
-
+  private contentRoot!: string
   private _toc?: GeneralObject
   private _metadata?: GeneralObject
 
@@ -85,9 +83,9 @@ export class Epub {
   }
 
   parse() {
-    this._opfPath = this._getOpfPath()
-    this._content = this.getXmlFile('/' + this._opfPath)
-    this._root = determineRoot(this._opfPath)
+    const { opfPath, contentRoot } = this.parseMetaContainer()
+    this.contentRoot = contentRoot
+    this._content = this.getXmlFile('/' + opfPath)
 
     this._manifest = this.getManifest(this._content)
     this._metadata = _.get(this._content, ['package', 'metadata'], {})
@@ -107,12 +105,17 @@ export class Epub {
 
     return this
   }
+  
+  parseMetaContainer() {
+    const fileText = this.getFile('/META-INF/container.xml').asText()
+    return xml.parseMetaContainer(fileText)
+  }
 
   getFile(filePath: string) {
     const isAbsolute = filePath.startsWith('/')
     const absolutePath = isAbsolute
       ? filePath.slice(1)
-      : path.join(this._root, filePath)
+      : path.join(this.contentRoot, filePath)
     const file = this.zip.getFile(absolutePath)
     return file
   }
@@ -123,18 +126,9 @@ export class Epub {
   }
 
   /**
-   * Get the path of the OPF (Open Packaging Format) file in the EPUB file.
-   */
-  private _getOpfPath(): string {
-    return this.getXmlFile('/META-INF/container.xml').container.rootfiles.rootfile['@full-path']
-  }
-
-
-  /**
-   * Resolves the item ID from a given href link in the EPUB manifest.
-   *
-   * @param {string} href - The href link to resolve the item ID for.
-   * @returns {string} The corresponding item ID from the manifest.
+   * Parse the corresponding ID according to the link.
+   * @param {string} href - The link to be resolved.
+   * @return {string} The ID of the item.
    */
   getItemId(href: string) {
     const { name: tarName } = parseLink(href)
