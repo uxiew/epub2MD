@@ -2,7 +2,6 @@ import { Buffer } from 'node:buffer'
 import path from 'node:path'
 import _ from 'lodash'
 
-import parseLink from '../parseLink'
 import parseSection, { Section } from '../parseSection'
 import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
@@ -35,7 +34,7 @@ export class Epub {
 
     // https://github.com/gaoxiaoliangz/epub-parser/issues/13
     // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-    const tocPath = opf.manifest.find(item => item.id === 'ncx')?.href
+    const tocPath = opf.manifest.getById('ncx')?.href
     const toc = tocPath === undefined ? undefined :
       this.parseToc(tocPath)
     this.structure = toc
@@ -57,7 +56,7 @@ export class Epub {
 
   parseToc(path: string) {
     const fileText = this.getFile(path).asText()
-    return xml.parseToc(fileText, this.getItemId.bind(this))
+    return xml.parseToc(fileText, href => this.opf.manifest.getItemId(href))
   }
 
   getFile(filePath: string) {
@@ -67,21 +66,6 @@ export class Epub {
       : path.join(this.contentRoot, filePath)
     const file = this.zip.getFile(absolutePath)
     return file
-  }
-
-  /**
-   * Resolves the item ID from a given href link in the EPUB manifest.
-   *
-   * @param {string} href - The href link to resolve the item ID for.
-   * @returns {string} The corresponding item ID from the manifest.
-   */
-  getItemId(href: string) {
-    const { name: tarName } = parseLink(href)
-    const tarItem = this.opf.manifest.find(item => {
-      const { name } = parseLink(item.href)
-      return name === tarName
-    })
-    return tarItem?.id!
   }
 
   /**
@@ -114,13 +98,13 @@ export class Epub {
       list = [id];
     }
     return list.map((id) => {
-      const path = this.opf.manifest.find(item => item.id === id)!.href
+      const path = this.opf.manifest.getById(id)!.href
       const html = this.getFile(path).asText()
       const section = parseSection({
         id,
         htmlString: html,
         getFile: this.getFile.bind(this),
-        getItemId: this.getItemId.bind(this),
+        getItemId: href => this.opf.manifest.getItemId(href),
         expand: this.options.expand,
       })
 

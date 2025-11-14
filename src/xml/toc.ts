@@ -2,9 +2,9 @@ import _ from 'lodash'
 import parseLink from '../parseLink'
 import { GeneralObject } from '../types'
 import { parseXml } from './parseXml'
-import { Epub } from '../epub/parseEpub'
+import { Manifest } from './opf'
 
-export function parseToc(text: string, getItemId: Epub['getItemId']) {
+export function parseToc(text: string, getItemId: Manifest['getItemId']) {
   const object = parseXml(text) as any
   const toc = object.html
     ? html(object, getItemId)
@@ -12,7 +12,7 @@ export function parseToc(text: string, getItemId: Epub['getItemId']) {
   return toc && new Toc(toc)
 }
 
-function ncx(tocObj: GeneralObject, getItemId: Epub['getItemId']): TocItem[] {
+function ncx(tocObj: GeneralObject, getItemId: Manifest['getItemId']): TocItem[] {
   // may be GeneralObject or GeneralObject[] or []
   const rootNavPoints = _.get(tocObj, ['ncx', 'navMap', 'navPoint'], [])
   const parseNavPoint = (navPoint: GeneralObject) => {
@@ -49,7 +49,7 @@ function ncx(tocObj: GeneralObject, getItemId: Epub['getItemId']): TocItem[] {
   return parseNavPoints(rootNavPoints)
 }
 
-function html(tocObj: GeneralObject, getItemId: Epub['getItemId']) {
+function html(tocObj: GeneralObject, getItemId: Manifest['getItemId']) {
   const tocRoot = tocObj.html.body[0].nav[0]['ol'][0].li
   let runningIndex = 1
 

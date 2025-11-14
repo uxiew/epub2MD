@@ -10,7 +10,7 @@ export function parseOpf(text: string) {
   if (!metadata) throw new Error('metadata not found in opf')
   const spine = object?.package?.spine
   return {
-    manifest: parseManifest(manifest),
+    manifest: new Manifest(parseManifest(manifest)),
     metadata: parseMetadata(metadata),
     spine: parseSpine(spine)
   }
@@ -25,6 +25,7 @@ function parseManifest(manifest: object) {
     filename: parseLink(item['@href']).name,
   }))
 }
+export type ManifestItem = ReturnType<typeof parseManifest>[number]
 
 type Metadata = Partial<{
   title: string,
@@ -68,4 +69,31 @@ function parseSpine(spine: any) {
   return Object.fromEntries(
     itemref.map((item: any, index: number) => [item['@idref'], index])
   ) as Record<string, number>
+}
+
+export class Manifest implements Iterable<ManifestItem> {
+  constructor(private manifest: ManifestItem[]) {}
+
+  [Symbol.iterator]() {
+    return this.manifest[Symbol.iterator]()
+  }
+
+  /**
+   * Resolves the item ID from a given href link in the EPUB manifest.
+   *
+   * @param {string} href - The href link to resolve the item ID for.
+   * @returns {string} The corresponding item ID from the manifest.
+   */
+  getItemId(href: string) {
+    const { name: tarName } = parseLink(href)
+    const tarItem = this.manifest.find(item => {
+      const { name } = parseLink(item.href)
+      return name === tarName
+    })
+    return tarItem?.id!
+  }
+
+  getById(id: string) {
+    return this.manifest.find(item => item.id === id)
+  }
 }

@@ -90,7 +90,7 @@ export class Converter {
           const { hash = '', url } = parseHref(link, true)
           if (link.startsWith("#"))
             return linkStartSep + this.options.shouldMerge ? id : fileName + link
-          const sectionId = this.epub.getItemId(url)
+          const sectionId = this.epub.opf.manifest.getItemId(url)
           const internalNavName = this.epub.structure?.getBySectionId(sectionId)?.name || link
 
           // fix link's path
@@ -103,7 +103,7 @@ export class Converter {
             validPath = basename(clearOutpath(file, this.epub.structure).outPath)
 
           // content's id
-          const toId = this.epub.getItemId(
+          const toId = this.epub.opf.manifest.getItemId(
             join(dirname(filepath), url)
           )
 
