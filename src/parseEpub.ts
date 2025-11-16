@@ -322,7 +322,7 @@ export class Epub {
     return this.sections ? sectionIndex != -1 ? this.sections[sectionIndex] : null : null
   }
 
-  async parse(): Promise<Epub> {
+  parse() {
     this._opfPath = this._getOpfPath()
     this._content = this._resolveXMLAsJsObject('/' + this._opfPath)
     this._root = determineRoot(this._opfPath)
@@ -348,7 +348,7 @@ export class Epub {
 }
 
 
-export default function parserWrapper(target: string | Buffer, opts?: ParserOptions): Promise<Epub> {
+export default function parserWrapper(target: string | Buffer, opts?: ParserOptions) {
   // seems 260 is the length limit of old windows standard
   // so path length is not used to determine whether it's path or binary string
   // the downside here is that if the filepath is incorrect, it will be treated as binary string by default

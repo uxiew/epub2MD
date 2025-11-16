@@ -123,8 +123,8 @@ export class Converter {
    * representing the file contents. When unzip is false, it skips certain files like
    * the NCX file and title page, and generates appropriate output paths for other files.
    */
-  async getManifest(unzip?: boolean) {
-    this.epub = await parseEpub(this.epubFilePath, {
+  getManifest(unzip?: boolean) {
+    this.epub = parseEpub(this.epubFilePath, {
       convertToMarkdown: convertHTML
     })
     this.outDir = this.epubFilePath.replace('.epub', '')
@@ -191,8 +191,8 @@ export class Converter {
     if (downloadTasks.length) await Promise.all(downloadTasks)
   }
 
-  private async getFileDataAsync(structure: Structure, handleContent?: (content: string) => string) {
-    let { id, type, filepath, outpath, orderLabel } = structure
+  private getFileData(structure: Structure) {
+    let { id, type, filepath, outpath } = structure
     let content: Buffer | string = '',
       // nav: TOCItem | undefined,
       // current content's internal links
@@ -297,7 +297,7 @@ export class Converter {
    * @param RunOptions - Configuration options or boolean (backward compatibility)
    * @returns A promise resolving to the output directory or the result of generating a merged file
    */
-  async run(options?: RunOptions): Promise<string> {
+  run(options?: RunOptions) {
     const isUnzipOnly = options?.cmd === 'unzip'
 
     if (options) {
@@ -307,7 +307,7 @@ export class Converter {
       this.mergedFilename = options.mergedFilename
     }
 
-    await this.getManifest(isUnzipOnly)
+    this.getManifest(isUnzipOnly)
 
     if (this.shouldMerge && !isUnzipOnly) {
       return this.generateMergedFile()
@@ -317,7 +317,7 @@ export class Converter {
     let num = 1
     for (const s of this.structure) {
       // 使用异步版本
-      const { type, outFilePath, content } = await this.getFileDataAsync(s)
+      const { type, outFilePath, content } = this.getFileData(s)
       if (content.toString() === '') continue;
 
       if (type === 'md') {
@@ -337,12 +337,12 @@ export class Converter {
   /**
    * Directly generate a single merged Markdown file
    */
-  private async generateMergedFile() {
+  private generateMergedFile() {
     // Save markdown content and sorting information
     let num = 1, mergedContent = ''
     // Process all chapters
     for (const s of this.structure) {
-      let { id, filepath, outFilePath, content } = await this.getFileDataAsync(s)
+      let { id, filepath, outFilePath, content } = this.getFileData(s)
       const { isHTML } = checkFileType(filepath)
       if (isHTML) {
         content = (`<a role="toc_link" id="${id}"></a>\n`) + content

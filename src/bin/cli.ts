@@ -96,20 +96,17 @@ if (!hasRun && flags[Commands.unzip]) {
   if (epubPath) {
     logger.info('unzipping...')
 
-    new Converter(epubPath)
-      .run({
+    try {
+      const outDir = new Converter(epubPath).run({
         cmd: Commands.unzip, // Use cmd to indicate unzip only
         mergedFilename: undefined,
         shouldMerge: false,
         localize: false,
       })
-      .then((outDir) => {
-        logger.info(`Unzip successful! output: ${outDir}`)
-      })
-      .catch((error) => {
-        logger.error(error)
-      })
-
+      logger.info(`Unzip successful! output: ${outDir}`)
+    } catch (error) {
+      logger.error(error as string)
+    }
     hasRun = true
   } else {
     logger.error('No valid epub file path provided for unzip command')
@@ -223,7 +220,7 @@ async function run(cmd: CommandType) {
       )
 
       try {
-        const outDir = await new Converter(currentFile).run({
+        const outDir = new Converter(currentFile).run({
           cmd,
           mergedFilename,
           shouldMerge,
@@ -251,14 +248,13 @@ async function run(cmd: CommandType) {
   // Handle information display commands
   const cmdPath = flags[cmd]
   if (typeof cmdPath === 'string') {
-    parseEpub(cmdPath)
-      .then((res) => {
-        logger.success(`This book ${cmd}:`)
-        logger.json(res[cmd as 'info' | 'structure' | 'sections'])
-      })
-      .catch((error) => {
-        logger.error(error)
-      })
+    try {
+      const epub = parseEpub(cmdPath)
+      logger.success(`This book ${cmd}:`)
+      logger.json(epub[cmd as 'info' | 'structure' | 'sections'])
+    } catch (error) {
+      logger.error(error as string)
+    }
   } else {
     logger.error(`Path must be a string, got ${typeof cmdPath}`)
   }
