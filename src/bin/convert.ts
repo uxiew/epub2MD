@@ -54,6 +54,15 @@ export class Converter {
     this.epubFilePath = epubPath
     this.outDir = dirname(epubPath)
     this.options = { ...defaultOptions, ...options }
+
+    const isUnzipOnly = this.options.cmd === 'unzip'
+
+    this.getManifest(isUnzipOnly)
+
+    if (this.options.shouldMerge && !isUnzipOnly)
+      this.generateMergedFile()
+    else
+      this.generateFiles()
   }
 
 
@@ -295,22 +304,6 @@ export class Converter {
     }
   }
 
-  /**
-   * Runs the conversion process for an EPUB file.
-   *
-   * @returns A promise resolving to the output directory or the result of generating a merged file
-   */
-  run() {
-    const isUnzipOnly = this.options.cmd === 'unzip'
-
-    this.getManifest(isUnzipOnly)
-
-    if (this.options.shouldMerge && !isUnzipOnly)
-      return this.generateMergedFile()
-    else
-      return this.generateFiles()
-  }
-
   private generateFiles() {
     // Process all chapters
     let num = 1
@@ -320,8 +313,6 @@ export class Converter {
         logger.success(`${num++}: [${basename(outFilePath)}]`)
       writeFileSync(outFilePath, content, { overwrite: true })
     }
-
-    return this.outDir
   }
 
   quietGenerateFiles () {
@@ -361,6 +352,6 @@ export class Converter {
     )
     // Write merged content
     writeFileSync(outputPath, mergedContent, { overwrite: true })
-    return outputPath
+    this.outDir = outputPath
   }
 }

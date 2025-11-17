@@ -103,7 +103,7 @@ if (!hasRun && flags[Commands.unzip]) {
     logger.info('unzipping...')
 
     try {
-      const outDir = new Converter(epubPath, options).run()
+      const { outDir } = new Converter(epubPath, options)
       logger.info(`Unzip successful! output: ${outDir}`)
     } catch (error) {
       logger.error(error as string)
@@ -227,7 +227,7 @@ async function run(cmd: CommandType) {
         localize,
       }
       try {
-        const outDir = new Converter(currentFile, options).run()
+        const { outDir } = new Converter(currentFile, options)
 
         // If direct merge, return value is the merged file path
         if (shouldMerge) {
