@@ -9,7 +9,7 @@ import type { Epub, TOCItem } from '../parseEpub'
 import { checkFileType, convertHTML, fixLinkPath, getClearFilename, resolveHTMLId } from './helper'
 import { matchTOC } from '../utils'
 import parseHref from '../parseLink'
-import { Commands, type CommandType } from './cli'
+import { type CommandType } from './cli'
 
 interface Structure {
   id: string
@@ -202,7 +202,7 @@ export class Converter {
       // current content's internal links
       links: { url: string, hash: string, id: string, toId: string }[] = []
 
-    const needAutoCorrect = this.options.cmd === Commands.autocorrect
+    const needAutoCorrect = this.options.cmd === 'autocorrect'
 
     if (type === 'md') {
       const section = this.epub?.getSection(id)
@@ -314,23 +314,20 @@ export class Converter {
   private generateFiles() {
     // Process all chapters
     let num = 1
-    for (const s of this.structure) {
-      // 使用异步版本
-      const { type, outFilePath, content } = this.getFileData(s)
-      if (content.toString() === '') continue;
-
-      if (type === 'md') {
+    for (const { type, outFilePath, content } of this.quietGenerateFiles()) {
+      if (content.length === 0) continue
+      if (type === 'md')
         logger.success(`${num++}: [${basename(outFilePath)}]`)
-      }
-
-      writeFileSync(
-        outFilePath,
-        content,
-        { overwrite: true }
-      )
+      writeFileSync(outFilePath, content, { overwrite: true })
     }
 
     return this.outDir
+  }
+
+  quietGenerateFiles () {
+    return this.structure
+      .values()
+      .map(x => this.getFileData(x))
   }
 
   /**
