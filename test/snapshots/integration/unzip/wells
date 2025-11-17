@@ -1,13 +1,124 @@
 {
   "0": {
-    "created output folder": false,
-    "folder name = file stem": false,
-    "image count": undefined,
-    "markdown file count": undefined,
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 4,
+    "markdown file count": 14,
     "output merged markdown": false,
   },
-  "hashTree": "Output folder not created",
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "28k23V5QYvxhJJ1tqweAHScacIM=",
+        "name": "01-chapter-1.md",
+      },
+      HashedFile {
+        "hash": "M9jNPoB9tIWVEZjkMcsp+lB+jpI=",
+        "name": "02-chapter-2.md",
+      },
+      HashedFile {
+        "hash": "g+unNj/UYrukq/qB4uQ1+PAko/M=",
+        "name": "03-chapter-3.md",
+      },
+      HashedFile {
+        "hash": "lU2UaaVr3ErM2dWrigjKZ837iUo=",
+        "name": "04-chapter-4.md",
+      },
+      HashedFile {
+        "hash": "PR0MUxMaVV3Ah9YoG2XfJPIzuTE=",
+        "name": "05-chapter-5.md",
+      },
+      HashedFile {
+        "hash": "IL9ylrVQ18GECYi4tEUhIeMhCpc=",
+        "name": "06-chapter-6.md",
+      },
+      HashedFile {
+        "hash": "x573C5sayfQmPkjrlf9ZphPVMKk=",
+        "name": "07-chapter-7.md",
+      },
+      HashedFile {
+        "hash": "k+sJ03VoD7OkUdEAANeg0VIjgn0=",
+        "name": "08-chapter-8.md",
+      },
+      HashedFile {
+        "hash": "UABXYzcduPOmi/ex1lxX9tWeTh4=",
+        "name": "09-chapter-9.md",
+      },
+      HashedFile {
+        "hash": "hNj0w8cPwwi8c9M8P7Vmi2/Ee84=",
+        "name": "10-chapter-10.md",
+      },
+      HashedFile {
+        "hash": "Fe1xhRwdxFh0kLgObRDpo4rSb40=",
+        "name": "11-halftitlepage.md",
+      },
+      HashedFile {
+        "hash": "3QTJzNBWo8bD+hK0vAPeWSRScTw=",
+        "name": "12-preface.md",
+      },
+      HashedFile {
+        "hash": "5r1kqnTr1INBkapowaqq+xrVdlI=",
+        "name": "13-titlepage.md",
+      },
+      HashedFile {
+        "hash": "xT0RTdFrlO6IFlMbyVSa8cLR2iA=",
+        "name": "14-toc.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "T10P+HfcfVnd5sffjAZc40MYuzo=",
+            "name": "cover.jpg",
+          },
+          HashedFile {
+            "hash": "R3XKoYlRMe3sMcZOFC3NOu2lVv8=",
+            "name": "illustration-1.png",
+          },
+          HashedFile {
+            "hash": "k+ivRXiicZyjnB1CjlyqDrqSd0U=",
+            "name": "illustration-2.png",
+          },
+          HashedFile {
+            "hash": "xPTIsmn4DcrhDLFlNAVtAB3ftmM=",
+            "name": "illustration-3.png",
+          },
+        ],
+        "hash": "jXScBgOOU0qXy647lriRNZmsKSE=",
+        "name": "images",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "toSZKNHclBSVKCj9nkxnO3lGgyQ=",
+            "name": "core.css",
+          },
+          HashedFile {
+            "hash": "OsPsqvJN6coa5uIcL/848yofChE=",
+            "name": "local.css",
+          },
+        ],
+        "hash": "3yw6gZCgUN2wQfU42x51a9/DLxg=",
+        "name": "static",
+      },
+    ],
+    "hash": "YpOyd89x9t6cWlRV9iUwf/p2KVQ=",
+    "name": "wells",
+  },
   "stdout": "[epub2md]: unzipping...
+[epub2md]: 1: [01-chapter-1.md]
+[epub2md]: 2: [02-chapter-2.md]
+[epub2md]: 3: [03-chapter-3.md]
+[epub2md]: 4: [04-chapter-4.md]
+[epub2md]: 5: [05-chapter-5.md]
+[epub2md]: 6: [06-chapter-6.md]
+[epub2md]: 7: [07-chapter-7.md]
+[epub2md]: 8: [08-chapter-8.md]
+[epub2md]: 9: [09-chapter-9.md]
+[epub2md]: 10: [10-chapter-10.md]
+[epub2md]: 11: [11-halftitlepage.md]
+[epub2md]: 12: [12-preface.md]
+[epub2md]: 13: [13-titlepage.md]
+[epub2md]: 14: [14-toc.md]
 [epub2md]: Unzip successful! output: <absolute path hidden from snapshot>/wells
 ",
 }

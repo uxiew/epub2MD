@@ -54,19 +54,17 @@ export class Converter {
   constructor(epubPath: string, options?: Partial<RunOptions>) {
     this.options = { ...defaultOptions, ...options }
 
-    const isUnzipOnly = this.options.cmd === 'unzip'
-
     this.epub = parseEpub(epubPath, { convertToMarkdown: convertHTML })
     this.outDir = epubPath.replace('.epub', '')
 
-    this.getManifest(isUnzipOnly)
+    this.getManifest()
 
     this.files = this.structure
       .values()
       .map(x => this.getFileData(x))
       .filter(x => x.content.length > 0)
 
-    if (this.options.shouldMerge && !isUnzipOnly)
+    if (this.options.shouldMerge)
       this.mergeProgress = this.mergeFiles()
   }
 
@@ -125,39 +123,28 @@ export class Converter {
   /**
    * Retrieves and processes the manifest of an EPUB file.
    *
-   * @param unzip - Optional flag to indicate whether to simply unzip the file contents
-   * @returns Populates the structure array with manifest items, either unzipped or converted
+   * @returns Populates the structure array with manifest items
    *
    * This method parses the EPUB file, extracts its manifest, and creates a structure
    * representing the file contents. When unzip is false, it skips certain files like
    * the NCX file and title page, and generates appropriate output paths for other files.
    */
-  private getManifest(unzip: boolean) {
+  private getManifest() {
     const orderPrefix = new OrderPrefix({
       maximum: this.epub.sections?.length ?? 0
     })
     for (const { href: filepath, id } of this.epub.getManifest()) {
-      let outpath = '', type: Structure['type'] = ''
-      // simply unzip
-      if (unzip) outpath = join(this.outDir, filepath)
-      else {
-        // remove those useless file, keep other files,like img/css/js etc.
-        if (filepath.endsWith('ncx') || id === 'titlepage') continue
-        const file = this.parseFileInfo(filepath)
-        outpath = file.path
-        type = file.type
-      }
-      if (type !== '') {
-        this.structure.push({
-          // current only label markdown file
-          orderPrefix: type === 'md' ? orderPrefix.next() : '',
-          id,
-          type,
-          outpath,
-          filepath
-        })
-
-      }
+      if (filepath.endsWith('ncx') || id === 'titlepage') continue
+      const { type, path: outpath } = this.parseFileInfo(filepath)
+      if (type === '' && this.options.cmd !== 'unzip') continue
+      this.structure.push({
+        // current only label markdown file
+        orderPrefix: type === 'md' ? orderPrefix.next() : '',
+        id,
+        type,
+        outpath,
+        filepath
+      })
     }
   }
 
