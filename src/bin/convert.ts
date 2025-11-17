@@ -16,7 +16,7 @@ import { type CommandType } from './cli'
 interface Structure {
   id: string
   type: 'md' | 'img' | ''
-  orderLabel: string
+  orderPrefix: string
   outpath: string
   filepath: string
 }
@@ -70,8 +70,7 @@ export class Converter {
       this.mergeProgress = this.mergeFiles()
   }
 
-
-  private clearOutpath({ id, outpath, orderLabel }: Structure) {
+  private clearOutpath({ id, outpath, orderPrefix }: Structure) {
     /*get readable name from toc items*/
     function _matchNav(id: Structure['id'], tocItems?: TOCItem[]): TOCItem | undefined {
       if (Array.isArray(tocItems))
@@ -98,7 +97,7 @@ export class Converter {
     return {
       fileName,
       outDir,
-      outPath: join(outDir, orderLabel + '-' + fileName)
+      outPath: join(outDir, orderPrefix + '-' + fileName)
     }
   }
 
@@ -141,12 +140,10 @@ export class Converter {
    * representing the file contents. When unzip is false, it skips certain files like
    * the NCX file and title page, and generates appropriate output paths for other files.
    */
-  getManifest(unzip?: boolean) {
-    // for numbered output,and file's internal link
-    let num = 0
-    const padding = Math.floor(
-      Math.log10(this.epub?.sections?.length ?? 0)
-    );
+  private getManifest(unzip: boolean) {
+    const orderPrefix = new OrderPrefix({
+      maximum: this.epub.sections?.length ?? 0
+    })
     for (const { href: filepath, id } of this.epub.getManifest()) {
       let outpath = '', type: Structure['type'] = ''
       // simply unzip
@@ -161,8 +158,7 @@ export class Converter {
       if (type !== '') {
         this.structure.push({
           // current only label markdown file
-          orderLabel: type === 'md'
-            ? (num++, ('0'.repeat(padding) + num).slice(-(padding + 1))) : '',
+          orderPrefix: type === 'md' ? orderPrefix.next() : '',
           id,
           type,
           outpath,
@@ -323,3 +319,14 @@ export class Converter {
 
 export type FileData = IteratorObject<ReturnType<Converter['getFileData']>>
 export type MergeProgress = ReturnType<Converter['mergeFiles']>
+
+class OrderPrefix {
+  private count = 0
+  private length: number
+  constructor({ maximum }: { maximum: number }) {
+    this.length = Math.floor(Math.log10(maximum)) + 1
+  }
+  next() {
+    return (++this.count).toString().padStart(this.length, '0')
+  }
+}
