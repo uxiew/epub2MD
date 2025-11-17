@@ -305,10 +305,13 @@ export class Converter {
 
     this.getManifest(isUnzipOnly)
 
-    if (this.options.shouldMerge && !isUnzipOnly) {
+    if (this.options.shouldMerge && !isUnzipOnly)
       return this.generateMergedFile()
-    }
+    else
+      return this.generateFiles()
+  }
 
+  private generateFiles() {
     // Process all chapters
     let num = 1
     for (const s of this.structure) {
