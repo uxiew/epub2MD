@@ -105,26 +105,18 @@ export class Converter {
   * Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
   * @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
   */
-  parseFileInfo(filepath: string): {
-    type: Structure['type']
-    name: string
-    path: string
-  } {
+  parseFileInfo(filepath: string) {
     const { isImage, isHTML } = checkFileType(filepath)
     // other files skipped
     const name = basename(filepath)
-    const path = (!isImage && !isHTML) ? join(
+    const path = join(
       this.outDir,
-      'static',
-      isHTML ? resolveHTMLId(name) + this.MD_FILE_EXT : name,
-    ) : join(
-      this.outDir,
-      isImage ? this.IMAGE_DIR : '',
+      isImage ? this.IMAGE_DIR : isHTML ? '' : 'static',
       isHTML ? resolveHTMLId(name) + this.MD_FILE_EXT : name,
     )
     return {
       // html => md
-      type: isHTML ? 'md' : isImage ? 'img' : '',
+      type: isHTML ? 'md' : isImage ? 'img' : '' as Structure['type'],
       name,
       path
     }
