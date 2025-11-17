@@ -93,16 +93,17 @@ if (!hasRun && flags[Commands.unzip]) {
         ? unprocessedArgs[0]
         : null
 
+  const options = {
+    cmd: Commands.unzip,
+    mergedFilename: undefined,
+    shouldMerge: false,
+    localize: false,
+  }
   if (epubPath) {
     logger.info('unzipping...')
 
     try {
-      const outDir = new Converter(epubPath).run({
-        cmd: Commands.unzip, // Use cmd to indicate unzip only
-        mergedFilename: undefined,
-        shouldMerge: false,
-        localize: false,
-      })
+      const outDir = new Converter(epubPath, options).run()
       logger.info(`Unzip successful! output: ${outDir}`)
     } catch (error) {
       logger.error(error as string)
@@ -219,13 +220,14 @@ async function run(cmd: CommandType) {
         }${flags[Commands.merge] ? ' and merging' : ''}...`,
       )
 
+      const options = {
+        cmd,
+        mergedFilename,
+        shouldMerge,
+        localize,
+      }
       try {
-        const outDir = new Converter(currentFile).run({
-          cmd,
-          mergedFilename,
-          shouldMerge,
-          localize,
-        })
+        const outDir = new Converter(currentFile, options).run()
 
         // If direct merge, return value is the merged file path
         if (shouldMerge) {

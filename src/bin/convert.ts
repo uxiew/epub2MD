@@ -47,9 +47,16 @@ export class Converter {
    * Constructor
    * @param epubPath - The path to the EPUB file
    */
-  constructor(epubPath: string) {
+  constructor(epubPath: string, options?: RunOptions) {
     this.epubFilePath = epubPath
     this.outDir = dirname(epubPath)
+
+    if (options) {
+      this.cmd = options.cmd
+      this.shouldMerge = options.shouldMerge
+      this.localize = options.localize
+      this.mergedFilename = options.mergedFilename
+    }
   }
 
 
@@ -297,15 +304,8 @@ export class Converter {
    * @param RunOptions - Configuration options or boolean (backward compatibility)
    * @returns A promise resolving to the output directory or the result of generating a merged file
    */
-  run(options?: RunOptions) {
-    const isUnzipOnly = options?.cmd === 'unzip'
-
-    if (options) {
-      this.cmd = options.cmd
-      this.shouldMerge = options.shouldMerge
-      this.localize = options.localize
-      this.mergedFilename = options.mergedFilename
-    }
+  run() {
+    const isUnzipOnly = this.cmd === 'unzip'
 
     this.getManifest(isUnzipOnly)
 
