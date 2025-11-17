@@ -10,11 +10,11 @@ export const name = 'epub2md'
  * 日志级别枚举
  */
 export enum LogLevel {
-    DEBUG = 0,
-    INFO = 1,
-    SUCCESS = 2,
-    WARN = 3,
-    ERROR = 4,
+  DEBUG = 0,
+  INFO = 1,
+  SUCCESS = 2,
+  WARN = 3,
+  ERROR = 4,
 }
 
 // 当前日志级别，可以通过环境变量或配置文件设置
@@ -25,7 +25,7 @@ let currentLogLevel = LogLevel.INFO
  * @param level 日志级别
  */
 export function setLogLevel(level: LogLevel): void {
-    currentLogLevel = level
+  currentLogLevel = level
 }
 
 /**
@@ -33,7 +33,7 @@ export function setLogLevel(level: LogLevel): void {
  * @param message 消息内容
  */
 function formatMessage(message: string): string {
-    return `[${name}]: ${message}`
+  return `[${name}]: ${message}`
 }
 
 /**
@@ -42,9 +42,9 @@ function formatMessage(message: string): string {
  * @param args 额外参数
  */
 export function debug(message: string, ...args: any[]): void {
-    if (currentLogLevel <= LogLevel.DEBUG) {
-        console.log(pc.gray(formatMessage(message)), ...args)
-    }
+  if (currentLogLevel <= LogLevel.DEBUG) {
+    console.log(pc.gray(formatMessage(message)), ...args)
+  }
 }
 
 /**
@@ -53,9 +53,9 @@ export function debug(message: string, ...args: any[]): void {
  * @param args 额外参数
  */
 export function info(message: string, ...args: any[]): void {
-    if (currentLogLevel <= LogLevel.INFO) {
-        console.log(pc.blue(formatMessage(message)), ...args)
-    }
+  if (currentLogLevel <= LogLevel.INFO) {
+    console.log(pc.blue(formatMessage(message)), ...args)
+  }
 }
 
 /**
@@ -64,9 +64,9 @@ export function info(message: string, ...args: any[]): void {
  * @param args 额外参数
  */
 export function success(message: string, ...args: any[]): void {
-    if (currentLogLevel <= LogLevel.SUCCESS) {
-        console.log(pc.green(formatMessage(message)), ...args)
-    }
+  if (currentLogLevel <= LogLevel.SUCCESS) {
+    console.log(pc.green(formatMessage(message)), ...args)
+  }
 }
 
 /**
@@ -75,9 +75,9 @@ export function success(message: string, ...args: any[]): void {
  * @param args 额外参数
  */
 export function warn(message: string, ...args: any[]): void {
-    if (currentLogLevel <= LogLevel.WARN) {
-        console.log(pc.yellow(formatMessage(message)), ...args)
-    }
+  if (currentLogLevel <= LogLevel.WARN) {
+    console.log(pc.yellow(formatMessage(message)), ...args)
+  }
 }
 
 /**
@@ -86,9 +86,9 @@ export function warn(message: string, ...args: any[]): void {
  * @param args 额外参数
  */
 export function error(message: string, ...args: any[]): void {
-    if (currentLogLevel <= LogLevel.ERROR) {
-        console.log(pc.red(formatMessage(message)), ...args)
-    }
+  if (currentLogLevel <= LogLevel.ERROR) {
+    console.log(pc.red(formatMessage(message)), ...args)
+  }
 }
 
 /**
@@ -96,21 +96,21 @@ export function error(message: string, ...args: any[]): void {
  * @param data 要输出的数据
  */
 export function json(data: any): void {
-    try {
-        const { json: beautyJson } = require('beauty-json')
-        beautyJson.log(data)
-    } catch (e) {
-        console.log(data)
-    }
+  try {
+    const { json: beautyJson } = require('beauty-json')
+    beautyJson.log(data)
+  } catch (e) {
+    console.log(data)
+  }
 }
 
 // 导出默认对象，包含所有日志函数
 export default {
-    debug,
-    info,
-    success,
-    warn,
-    error,
-    json,
-    setLogLevel,
+  debug,
+  info,
+  success,
+  warn,
+  error,
+  json,
+  setLogLevel,
 }
