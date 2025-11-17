@@ -1,0 +1,108 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 1,
+    "markdown file count": 16,
+    "output merged markdown": false,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "iPkAnmuwV/BAmdubVlukNN3FQXA=",
+        "name": "02-围城.md",
+      },
+      HashedFile {
+        "hash": "kcUkiO/Jq9ix16slQa//g1Y1iL8=",
+        "name": "03-目录.md",
+      },
+      HashedFile {
+        "hash": "wfPdu3yn/BcAcO6TTSy1z7rlOLs=",
+        "name": "04-校书记略.md",
+      },
+      HashedFile {
+        "hash": "wxDSY56KWYQpuNKTB6hkg/Edyvw=",
+        "name": "05-作者简介.md",
+      },
+      HashedFile {
+        "hash": "AljwOpIcIUfq2HBXTR4XM3+koi4=",
+        "name": "06-重印前记.md",
+      },
+      HashedFile {
+        "hash": "0EBQasDFI9RdlofJFPKJVsJx2js=",
+        "name": "07-序.md",
+      },
+      HashedFile {
+        "hash": "I7uWgtMRLpEgubSEnuLhPFZ+9Jo=",
+        "name": "08-第一章.md",
+      },
+      HashedFile {
+        "hash": "2e52D5zYWp6Edg8HTgMpahu1KTM=",
+        "name": "09-第二章.md",
+      },
+      HashedFile {
+        "hash": "iFOAOBy75fthXVrjzMcffQkKxSE=",
+        "name": "10-第三章.md",
+      },
+      HashedFile {
+        "hash": "16bYPCUECvI4d+ew7LmDcGJblbo=",
+        "name": "11-第四章.md",
+      },
+      HashedFile {
+        "hash": "ljczQ4JXrPO37Ena3o6lMbE+4lg=",
+        "name": "12-第五章.md",
+      },
+      HashedFile {
+        "hash": "8rVBTvD0DFOBiLKktEDT/e0WpRQ=",
+        "name": "13-第六章.md",
+      },
+      HashedFile {
+        "hash": "AeCA3iGRNwKMCnbDlPJhyA4vUlc=",
+        "name": "14-第七章.md",
+      },
+      HashedFile {
+        "hash": "5aFl0i6hCTFT3sfYdbxXTuVaEn8=",
+        "name": "15-第八章.md",
+      },
+      HashedFile {
+        "hash": "dcA4dfEaBYQVg/Zk+kv55pQX4Z0=",
+        "name": "16-第九章.md",
+      },
+      HashedFile {
+        "hash": "l9ts3jWAGpCF681MWcyevDAwlTY=",
+        "name": "17-附录_记钱锺书与《围城》.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "v7G0Yx082z3R1jA+Citawr474/M=",
+            "name": "s1070222.jpg",
+          },
+        ],
+        "hash": "VboHRBTXXt6SBwYrFk2dai5vt/w=",
+        "name": "images",
+      },
+    ],
+    "hash": "ypsibAq42OQCP+K8Ur95E0K/tjg=",
+    "name": "file-2",
+  },
+  "stdout": "[34m[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-2.epub...[39m
+[32m[epub2md]: 1: [02-围城.md][39m
+[32m[epub2md]: 2: [03-目录.md][39m
+[32m[epub2md]: 3: [04-校书记略.md][39m
+[32m[epub2md]: 4: [05-作者简介.md][39m
+[32m[epub2md]: 5: [06-重印前记.md][39m
+[32m[epub2md]: 6: [07-序.md][39m
+[32m[epub2md]: 7: [08-第一章.md][39m
+[32m[epub2md]: 8: [09-第二章.md][39m
+[32m[epub2md]: 9: [10-第三章.md][39m
+[32m[epub2md]: 10: [11-第四章.md][39m
+[32m[epub2md]: 11: [12-第五章.md][39m
+[32m[epub2md]: 12: [13-第六章.md][39m
+[32m[epub2md]: 13: [14-第七章.md][39m
+[32m[epub2md]: 14: [15-第八章.md][39m
+[32m[epub2md]: 15: [16-第九章.md][39m
+[32m[epub2md]: 16: [17-附录_记钱锺书与《围城》.md][39m
+[34m[epub2md]: [1/1] Conversion successful! output: <absolute path hidden from snapshot>/file-2[39m
+",
+}

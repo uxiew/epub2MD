@@ -1,28 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import os from 'node:os'
-import { mergeMarkdowns } from '../src/bin/merge'
 import { promisify } from 'node:util'
+import { mergeMarkdowns } from '../src/bin/merge'
+import { newTempDir } from './utilities/utilities'
 
-const mkdtemp = promisify(fs.mkdtemp)
 const writeFile = promisify(fs.writeFile)
 const readFile = promisify(fs.readFile)
-const mkdir = promisify(fs.mkdir)
-const rmdir = promisify(fs.rm)
 
 describe('mergeMarkdowns', () => {
   let tempDir: string
-
-  beforeEach(async () => {
-    // 创建临时目录
-    tempDir = await mkdtemp(path.join(os.tmpdir(), 'epub2md-test-'))
-  })
-
-  afterEach(async () => {
-    // 清理临时目录
-    await rmdir(tempDir, { recursive: true, force: true })
-    await rmdir('./fixtures/merge', { recursive: true, force: true })
-  })
+  beforeEach(() => tempDir = newTempDir())
 
   it('应该按照数字顺序合并markdown文件', async () => {
     // 创建测试用的markdown文件
@@ -64,12 +51,11 @@ describe('mergeMarkdowns', () => {
   })
 
   it('应该在没有找到markdown文件时抛出错误', async () => {
-    // 创建一个空目录
-    const emptyDir = path.join(tempDir, 'empty')
-    await mkdir(emptyDir)
+    const emptyDir = tempDir
 
     // 期望函数抛出错误
-    await expect(mergeMarkdowns(emptyDir)).rejects.toThrow("No Markdown file was found!")
+    const promise = suppressConsoleLog(() => mergeMarkdowns(emptyDir))
+    await expect(promise).rejects.toThrow("No Markdown file was found!")
   })
 
   it('应该在各章节之间添加分隔符', async () => {
@@ -93,3 +79,14 @@ describe('mergeMarkdowns', () => {
     expect(merged).toBe('内容1\n\n---\n\n内容2')
   })
 })
+
+/**
+ * Disable console.log during the execution of the given function
+ */
+const suppressConsoleLog = <T>(fn: () => T) => {
+  const original = console.log
+  console.log = () => {}
+  const result = fn()
+  console.log = original
+  return result
+}

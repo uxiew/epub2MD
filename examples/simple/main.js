@@ -1,7 +1,7 @@
 // @ts-check
 const { parseEpub } = require('../../lib')
 
-parseEpub('../../fixtures/zhihu.epub').then((result) => {
+parseEpub('../../test/fixtures/zhihu.epub').then((result) => {
   console.log('result object has keys: ', Object.keys(result))
   console.log('book info', result.info)
   console.log('book structure', result.structure)
