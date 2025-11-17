@@ -21,9 +21,14 @@ interface Structure {
 
 interface RunOptions {
   cmd: CommandType
-  shouldMerge: boolean
-  localize: boolean
+  shouldMerge: boolean      // Whether to directly generate the merged file
+  localize: boolean         // Whether to retain the original online image link
   mergedFilename?: string
+}
+const defaultOptions = {
+  cmd: 'convert' as const,
+  shouldMerge: false,
+  localize: false,
 }
 
 export class Converter {
@@ -31,14 +36,11 @@ export class Converter {
   epubFilePath: string // current epub 's path
 
   outDir: string  // epub 's original directory to save markdown files
-  mergedFilename?: string // The merged file name
 
   // include images/html/css/js in the epub file
   structure: Structure[] = [] // epub dir structure
 
-  cmd: CommandType = 'convert' // current using command flag
-  shouldMerge: boolean = false// Whether to directly generate the merged file
-  localize: boolean = false // Whether to retain the original online image link
+  options: RunOptions
 
   IMAGE_DIR: string = 'images' // The directory to save images
   MD_FILE_EXT: string = '.md' as const // out file extname
@@ -46,17 +48,12 @@ export class Converter {
   /**
    * Constructor
    * @param epubPath - The path to the EPUB file
+   * @param RunOptions - Configuration options or boolean (backward compatibility)
    */
-  constructor(epubPath: string, options?: RunOptions) {
+  constructor(epubPath: string, options?: Partial<RunOptions>) {
     this.epubFilePath = epubPath
     this.outDir = dirname(epubPath)
-
-    if (options) {
-      this.cmd = options.cmd
-      this.shouldMerge = options.shouldMerge
-      this.localize = options.localize
-      this.mergedFilename = options.mergedFilename
-    }
+    this.options = { ...defaultOptions, ...options }
   }
 
 
@@ -205,7 +202,7 @@ export class Converter {
       // current content's internal links
       links: { url: string, hash: string, id: string, toId: string }[] = []
 
-    const needAutoCorrect = this.cmd === Commands.autocorrect
+    const needAutoCorrect = this.options.cmd === Commands.autocorrect
 
     if (type === 'md') {
       const section = this.epub?.getSection(id)
@@ -220,7 +217,7 @@ export class Converter {
       // resources links
       const resLinks: string[] = []
       // When merging into a single file, perform link processing.
-      const linkStartSep = this.shouldMerge ? '#' : './'
+      const linkStartSep = this.options.shouldMerge ? '#' : './'
 
       // First, synchronously replace the internal images of the epub with those in./images/xxx
       content = fixLinkPath(content, (link, isText) => {
@@ -228,7 +225,7 @@ export class Converter {
           const { hash = '', url } = parseHref(link, true)
 
           if (link.startsWith("#")) {
-            return linkStartSep + this.shouldMerge ? id : fileName + link
+            return linkStartSep + this.options.shouldMerge ? id : fileName + link
           }
 
           link = resolveHTMLId(basename(url))
@@ -262,7 +259,7 @@ export class Converter {
             toId
           })
 
-          return this.shouldMerge
+          return this.options.shouldMerge
             ? linkStartSep + toId + (hash ? '#' + hash : '')
             : linkStartSep + validPath + `${hash ? '#' + hash : ''}`
         } else {
@@ -274,7 +271,7 @@ export class Converter {
       })
 
       // Asynchronously localize http/https images again
-      if (this.localize) {
+      if (this.options.localize) {
         try {
           this.localizeImages(resLinks, join(this.outDir, this.IMAGE_DIR))
         } catch (error) {
@@ -301,15 +298,14 @@ export class Converter {
   /**
    * Runs the conversion process for an EPUB file.
    *
-   * @param RunOptions - Configuration options or boolean (backward compatibility)
    * @returns A promise resolving to the output directory or the result of generating a merged file
    */
   run() {
-    const isUnzipOnly = this.cmd === 'unzip'
+    const isUnzipOnly = this.options.cmd === 'unzip'
 
     this.getManifest(isUnzipOnly)
 
-    if (this.shouldMerge && !isUnzipOnly) {
+    if (this.options.shouldMerge && !isUnzipOnly) {
       return this.generateMergedFile()
     }
 
@@ -361,7 +357,7 @@ export class Converter {
     // Generate merged file name
     const outputPath = join(
       this.outDir,
-      this.mergedFilename || `${basename(this.outDir)}-merged.md`
+      this.options.mergedFilename || `${basename(this.outDir)}-merged.md`
     )
     // Write merged content
     writeFileSync(outputPath, mergedContent, { overwrite: true })
