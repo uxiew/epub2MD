@@ -17,24 +17,34 @@ const epubs = readdirSync(fixturesPath)
   }))
 
 const cliPath = resolve(projectRoot, 'lib/bin/cli.cjs')
-const suites = Suites({
-  convert: {
-  },
-  autocorrect: {
-    args: 'a',
-  },
-  localize: {
-    args: 'l',
-  },
-  unzip: {
-    args: 'u',
-  },
-  merge: {
-    args: 'm',
-  },
-})
-
 const networkMockPath = resolve(projectRoot, 'test/mock-network.cjs')
+const cliCommand =
+  process.env.command === 'skip'
+  ? { skip: process.env.tests!.split(',') } :
+  process.env.command === 'only'
+  ? { only: process.env.tests!.split(',') }
+  : {}
+
+const Suites = (suites: Record<string, string>) =>
+  Object.entries(suites)
+    .map(([name, args]) => ({ name, args }))
+    .filter(suite => {
+      if (cliCommand.only)
+        return cliCommand.only.includes(suite.name)
+      if (cliCommand.skip)
+        return !cliCommand.skip.includes(suite.name)
+      return true
+    })
+    .map(({ name, args }) =>
+      ({ name, args: args ? '-' + args : '' }))
+
+const suites = Suites({
+  convert: '',
+  autocorrect: 'a',
+  localize: 'l',
+  unzip: 'u',
+  merge: 'm',
+})
 
 suite('hash output of cli commands', () => {
   for (const { name, args } of suites)
@@ -52,23 +62,6 @@ suite('hash output of cli commands', () => {
         })
     })
 })
-
-interface Suite {
-  args?: string
-  skip?: boolean
-  only?: boolean
-}
-
-function Suites(suites: Record<string, Suite>) {
-  const list = Object.entries(suites)
-    .map(([name, etc]) => ({ name, ...etc }))
-  const only = list.find(suite => suite.only)
-  const filtered = only ? [only] :
-    list.filter(suite => !suite.skip)
-  return filtered
-    .map(({ name, args }) =>
-      ({ name, args: args ? '-' + args : '' }))
-}
 
 const dropLastLine = (s: string) =>
   s.replace(/\n[^\n]*\n?$/, '\n')
