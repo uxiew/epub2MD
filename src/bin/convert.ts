@@ -1,5 +1,5 @@
 import { basename, dirname, extname, format, join, parse } from 'node:path'
-import { existsSync, mkdirSync, readv } from 'node:fs'
+import { existsSync } from 'node:fs'
 import logger, { name } from '../logger'
 import _ from 'lodash'
 import { writeFileSync } from 'write-file-safe'
@@ -50,7 +50,6 @@ export class Converter {
   constructor(epubPath: string) {
     this.epubFilePath = epubPath
     this.outDir = dirname(epubPath)
-    if (!existsSync(this.outDir)) mkdirSync(this.outDir)
   }
 
 
@@ -183,7 +182,6 @@ export class Converter {
    * 本地化 markdown 内容中的所有 http/https 图片链接
    */
   private async localizeImages(links: string[], outDir: string) {
-    if (!existsSync(outDir)) mkdirSync(outDir)
     const downloadTasks: Promise<void>[] = []
     for (const link of links) {
       const imgName = basename(link.split('?')[0])
