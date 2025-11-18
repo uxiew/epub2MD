@@ -18,8 +18,8 @@ const cli = './lib/bin/cli.cjs'
 describe(`Image Localization Tests`, () => {
   
   it('Run CLI with localize option', async () => {
-    const epubPath = './fixtures/online-imgs.epub' // 假设这个文件包含 http 图片链接
-    const outputDir = './fixtures/online-imgs'
+    const epubPath = './test/fixtures/online-imgs.epub' // 假设这个文件包含 http 图片链接
+    const outputDir = './test/fixtures/online-imgs'
 
     try {
       if (fs.existsSync(outputDir)) {
@@ -48,8 +48,8 @@ describe(`Image Localization Tests`, () => {
   }, 50000) // 增加Jest测试超时时间到30秒
 
   it('Run CLI with localize and merge options together', async () => {
-    const epubPath = './fixtures/online-imgs.epub'
-    const outputDir = './fixtures/online-imgs'
+    const epubPath = './test/fixtures/online-imgs.epub'
+    const outputDir = './test/fixtures/online-imgs'
     const outputFile = path.join(outputDir, 'online-imgs-merged.md')
 
     try {

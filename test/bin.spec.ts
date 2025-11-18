@@ -23,10 +23,10 @@ const cli = './lib/bin/cli.cjs'
 describe(`Global CLI runner`, () => {
 
   it('Run CLI good running', async () => {
-    const outputDir = './fixtures/zhihu'
+    const outputDir = './test/fixtures/zhihu'
 
     try {
-      const res = safeExecSync(`node ${cli} ./fixtures/zhihu.epub`)
+      const res = safeExecSync(`node ${cli} ./test/fixtures/zhihu.epub`)
       expect(res).toMatch('Conversion successful!')
     } finally {
       // 清理临时目录
@@ -64,8 +64,8 @@ describe(`Global CLI runner`, () => {
 
   it('Run CLI with direct merge option (--merge flag)', async () => {
     // 设置测试 EPUB 文件路径
-    const epubPath = './fixtures/file-1.epub'
-    const outputDir = './fixtures/file-1'
+    const epubPath = './test/fixtures/file-1.epub'
+    const outputDir = './test/fixtures/file-1'
     const outputFile = path.join(outputDir, 'file-1-merged.md')
 
     try {
@@ -97,8 +97,8 @@ describe(`Global CLI runner`, () => {
 
   it('Run CLI with direct merge option and custom output filename', async () => {
     // 设置测试 EPUB 文件路径
-    const epubPath = './fixtures/file-1.epub'
-    const outputDir = './fixtures/file-1'
+    const epubPath = './test/fixtures/file-1.epub'
+    const outputDir = './test/fixtures/file-1'
     const customOutputName = 'custom-output.md'
     const outputFile = path.join(outputDir, customOutputName)
 
@@ -130,8 +130,8 @@ describe(`Global CLI runner`, () => {
 
   it('Run CLI with image option', async () => {
     // 设置测试 EPUB 文件路径
-    const epubPath = './fixtures/file-2.epub'
-    const outputDir = './fixtures/file-2'
+    const epubPath = './test/fixtures/file-2.epub'
+    const outputDir = './test/fixtures/file-2'
     const outputFile = path.join(outputDir, 'file-2-merged.md')
 
     try {

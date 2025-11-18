@@ -21,7 +21,7 @@ describe('mergeMarkdowns', () => {
   afterEach(async () => {
     // 清理临时目录
     await rmdir(tempDir, { recursive: true, force: true })
-    await rmdir('./fixtures/merge', { recursive: true, force: true })
+    await rmdir('./test/fixtures/merge', { recursive: true, force: true })
   })
 
   it('应该按照数字顺序合并markdown文件', async () => {

@@ -10,12 +10,13 @@ const exists = fs.existsSync
 
 const cli = './lib/bin/cli.cjs'
 const testDir = './test-wildcards'
+const source = './test/fixtures/file-1.epub'
 
 function safeExecSync(command: string): string {
   try {
-    return execSync(command).toString();
+    return execSync(command).toString()
   } catch (error) {
-    return `Error: ${error}`;
+    return `Error: ${error}`
   }
 }
 
@@ -27,7 +28,6 @@ describe('CLI Wildcard Support', () => {
     await mkdir(testDir)
     // Prepare dummy epub files
     // We use file-1.epub as a lightweight fixture
-    const source = './fixtures/file-1.epub'
     await copyFile(source, path.join(testDir, 'book-1.epub'))
     await copyFile(source, path.join(testDir, 'book-2.epub'))
     await copyFile(source, path.join(testDir, 'other.epub'))
@@ -75,8 +75,8 @@ describe('CLI Wildcard Support', () => {
     if (!exists(nestedDir)) {
       fs.mkdirSync(nestedDir)
     }
-    fs.copyFileSync('./fixtures/file-1.epub', path.join(nestedDir, 'nested-book-1.epub'))
-    fs.copyFileSync('./fixtures/file-1.epub', path.join(nestedDir, 'nested-book-2.epub'))
+    fs.copyFileSync(source, path.join(nestedDir, 'nested-book-1.epub'))
+    fs.copyFileSync(source, path.join(nestedDir, 'nested-book-2.epub'))
 
     // Pattern: test-wildcards/**/*.epub
     // This matches all files in test-wildcards and subdirectories.

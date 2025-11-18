@@ -1,7 +1,7 @@
 .DS_Store
-fixtures/*
-fixtures/zhihu/images/*
-!fixtures/*.epub
+test/fixtures/*
+test/fixtures/zhihu/images/*
+!test/fixtures/*.epub
 dist
 lib
 temp
