@@ -5,7 +5,6 @@ import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
 import { projectRoot } from './utilities'
 import { Path } from '../src/utils'
-import assert from 'node:assert'
 import { isObject } from 'lodash'
 
 
@@ -60,24 +59,24 @@ suite('hash output of cli commands', () => {
           const tree = isObject(hashTree) ? hashTree : undefined
           const images = tree?.children.find(file => file.name === 'images')
           const mdFiles = tree?.children.filter(file => file.name.endsWith('.md'))
+
+          const mergedMarkdown = !!
+            tree?.children.find(file =>
+              file.name === epub.fileStem + '-merged.md')
+
           const snapshot = {
             stdout,
             hashTree,
-            imageCount: images?.children.length,
-            mdFileCount: mdFiles?.length
+            0: {
+              'image count': images?.children.length,
+              'markdown file count': mdFiles?.length,
+              'created output folder': typeof hashTree === 'object',
+              'folder name = file stem': tree?.name === epub.fileStem,
+              'output merged markdown': mergedMarkdown
+            }
           }
-          await expect(snapshot).toMatchFileSnapshot(snapshotPath)
           rmSync(outputDir, { force: true, recursive: true })
-
-          if (suiteName === 'unzip') return
-          if (typeof hashTree === 'string')
-            assert.fail('Output folder not created')
-
-          assert.equal(hashTree.name, epub.fileStem)
-
-          if (suiteName === 'merge')
-            assert(hashTree.children.find(file =>
-              file.name === epub.fileStem + '-merged.md'))
+          await expect(snapshot).toMatchFileSnapshot(snapshotPath)
         })
     })
 })
