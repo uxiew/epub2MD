@@ -1,23 +1,20 @@
-import { basename, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import { readdirSync, rmSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
 import { projectRoot } from './utilities'
+import { Path } from '../src/utils'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
 const epubs = readdirSync(fixturesPath)
-  .filter(path => path.endsWith('.epub'))
-  .map(path => resolve(fixturesPath, path))
-  .map(path => ({
-    inputPath: path,
-    outputPath: path.replace(/.epub$/, '')
-  }))
+  .map(path => Path(resolve(fixturesPath, path)))
+  .filter(path => path.extension === 'epub')
 
 const cliPath = resolve(projectRoot, 'lib/bin/cli.cjs')
 const networkMockPath = resolve(projectRoot, 'test/mock-network.cjs')
-const cliCommand =
+const onlySkip =
   process.env.command === 'skip'
   ? { skip: process.env.tests!.split(',') } :
   process.env.command === 'only'
@@ -28,10 +25,10 @@ const Suites = (suites: Record<string, string>) =>
   Object.entries(suites)
     .map(([name, args]) => ({ name, args }))
     .filter(suite => {
-      if (cliCommand.only)
-        return cliCommand.only.includes(suite.name)
-      if (cliCommand.skip)
-        return !cliCommand.skip.includes(suite.name)
+      if (onlySkip.only)
+        return onlySkip.only.includes(suite.name)
+      if (onlySkip.skip)
+        return !onlySkip.skip.includes(suite.name)
       return true
     })
     .map(({ name, args }) =>
@@ -46,18 +43,19 @@ const suites = Suites({
 })
 
 suite('hash output of cli commands', () => {
-  for (const { name, args } of suites)
-    suite(name, () => {
-      for (const { inputPath, outputPath } of epubs)
-        test(basename(inputPath), async () => {
-          const command = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${inputPath} ${args}`
+  for (const { name: suiteName, args } of suites)
+    suite(suiteName, () => {
+      for (const epub of epubs)
+        test(epub.fileStem, async () => {
+          const outputDir = epub.pathStem
+          const cliCommand = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${epub.fullPath} ${args}`
           const stdout = dropLastLine(  // Don't want absolute path in snapshot
-            execSync(command, { encoding: 'utf-8' }))
-          const hashTree = await createFolderHash(outputPath)
+            execSync(cliCommand, { encoding: 'utf-8' }))
+          const hashTree = await createFolderHash(outputDir)
             .catch(() => 'Output folder not created')
-          const snapshotPath = resolve(projectRoot, `test/snapshots/integration/${name}/${basename(outputPath)}`)
+          const snapshotPath = resolve(projectRoot, 'test/snapshots/integration', suiteName, epub.fileStem)
           await expect({ stdout, hashTree }).toMatchFileSnapshot(snapshotPath)
-          rmSync(outputPath, { force: true, recursive: true })
+          rmSync(outputDir, { force: true, recursive: true })
         })
     })
 })
