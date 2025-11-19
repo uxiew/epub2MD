@@ -314,7 +314,6 @@ export class Epub {
 
   getSection(id: string): Section | null {
     let sectionIndex = -1
-    // console.log(id, this.getManifest())
     if (this._spine) sectionIndex = this._spine[id]
     // fix other html ont include spine structure
     if (sectionIndex === undefined) {
