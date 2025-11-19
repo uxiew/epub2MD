@@ -1,0 +1,58 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 4,
+    "markdown file count": 1,
+    "output merged markdown": true,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "T10P+HfcfVnd5sffjAZc40MYuzo=",
+            "name": "cover.jpg",
+          },
+          HashedFile {
+            "hash": "R3XKoYlRMe3sMcZOFC3NOu2lVv8=",
+            "name": "illustration-1.png",
+          },
+          HashedFile {
+            "hash": "k+ivRXiicZyjnB1CjlyqDrqSd0U=",
+            "name": "illustration-2.png",
+          },
+          HashedFile {
+            "hash": "xPTIsmn4DcrhDLFlNAVtAB3ftmM=",
+            "name": "illustration-3.png",
+          },
+        ],
+        "hash": "jXScBgOOU0qXy647lriRNZmsKSE=",
+        "name": "images",
+      },
+      HashedFile {
+        "hash": "lgRpm8dKHbT4WQQV/5xOdgfX8P0=",
+        "name": "wells-merged.md",
+      },
+    ],
+    "hash": "nvLSWWBfYPZ5YVrruCWZKa95hQM=",
+    "name": "wells",
+  },
+  "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/wells.epub and merging...
+[epub2md]: 2: [01-chapter-1.md]
+[epub2md]: 3: [02-chapter-2.md]
+[epub2md]: 4: [03-chapter-3.md]
+[epub2md]: 5: [04-chapter-4.md]
+[epub2md]: 6: [05-chapter-5.md]
+[epub2md]: 7: [06-chapter-6.md]
+[epub2md]: 8: [07-chapter-7.md]
+[epub2md]: 9: [08-chapter-8.md]
+[epub2md]: 10: [09-chapter-9.md]
+[epub2md]: 11: [10-chapter-10.md]
+[epub2md]: 12: [11-halftitlepage.md]
+[epub2md]: 13: [12-preface.md]
+[epub2md]: 14: [13-titlepage.md]
+[epub2md]: 15: [14-toc.md]
+[epub2md]: [1/1] Merging successful! Output file: <absolute path hidden from snapshot>/wells/wells-merged.md
+",
+}

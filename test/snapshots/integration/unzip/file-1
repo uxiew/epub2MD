@@ -1,0 +1,13 @@
+{
+  "0": {
+    "created output folder": false,
+    "folder name = file stem": false,
+    "image count": undefined,
+    "markdown file count": undefined,
+    "output merged markdown": false,
+  },
+  "hashTree": "Output folder not created",
+  "stdout": "[epub2md]: unzipping...
+[epub2md]: Unzip successful! output: <absolute path hidden from snapshot>/file-1
+",
+}

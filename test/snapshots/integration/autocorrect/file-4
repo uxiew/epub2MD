@@ -1,0 +1,903 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 1,
+    "markdown file count": 175,
+    "output merged markdown": false,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "Kqxp8yc4YofeiG+oZUo5mY3Pngk=",
+        "name": "001-封面.md",
+      },
+      HashedFile {
+        "hash": "n4r9MKTCarZ9kV2n9KJUmOvEokk=",
+        "name": "002-各方评价.md",
+      },
+      HashedFile {
+        "hash": "ifffCOYq1vJ1nvS3D7LPnSeTVtc=",
+        "name": "003-第一章：人造与天生.md",
+      },
+      HashedFile {
+        "hash": "GcUj2kLEaJ8RPxT5FiF1LUXoLTU=",
+        "name": "004-1.1_新生物文明.md",
+      },
+      HashedFile {
+        "hash": "BemgqPnxh8P06nPxwgfxcQnOsNk=",
+        "name": "005-1.2_生物逻辑的胜利.md",
+      },
+      HashedFile {
+        "hash": "zeGahlWAuMf1SS7GM6WA3zkJuQU=",
+        "name": "006-1.3_学会向我们的创造物低头.md",
+      },
+      HashedFile {
+        "hash": "9pSd0YqDouQ6YOqCQCih275K3Jg=",
+        "name": "007-第二章：蜂群思维.md",
+      },
+      HashedFile {
+        "hash": "bzNmR2U5VtHrcpUhZwBZ5x+LGio=",
+        "name": "008-2.1_蜜蜂之道：分布式管理.md",
+      },
+      HashedFile {
+        "hash": "hTOx39+9msb8v61mJZWz8KxZIwQ=",
+        "name": "009-2.2_群氓的集体智慧.md",
+      },
+      HashedFile {
+        "hash": "EBOIMzkCqRWlnket7KifEzjMgv8=",
+        "name": "010-2.3_非匀质的看不见的手.md",
+      },
+      HashedFile {
+        "hash": "Y1KjQG6nZcG1aQ08CRl0gtzFo3s=",
+        "name": "011-2.4_认知行为的分散记忆.md",
+      },
+      HashedFile {
+        "hash": "vTwzPleBeqdmMh0dacrwh+5TOBg=",
+        "name": "012-2.5_从量变到质变.md",
+      },
+      HashedFile {
+        "hash": "NoozASiZZgQMbLKjJmvgS89UfW8=",
+        "name": "013-2.6_群集的利与弊.md",
+      },
+      HashedFile {
+        "hash": "bK+s1V+uOFNsDTP+hc2wFt6Nnd8=",
+        "name": "014-2.7_网络是二十一世纪的图标.md",
+      },
+      HashedFile {
+        "hash": "0BOdkKswdihYz6s6sXYKNJn/glY=",
+        "name": "015-第三章：有心智的机器.md",
+      },
+      HashedFile {
+        "hash": "TJEsZqqonVNzbWRdbiYwIxlj6gM=",
+        "name": "016-3.1_取悦有身体的机器.md",
+      },
+      HashedFile {
+        "hash": "4iM5OCwfy5OBoh65l4m+JEUSW0A=",
+        "name": "017-3.2_快速、廉价、失控.md",
+      },
+      HashedFile {
+        "hash": "ZoN3Xqh1SB1L/sNhCG0VOvq7Fus=",
+        "name": "018-3.3_众愚成智.md",
+      },
+      HashedFile {
+        "hash": "fp7Lg63C5flBDDQd0MkxlyGTkNA=",
+        "name": "019-3.4_嵌套层级的优点.md",
+      },
+      HashedFile {
+        "hash": "t+cDvUa8mIdSOPcVDN05qdBHXzY=",
+        "name": "020-3.5_利用现实世界的反馈实现交流.md",
+      },
+      HashedFile {
+        "hash": "M8STj6TYlc0VqsggMJcA9G9FNjw=",
+        "name": "021-3.6_无躯体则无意识.md",
+      },
+      HashedFile {
+        "hash": "e3JzK3nMgetYdR5H1KCZHsqT7fg=",
+        "name": "022-3.7_心智_躯体的黑盲性精神错乱.md",
+      },
+      HashedFile {
+        "hash": "o9SorKPhPSDqjBiFhYwyFCOkcAs=",
+        "name": "023-第四章：组装复杂性.md",
+      },
+      HashedFile {
+        "hash": "MGoHh3BGKwcbayjR/gAjwbItM5k=",
+        "name": "024-4.1_生物——机器的未来.md",
+      },
+      HashedFile {
+        "hash": "+f7oP59peMih2yts2tRFbzPncJM=",
+        "name": "025-4.2_用火和软体种子恢复草原.md",
+      },
+      HashedFile {
+        "hash": "qcftPTc4d1QqPs4szzxbiO6dk/w=",
+        "name": "026-4.3_通往稳定生态系统的随机路线.md",
+      },
+      HashedFile {
+        "hash": "waQlMtPVcUUdD3ow4iOVM1pI5+8=",
+        "name": "027-4.4_如何同时做好一切.md",
+      },
+      HashedFile {
+        "hash": "Log79nEGqFBPwcSx0R9y5Bw+mEU=",
+        "name": "028-4.5_艰巨的「拼蛋壳」任务.md",
+      },
+      HashedFile {
+        "hash": "SOBYtVODVdjQ/EK/4pVcP5g9wmc=",
+        "name": "029-第五章：共同进化.md",
+      },
+      HashedFile {
+        "hash": "7uvCZMmF/44QcHpqcWOWBEBOrbo=",
+        "name": "030-5.1_放在镜子上的变色龙是什么颜色的？.md",
+      },
+      HashedFile {
+        "hash": "hdnimL7OociP5PJl/ywfl/xoPeU=",
+        "name": "031-5.2_生命之无法理喻之处.md",
+      },
+      HashedFile {
+        "hash": "VCadnpP79KBiKTfJ3odZgTmUlPw=",
+        "name": "032-5.3_在持久的摇摇欲坠状态中保持平衡.md",
+      },
+      HashedFile {
+        "hash": "jnoOmsg0rVZ6QX4/k0SPal7BQJ4=",
+        "name": "033-5.4_岩石乃节奏缓慢的生命.md",
+      },
+      HashedFile {
+        "hash": "W+L1DAt5jvip3n9mQ/sTCWgs0K0=",
+        "name": "034-5.5_不讲交情或无远见的合作.md",
+      },
+      HashedFile {
+        "hash": "GUfHbgT7vc9PAlrtfGjLdFpwyes=",
+        "name": "035-第六章：自然之流变.md",
+      },
+      HashedFile {
+        "hash": "9mSwEUVkPNBbuKnfTT29KPee2MI=",
+        "name": "036-6.1_均衡即死亡.md",
+      },
+      HashedFile {
+        "hash": "h0yMCCmk8CHgoTmk+RRnK9/0L30=",
+        "name": "037-6.2_谁先出现，稳定性还是多样性？.md",
+      },
+      HashedFile {
+        "hash": "gmldADbC5h43uNlmwjKFAw8SD2I=",
+        "name": "038-6.3_生态系统：超有机体，抑或是身份作坊？.md",
+      },
+      HashedFile {
+        "hash": "ErUk5cf4ZK1dWVuvm5QrpLCAheo=",
+        "name": "039-6.4_变化的起源.md",
+      },
+      HashedFile {
+        "hash": "exM1sWtgqBSyc9DUW0nVqSaiKI0=",
+        "name": "040-6.5_生生不息的生命.md",
+      },
+      HashedFile {
+        "hash": "F0WUQmLLU2KJjeQBrjDW+3j08L4=",
+        "name": "041-6.6_负熵.md",
+      },
+      HashedFile {
+        "hash": "1e0bcWASi2JbYlbgqGjFILlHbC0=",
+        "name": "042-6.7_第四个间断：生成之环.md",
+      },
+      HashedFile {
+        "hash": "99T7C0zo4aybDcBmzQB3E9pc3PA=",
+        "name": "043-第七章：控制的兴起.md",
+      },
+      HashedFile {
+        "hash": "O6+neVq57Kt6HE5g43DWD/8Et2c=",
+        "name": "044-7.1_古希腊的第一个人工自我.md",
+      },
+      HashedFile {
+        "hash": "5LKXDTL8mN6o1cXQqwZchN5RKcI=",
+        "name": "045-7.2_机械自我的成熟.md",
+      },
+      HashedFile {
+        "hash": "ovJt+ZRS9ZyowCyLIzDbBf1YsT0=",
+        "name": "046-7.3_抽水马桶：套套逻辑的原型.md",
+      },
+      HashedFile {
+        "hash": "Jw8YPCsBQdExvHqYKIiaGJ4A1uA=",
+        "name": "047-7.4_自我能动派.md",
+      },
+      HashedFile {
+        "hash": "Op36ouCTHvxJquGmEMd8+Xqib1U=",
+        "name": "048-第八章：封闭系统.md",
+      },
+      HashedFile {
+        "hash": "4nHc4zZxcqcviSbXtj5CdolMakI=",
+        "name": "049-8.1_密封的瓶装生命.md",
+      },
+      HashedFile {
+        "hash": "oMEMkwwolFGC/exPWP/0hzEMYBE=",
+        "name": "050-8.2_邮购盖亚.md",
+      },
+      HashedFile {
+        "hash": "XDMGl0AFKFHy57Qt7HN/8oj78Zc=",
+        "name": "051-8.3_人与绿藻息息相关.md",
+      },
+      HashedFile {
+        "hash": "HzQDT8jD/OjYghKjCeteXUJ1GqM=",
+        "name": "052-8.4_巨大的生态技术玻璃球.md",
+      },
+      HashedFile {
+        "hash": "9kCHbciaU/ugnCDsE0jcMEloj5c=",
+        "name": "053-8.5_在持久的混沌中进行的实验.md",
+      },
+      HashedFile {
+        "hash": "KVc6DwtsZ/fQBgqD3JIoXW4540k=",
+        "name": "054-8.6_另外一种合成生态系统.md",
+      },
+      HashedFile {
+        "hash": "pprmb23jO79knt2FwMT1n8uiuhc=",
+        "name": "055-第九章：「冒出」的生态圈.md",
+      },
+      HashedFile {
+        "hash": "DOray3a3rGVNv8F0gRO5+DmSTQ0=",
+        "name": "056-9.1_一亿美元玻璃方舟的副驾驶.md",
+      },
+      HashedFile {
+        "hash": "APZDsxbR3ge902I87V4bZGXByG4=",
+        "name": "057-9.2_城市野草.md",
+      },
+      HashedFile {
+        "hash": "kCXSK7PGvlm6Ausv9RIdZthpMfU=",
+        "name": "058-9.3_有意的季节调配.md",
+      },
+      HashedFile {
+        "hash": "+VKPEmsxkKkjaWTfOulp20wnx+g=",
+        "name": "059-9.4_生命科学的回旋加速器.md",
+      },
+      HashedFile {
+        "hash": "gIJwr2LXKYB0rOfDfFn34aa66RY=",
+        "name": "060-9.5_终极技术.md",
+      },
+      HashedFile {
+        "hash": "xILqLcOXfTZIvNrHkCoSGYcX8fU=",
+        "name": "061-第十章：工业生态学.md",
+      },
+      HashedFile {
+        "hash": "IyAIsx+LcOaYX2Gont4+WVcYN0Q=",
+        "name": "062-10.1_全天候、全方位的接入.md",
+      },
+      HashedFile {
+        "hash": "L7EoXTxKl+auuJBiillbsebJwyw=",
+        "name": "063-10.2_看不见的智能.md",
+      },
+      HashedFile {
+        "hash": "UKGL0UHgVMD0BY5qyYddvKQ3XzE=",
+        "name": "064-10.3_咬人的房间与不咬人的房间.md",
+      },
+      HashedFile {
+        "hash": "t6WDb+YFCftgjx6R/sb4jPoK3PM=",
+        "name": "065-10.4_规划一个共同体.md",
+      },
+      HashedFile {
+        "hash": "oEt66eVqg5YpS8gfwsh8VGHEYGY=",
+        "name": "066-10.5_闭环制造.md",
+      },
+      HashedFile {
+        "hash": "rgfQzzdtV+MKd9vVrjt1VhQYUNE=",
+        "name": "067-10.6_适应的技术.md",
+      },
+      HashedFile {
+        "hash": "oI/jL0++SD8ejDrs2LnWIJchVmA=",
+        "name": "068-第十一章：网络经济学.md",
+      },
+      HashedFile {
+        "hash": "fknvKhQxmgSBfrKRKCs/iYU/VwE=",
+        "name": "069-11.1_脱离实体.md",
+      },
+      HashedFile {
+        "hash": "tP05pthW0PGhj8ybO9Kre3lps78=",
+        "name": "070-11.2_以联结取代计算.md",
+      },
+      HashedFile {
+        "hash": "mRic4mgDP3ebUQcE00aqoZUOs8k=",
+        "name": "071-11.3_信息工厂.md",
+      },
+      HashedFile {
+        "hash": "5VhsL5HD/KK4gOlpCTDkY7vPl+M=",
+        "name": "072-11.4_与错误打交道.md",
+      },
+      HashedFile {
+        "hash": "IqYPSXxK0QxRJ4n3KsCZbYoLGFQ=",
+        "name": "073-11.5_联通所有的一切.md",
+      },
+      HashedFile {
+        "hash": "jeyIpSCoOl/USV52bhsXdWknDxQ=",
+        "name": "074-第十二章：电子货币.md",
+      },
+      HashedFile {
+        "hash": "D+n2unWtl1m51ErcsDAYWUNUHBU=",
+        "name": "075-12.1_密码无政府状态：加密永胜.md",
+      },
+      HashedFile {
+        "hash": "fchbmeHoydsQN32EtRfY4j0lOiM=",
+        "name": "076-12.2_传真机效应和收益递增定律.md",
+      },
+      HashedFile {
+        "hash": "dKIAe9rmi8RZlTYgHW+Yvy5g8c8=",
+        "name": "077-12.3_超级传播.md",
+      },
+      HashedFile {
+        "hash": "Jqwam05ARtaJ5aPfFrA4L55Fhmw=",
+        "name": "078-12.4_带电荷的东西就可用于电子货币充值.md",
+      },
+      HashedFile {
+        "hash": "X4WSw7qzgn5KtFy8aoCVKYk1m18=",
+        "name": "079-12.5_点对点金融与超级小钱.md",
+      },
+      HashedFile {
+        "hash": "U8h4/jCHCmZmF8fxGJ2P5D8Pveo=",
+        "name": "080-12.6_对隐密经济的恐惧.md",
+      },
+      HashedFile {
+        "hash": "G3eN02dYRh2vVgR84l9zs5fwG30=",
+        "name": "081-第十三章：上帝的游戏.md",
+      },
+      HashedFile {
+        "hash": "Cec9EjbYtG3USaaxQMYGihV+L90=",
+        "name": "082-13.1_电子神格.md",
+      },
+      HashedFile {
+        "hash": "EsBaaQTTKrW42MO8ZnZ8FV+f9/Y=",
+        "name": "083-13.2_有交互界面的理论.md",
+      },
+      HashedFile {
+        "hash": "2GaCUy80sBzulkQCLc1mwdKaEfk=",
+        "name": "084-13.3_一位造访他用多边形创造出来的天地的神祗.md",
+      },
+      HashedFile {
+        "hash": "yUUT775tglCoKdfCTSbm15tQg1A=",
+        "name": "085-13.4_拟像的传送.md",
+      },
+      HashedFile {
+        "hash": "ckmCaB+gqsQnCj4JQxt+E54wGAs=",
+        "name": "086-13.5_数字之战.md",
+      },
+      HashedFile {
+        "hash": "m8DaoEemTDmVIgF3pPyWkPcgSYg=",
+        "name": "087-13.6_无缝分布的军队.md",
+      },
+      HashedFile {
+        "hash": "YG87AZS1md+Wwc0R8GHZj2P2b9o=",
+        "name": "088-13.7_一个万千碎片的超真实.md",
+      },
+      HashedFile {
+        "hash": "EFLGz9ZKLxxXTGztTu2HnB9uhFA=",
+        "name": "089-13.8_两厢情愿的文字超级有机体.md",
+      },
+      HashedFile {
+        "hash": "LeVyuE0t7ana1uUFbkzynYRJJwk=",
+        "name": "090-13.9_放手则赢.md",
+      },
+      HashedFile {
+        "hash": "9ySuI84usHV02xgurh1pbrWv5L8=",
+        "name": "091-第十四章：在形式的图书馆中.md",
+      },
+      HashedFile {
+        "hash": "QDwqMtjqAlyToaCGFhq/bBopyj4=",
+        "name": "092-14.1_「大千」图书馆之旅.md",
+      },
+      HashedFile {
+        "hash": "JSpjPrvbwt/M5ja/GBaZdeG0yxo=",
+        "name": "093-14.2_一切可能图像之空间.md",
+      },
+      HashedFile {
+        "hash": "pS+pwDZYJeV+E7HgzaKwmBDXrxM=",
+        "name": "094-14.3_倘佯在生物形态王国.md",
+      },
+      HashedFile {
+        "hash": "yleoI8kA+3QtN5Aq7/C0h6cWZrw=",
+        "name": "095-14.4_御变异体而行.md",
+      },
+      HashedFile {
+        "hash": "Ahs0c+6Kzyi0cejJTYIwjfn4UOg=",
+        "name": "096-14.5_形式库中也有性.md",
+      },
+      HashedFile {
+        "hash": "ewP7848CFEICEMcFDABgI7xJutc=",
+        "name": "097-14.6_三步轻松繁育艺术杰作.md",
+      },
+      HashedFile {
+        "hash": "WlUhSyufCShLFuPCNNFWDVw7ARk=",
+        "name": "098-14.7_穿越随机性.md",
+      },
+      HashedFile {
+        "hash": "48BeogHg4FaYPu40pxigC7/Kpuk=",
+        "name": "099-第十五章：人工进化.md",
+      },
+      HashedFile {
+        "hash": "KOZtrrwnm58irqR6ruaDMyqWPpk=",
+        "name": "100-15.1_汤姆·雷的电进化机.md",
+      },
+      HashedFile {
+        "hash": "uqFOyY+b4adMtkq4wjKKXPqS6W4=",
+        "name": "101-15.2_你力所不逮的，进化能行.md",
+      },
+      HashedFile {
+        "hash": "rXrxnvagNXEnoS1wlYq0+tmRKys=",
+        "name": "102-15.3_并行实施的盲目行为.md",
+      },
+      HashedFile {
+        "hash": "EFP5mulr5ne3d5RCeJPVxJQlQTc=",
+        "name": "103-15.4_计算中的军备竞赛.md",
+      },
+      HashedFile {
+        "hash": "6CYbMgYF3u+EKyGnxyGAm044Yb4=",
+        "name": "104-15.5_驾驭野性的进化.md",
+      },
+      HashedFile {
+        "hash": "05GO7ctAxI/QqQyBrPiOt/tWm30=",
+        "name": "105-15.6_进化聪明分子的愚钝科学家.md",
+      },
+      HashedFile {
+        "hash": "mtkaDVmqpnQ+KblMfUZUazqGLRU=",
+        "name": "106-15.7_死亡是最好的老师.md",
+      },
+      HashedFile {
+        "hash": "UCDbfSXo3ec5UsCFGPCx15FfRGk=",
+        "name": "107-15.8_蚂蚁的算法天赋.md",
+      },
+      HashedFile {
+        "hash": "0MXskgI01+NyrmqZSF3Otw1Bh7Q=",
+        "name": "108-15.9_工程霸权的终结.md",
+      },
+      HashedFile {
+        "hash": "gbnyzMdcPJDAC1xJ/35mJpkw1ao=",
+        "name": "109-第十六章：控制的未来.md",
+      },
+      HashedFile {
+        "hash": "Ssk+Xdt8golZZ2Y6Sk5A9+Uzy98=",
+        "name": "110-16.1_玩具世界的卡通物理学.md",
+      },
+      HashedFile {
+        "hash": "9NGtuGrE8dRlemoghxon+beo0us=",
+        "name": "111-16.2_合成角色的诞生.md",
+      },
+      HashedFile {
+        "hash": "w/gXvAKAZgaFuNA/gs8l2cc0jEw=",
+        "name": "112-16.3_没有实体的机器人.md",
+      },
+      HashedFile {
+        "hash": "k3qdVEvqgO9z9mRbhfjb0tPZ050=",
+        "name": "113-16.4_行为学架构中的代理.md",
+      },
+      HashedFile {
+        "hash": "DmyTekT6L5xxX0m74GW8nM/ezGU=",
+        "name": "114-16.5_给自由意志强加宿命.md",
+      },
+      HashedFile {
+        "hash": "lV1lDe7am3+bYkV4bEfZZ3GhERU=",
+        "name": "115-16.6_米老鼠重装上阵.md",
+      },
+      HashedFile {
+        "hash": "z1DGA04sFKl3FMaVQNbik2nnM/o=",
+        "name": "116-16.7_寻求协同控制.md",
+      },
+      HashedFile {
+        "hash": "+loTnzBc8hjLvSs0GqR4BT8bf9c=",
+        "name": "117-第十七章：开放的宇宙.md",
+      },
+      HashedFile {
+        "hash": "4rvnZrfgdsuEJZUoz+hsNgqGbSU=",
+        "name": "118-17.1_拓展生存的空间.md",
+      },
+      HashedFile {
+        "hash": "x+cXWsHk+hNapAAq9HOc574aAfk=",
+        "name": "119-17.2_生成图像的基元组.md",
+      },
+      HashedFile {
+        "hash": "TI72yQPlcOzgf7xRwvm8YqVwB4Q=",
+        "name": "120-17.3_无心插柳柳成荫.md",
+      },
+      HashedFile {
+        "hash": "hjbjCw5AiSBxNUWw7/3X3Y4NTGg=",
+        "name": "121-17.4_打破规则求生存.md",
+      },
+      HashedFile {
+        "hash": "o5Vy0Rp6yuqmhvOlSJpjf/HaP+4=",
+        "name": "122-17.5_掌握进化工具.md",
+      },
+      HashedFile {
+        "hash": "V0A8k7vg8xI4mzXoWIj/Hm9k+YA=",
+        "name": "123-17.6_从滑翔意外到生命游戏.md",
+      },
+      HashedFile {
+        "hash": "va+Z+NdA4c+DHZsMp0z8PqvDJsI=",
+        "name": "124-17.7_生命的动词.md",
+      },
+      HashedFile {
+        "hash": "D83DZUBUnGfaRfN/qlR11ZbfFV8=",
+        "name": "125-17.8_在超生命的国度中安家落户.md",
+      },
+      HashedFile {
+        "hash": "pELu8w3QP++y2DxblIUrhx6oARs=",
+        "name": "126-第十八章：有组织的变化之架构.md",
+      },
+      HashedFile {
+        "hash": "0zcQ9exz4IbHdJzI54ERtxgYHMo=",
+        "name": "127-18.1_日常进化的革命.md",
+      },
+      HashedFile {
+        "hash": "ARR5LaIBDJrvEQNO8tQg6QE9/Lc=",
+        "name": "128-18.2_绕开中心法则.md",
+      },
+      HashedFile {
+        "hash": "lQfUfGfQ9MUu/P12rDY8Vff56QA=",
+        "name": "129-18.3_学习和进化之间的区别.md",
+      },
+      HashedFile {
+        "hash": "iWM19E20JUddcBWCb/cnMTLRXuA=",
+        "name": "130-18.4_进化的进化.md",
+      },
+      HashedFile {
+        "hash": "NkA4qP0Z8ynhDi0Z1Ml3mypomSQ=",
+        "name": "131-18.5_进化解释一切.md",
+      },
+      HashedFile {
+        "hash": "Z4op0+6vS/Vxwzr/i+JXSiodEak=",
+        "name": "132-第十九章：后达尔文主义.md",
+      },
+      HashedFile {
+        "hash": "qIjI7wkvEvb7w6Bo7AGxtYJRu+4=",
+        "name": "133-19.1_达尔文进化论不完备之处.md",
+      },
+      HashedFile {
+        "hash": "uyNX8dYw7X6bcnHErp3Cb0rzM/0=",
+        "name": "134-19.2_只有自然选择还不够.md",
+      },
+      HashedFile {
+        "hash": "gtlCdBTR0mOUS9mQOg5NmBzlhpc=",
+        "name": "135-19.3_生命之树上的连理枝.md",
+      },
+      HashedFile {
+        "hash": "I66zyINhP+YNvUptMfia3nIRV3k=",
+        "name": "136-19.4_非随机突变的前提.md",
+      },
+      HashedFile {
+        "hash": "V2Nlg0J2S1Q2iNmBLXd7uYm9PhI=",
+        "name": "137-19.5_怪亦有道.md",
+      },
+      HashedFile {
+        "hash": "2nePboztMooZMiM6sHygPBhe9EE=",
+        "name": "138-19.6_化抽象为具象.md",
+      },
+      HashedFile {
+        "hash": "TtlX5GVL+bsu265FE+sz+oLwaqQ=",
+        "name": "139-19.7_物以类聚.md",
+      },
+      HashedFile {
+        "hash": "nPY9Pska2NnTqcYylplUY9EaWB8=",
+        "name": "140-19.8_DNA并不能给所有东西编码.md",
+      },
+      HashedFile {
+        "hash": "fZcBtavtEg9PqPzafqKPPEH90jQ=",
+        "name": "141-19.9_不确定的生物搜索空间密度.md",
+      },
+      HashedFile {
+        "hash": "3hLC7Z358Q7pAb7j+AUEuFSsQ/8=",
+        "name": "142-19.10_自然选择之数学原理.md",
+      },
+      HashedFile {
+        "hash": "vooIiw836/bj06X6HJQUKxMJzIA=",
+        "name": "143-第二十章：沉睡的蝴蝶.md",
+      },
+      HashedFile {
+        "hash": "JD1nx/4REfqcXlnal7jZ66Gb7fg=",
+        "name": "144-20.1_无序之有序.md",
+      },
+      HashedFile {
+        "hash": "1zZEHV/DaACV8n8ZvpCbfNg1ljQ=",
+        "name": "145-20.2_反直觉的网络数学.md",
+      },
+      HashedFile {
+        "hash": "XGCSqnE7KHEycN7DLlhri0fW98w=",
+        "name": "146-20.3_迭坐，喷涌，自催化.md",
+      },
+      HashedFile {
+        "hash": "Z5gIjgLgbHtRN5VubE5X3kRx6Pc=",
+        "name": "147-20.4_值得一问的问题.md",
+      },
+      HashedFile {
+        "hash": "0cIKa5Mu2ChWMwoL/7i93YSiDFw=",
+        "name": "148-20.5_自调节的活系统.md",
+      },
+      HashedFile {
+        "hash": "a0x7WaKR6dE+wSVkpkcfoPY+egg=",
+        "name": "149-第二十一章：水往高处流.md",
+      },
+      HashedFile {
+        "hash": "POrXjFFItbX1BMymfSAuoXGQEMU=",
+        "name": "150-21.1_四十亿年的庞氏骗局.md",
+      },
+      HashedFile {
+        "hash": "W7d6Dcdf2gLDNn72sJuwCR8Xv9Y=",
+        "name": "151-21.2_进化的目的是什么.md",
+      },
+      HashedFile {
+        "hash": "2+aHvYyKMTd12MOkNzSA/2PjFww=",
+        "name": "152-21.3_超进化的七个趋势.md",
+      },
+      HashedFile {
+        "hash": "4IM7cDDyICWXnIcOkXbwLthGARk=",
+        "name": "153-21.4_土狼骗子般的自我进化.md",
+      },
+      HashedFile {
+        "hash": "k71WAwONlUBvV4N2ua4XBsAwp1Y=",
+        "name": "154-第二十二章：预言机.md",
+      },
+      HashedFile {
+        "hash": "pOpxQpF8CH5auJ1cSLLUCra7RYE=",
+        "name": "155-22.1_接球的大脑.md",
+      },
+      HashedFile {
+        "hash": "GTMDp4RPA05fWWHJjKIRnZZFnRo=",
+        "name": "156-22.2_混沌的另一面.md",
+      },
+      HashedFile {
+        "hash": "S2qcZJJyUXF8uX3DCtAHqewTrOk=",
+        "name": "157-22.3_具有正面意义的短视.md",
+      },
+      HashedFile {
+        "hash": "NS19+huVmWkygKz2X96VjEIjFSM=",
+        "name": "158-22.4_从可预测性范围里挣大钱.md",
+      },
+      HashedFile {
+        "hash": "st5nwiD9rQUYgHDpAVu7Jo3z0iU=",
+        "name": "159-22.5_前瞻：内视行动.md",
+      },
+      HashedFile {
+        "hash": "3uZB9VNLhiy3shooOE5SYl3aJK8=",
+        "name": "160-22.6_预测的多样性.md",
+      },
+      HashedFile {
+        "hash": "A+xaNJ9IP6iqw2yEgHtyTsl/EKs=",
+        "name": "161-22.7_以万变求不变.md",
+      },
+      HashedFile {
+        "hash": "Y7ZVRj9XON5Yy4MB2em7PdPemH8=",
+        "name": "162-22.8_系统存在的目的就是揭示未来.md",
+      },
+      HashedFile {
+        "hash": "OmiB7qH9S4wNAiqf4E+lfoKwCak=",
+        "name": "163-22.9_全球模型的诸多问题.md",
+      },
+      HashedFile {
+        "hash": "MvRdn/QJ9TSSvYlefeDnAJWnU+8=",
+        "name": "164-22.10_舵手是大家.md",
+      },
+      HashedFile {
+        "hash": "2QWCCu87buG4uJG/nadPgTCMbh0=",
+        "name": "165-第二十三章：整体，空洞，以及空间.md",
+      },
+      HashedFile {
+        "hash": "UdKXzVp+NK4iJL6aMPYhxhILKN4=",
+        "name": "166-23.1_控制论怎么了？.md",
+      },
+      HashedFile {
+        "hash": "xd3q4NSj//Up3/XImB73K+HjBY4=",
+        "name": "167-23.2_科学知识网之缺口.md",
+      },
+      HashedFile {
+        "hash": "AwZA1QSGvY9Y+RnS45/hCTXVvnA=",
+        "name": "168-23.3_令人惊讶的琐碎小事.md",
+      },
+      HashedFile {
+        "hash": "1jF0nMN5UCHgCH2Ptzjf0Id0jrY=",
+        "name": "169-23.4_超文本：权威的终结.md",
+      },
+      HashedFile {
+        "hash": "ErZYG9/5gAmE4lxouin5IgK05HY=",
+        "name": "170-23.5_新的思考空间.md",
+      },
+      HashedFile {
+        "hash": "Q9oYFN/XUKqgSPDOf5nZBBAXXWM=",
+        "name": "171-第二十四章：造物九律.md",
+      },
+      HashedFile {
+        "hash": "sXZZ1XZaq9wlMcELJBPd5lT6iQM=",
+        "name": "172-24.1_如何凭空造物.md",
+      },
+      HashedFile {
+        "hash": "MOwXyYTQ4zenPrHB9JrVuTEZpIw=",
+        "name": "173-24.2_劫持宇宙.md",
+      },
+      HashedFile {
+        "hash": "PlI/sA0neTJMHTguiwlDVPi1erw=",
+        "name": "174-九问_KK.md",
+      },
+      HashedFile {
+        "hash": "RRJqYqqF7FP1tFJUeJYWR8lnZt8=",
+        "name": "175-《失控》的协作与进化——翻译后记.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "Mu6oYF63IkuxHGQ1KuM0kmYXf5U=",
+            "name": "cover.jpg",
+          },
+        ],
+        "hash": "Fn5HMUh56IgqlFfD2QdKwyy6GT8=",
+        "name": "images",
+      },
+    ],
+    "hash": "+TWZwhGs5kX71mW6BTz4/sQwLXw=",
+    "name": "file-4",
+  },
+  "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-4.epub...
+[epub2md]: 1: [001-封面.md]
+[epub2md]: 2: [002-各方评价.md]
+[epub2md]: 3: [003-第一章：人造与天生.md]
+[epub2md]: 4: [004-1.1_新生物文明.md]
+[epub2md]: 5: [005-1.2_生物逻辑的胜利.md]
+[epub2md]: 6: [006-1.3_学会向我们的创造物低头.md]
+[epub2md]: 7: [007-第二章：蜂群思维.md]
+[epub2md]: 8: [008-2.1_蜜蜂之道：分布式管理.md]
+[epub2md]: 9: [009-2.2_群氓的集体智慧.md]
+[epub2md]: 10: [010-2.3_非匀质的看不见的手.md]
+[epub2md]: 11: [011-2.4_认知行为的分散记忆.md]
+[epub2md]: 12: [012-2.5_从量变到质变.md]
+[epub2md]: 13: [013-2.6_群集的利与弊.md]
+[epub2md]: 14: [014-2.7_网络是二十一世纪的图标.md]
+[epub2md]: 15: [015-第三章：有心智的机器.md]
+[epub2md]: 16: [016-3.1_取悦有身体的机器.md]
+[epub2md]: 17: [017-3.2_快速、廉价、失控.md]
+[epub2md]: 18: [018-3.3_众愚成智.md]
+[epub2md]: 19: [019-3.4_嵌套层级的优点.md]
+[epub2md]: 20: [020-3.5_利用现实世界的反馈实现交流.md]
+[epub2md]: 21: [021-3.6_无躯体则无意识.md]
+[epub2md]: 22: [022-3.7_心智_躯体的黑盲性精神错乱.md]
+[epub2md]: 23: [023-第四章：组装复杂性.md]
+[epub2md]: 24: [024-4.1_生物——机器的未来.md]
+[epub2md]: 25: [025-4.2_用火和软体种子恢复草原.md]
+[epub2md]: 26: [026-4.3_通往稳定生态系统的随机路线.md]
+[epub2md]: 27: [027-4.4_如何同时做好一切.md]
+[epub2md]: 28: [028-4.5_艰巨的「拼蛋壳」任务.md]
+[epub2md]: 29: [029-第五章：共同进化.md]
+[epub2md]: 30: [030-5.1_放在镜子上的变色龙是什么颜色的？.md]
+[epub2md]: 31: [031-5.2_生命之无法理喻之处.md]
+[epub2md]: 32: [032-5.3_在持久的摇摇欲坠状态中保持平衡.md]
+[epub2md]: 33: [033-5.4_岩石乃节奏缓慢的生命.md]
+[epub2md]: 34: [034-5.5_不讲交情或无远见的合作.md]
+[epub2md]: 35: [035-第六章：自然之流变.md]
+[epub2md]: 36: [036-6.1_均衡即死亡.md]
+[epub2md]: 37: [037-6.2_谁先出现，稳定性还是多样性？.md]
+[epub2md]: 38: [038-6.3_生态系统：超有机体，抑或是身份作坊？.md]
+[epub2md]: 39: [039-6.4_变化的起源.md]
+[epub2md]: 40: [040-6.5_生生不息的生命.md]
+[epub2md]: 41: [041-6.6_负熵.md]
+[epub2md]: 42: [042-6.7_第四个间断：生成之环.md]
+[epub2md]: 43: [043-第七章：控制的兴起.md]
+[epub2md]: 44: [044-7.1_古希腊的第一个人工自我.md]
+[epub2md]: 45: [045-7.2_机械自我的成熟.md]
+[epub2md]: 46: [046-7.3_抽水马桶：套套逻辑的原型.md]
+[epub2md]: 47: [047-7.4_自我能动派.md]
+[epub2md]: 48: [048-第八章：封闭系统.md]
+[epub2md]: 49: [049-8.1_密封的瓶装生命.md]
+[epub2md]: 50: [050-8.2_邮购盖亚.md]
+[epub2md]: 51: [051-8.3_人与绿藻息息相关.md]
+[epub2md]: 52: [052-8.4_巨大的生态技术玻璃球.md]
+[epub2md]: 53: [053-8.5_在持久的混沌中进行的实验.md]
+[epub2md]: 54: [054-8.6_另外一种合成生态系统.md]
+[epub2md]: 55: [055-第九章：「冒出」的生态圈.md]
+[epub2md]: 56: [056-9.1_一亿美元玻璃方舟的副驾驶.md]
+[epub2md]: 57: [057-9.2_城市野草.md]
+[epub2md]: 58: [058-9.3_有意的季节调配.md]
+[epub2md]: 59: [059-9.4_生命科学的回旋加速器.md]
+[epub2md]: 60: [060-9.5_终极技术.md]
+[epub2md]: 61: [061-第十章：工业生态学.md]
+[epub2md]: 62: [062-10.1_全天候、全方位的接入.md]
+[epub2md]: 63: [063-10.2_看不见的智能.md]
+[epub2md]: 64: [064-10.3_咬人的房间与不咬人的房间.md]
+[epub2md]: 65: [065-10.4_规划一个共同体.md]
+[epub2md]: 66: [066-10.5_闭环制造.md]
+[epub2md]: 67: [067-10.6_适应的技术.md]
+[epub2md]: 68: [068-第十一章：网络经济学.md]
+[epub2md]: 69: [069-11.1_脱离实体.md]
+[epub2md]: 70: [070-11.2_以联结取代计算.md]
+[epub2md]: 71: [071-11.3_信息工厂.md]
+[epub2md]: 72: [072-11.4_与错误打交道.md]
+[epub2md]: 73: [073-11.5_联通所有的一切.md]
+[epub2md]: 74: [074-第十二章：电子货币.md]
+[epub2md]: 75: [075-12.1_密码无政府状态：加密永胜.md]
+[epub2md]: 76: [076-12.2_传真机效应和收益递增定律.md]
+[epub2md]: 77: [077-12.3_超级传播.md]
+[epub2md]: 78: [078-12.4_带电荷的东西就可用于电子货币充值.md]
+[epub2md]: 79: [079-12.5_点对点金融与超级小钱.md]
+[epub2md]: 80: [080-12.6_对隐密经济的恐惧.md]
+[epub2md]: 81: [081-第十三章：上帝的游戏.md]
+[epub2md]: 82: [082-13.1_电子神格.md]
+[epub2md]: 83: [083-13.2_有交互界面的理论.md]
+[epub2md]: 84: [084-13.3_一位造访他用多边形创造出来的天地的神祗.md]
+[epub2md]: 85: [085-13.4_拟像的传送.md]
+[epub2md]: 86: [086-13.5_数字之战.md]
+[epub2md]: 87: [087-13.6_无缝分布的军队.md]
+[epub2md]: 88: [088-13.7_一个万千碎片的超真实.md]
+[epub2md]: 89: [089-13.8_两厢情愿的文字超级有机体.md]
+[epub2md]: 90: [090-13.9_放手则赢.md]
+[epub2md]: 91: [091-第十四章：在形式的图书馆中.md]
+[epub2md]: 92: [092-14.1_「大千」图书馆之旅.md]
+[epub2md]: 93: [093-14.2_一切可能图像之空间.md]
+[epub2md]: 94: [094-14.3_倘佯在生物形态王国.md]
+[epub2md]: 95: [095-14.4_御变异体而行.md]
+[epub2md]: 96: [096-14.5_形式库中也有性.md]
+[epub2md]: 97: [097-14.6_三步轻松繁育艺术杰作.md]
+[epub2md]: 98: [098-14.7_穿越随机性.md]
+[epub2md]: 99: [099-第十五章：人工进化.md]
+[epub2md]: 100: [100-15.1_汤姆·雷的电进化机.md]
+[epub2md]: 101: [101-15.2_你力所不逮的，进化能行.md]
+[epub2md]: 102: [102-15.3_并行实施的盲目行为.md]
+[epub2md]: 103: [103-15.4_计算中的军备竞赛.md]
+[epub2md]: 104: [104-15.5_驾驭野性的进化.md]
+[epub2md]: 105: [105-15.6_进化聪明分子的愚钝科学家.md]
+[epub2md]: 106: [106-15.7_死亡是最好的老师.md]
+[epub2md]: 107: [107-15.8_蚂蚁的算法天赋.md]
+[epub2md]: 108: [108-15.9_工程霸权的终结.md]
+[epub2md]: 109: [109-第十六章：控制的未来.md]
+[epub2md]: 110: [110-16.1_玩具世界的卡通物理学.md]
+[epub2md]: 111: [111-16.2_合成角色的诞生.md]
+[epub2md]: 112: [112-16.3_没有实体的机器人.md]
+[epub2md]: 113: [113-16.4_行为学架构中的代理.md]
+[epub2md]: 114: [114-16.5_给自由意志强加宿命.md]
+[epub2md]: 115: [115-16.6_米老鼠重装上阵.md]
+[epub2md]: 116: [116-16.7_寻求协同控制.md]
+[epub2md]: 117: [117-第十七章：开放的宇宙.md]
+[epub2md]: 118: [118-17.1_拓展生存的空间.md]
+[epub2md]: 119: [119-17.2_生成图像的基元组.md]
+[epub2md]: 120: [120-17.3_无心插柳柳成荫.md]
+[epub2md]: 121: [121-17.4_打破规则求生存.md]
+[epub2md]: 122: [122-17.5_掌握进化工具.md]
+[epub2md]: 123: [123-17.6_从滑翔意外到生命游戏.md]
+[epub2md]: 124: [124-17.7_生命的动词.md]
+[epub2md]: 125: [125-17.8_在超生命的国度中安家落户.md]
+[epub2md]: 126: [126-第十八章：有组织的变化之架构.md]
+[epub2md]: 127: [127-18.1_日常进化的革命.md]
+[epub2md]: 128: [128-18.2_绕开中心法则.md]
+[epub2md]: 129: [129-18.3_学习和进化之间的区别.md]
+[epub2md]: 130: [130-18.4_进化的进化.md]
+[epub2md]: 131: [131-18.5_进化解释一切.md]
+[epub2md]: 132: [132-第十九章：后达尔文主义.md]
+[epub2md]: 133: [133-19.1_达尔文进化论不完备之处.md]
+[epub2md]: 134: [134-19.2_只有自然选择还不够.md]
+[epub2md]: 135: [135-19.3_生命之树上的连理枝.md]
+[epub2md]: 136: [136-19.4_非随机突变的前提.md]
+[epub2md]: 137: [137-19.5_怪亦有道.md]
+[epub2md]: 138: [138-19.6_化抽象为具象.md]
+[epub2md]: 139: [139-19.7_物以类聚.md]
+[epub2md]: 140: [140-19.8_DNA并不能给所有东西编码.md]
+[epub2md]: 141: [141-19.9_不确定的生物搜索空间密度.md]
+[epub2md]: 142: [142-19.10_自然选择之数学原理.md]
+[epub2md]: 143: [143-第二十章：沉睡的蝴蝶.md]
+[epub2md]: 144: [144-20.1_无序之有序.md]
+[epub2md]: 145: [145-20.2_反直觉的网络数学.md]
+[epub2md]: 146: [146-20.3_迭坐，喷涌，自催化.md]
+[epub2md]: 147: [147-20.4_值得一问的问题.md]
+[epub2md]: 148: [148-20.5_自调节的活系统.md]
+[epub2md]: 149: [149-第二十一章：水往高处流.md]
+[epub2md]: 150: [150-21.1_四十亿年的庞氏骗局.md]
+[epub2md]: 151: [151-21.2_进化的目的是什么.md]
+[epub2md]: 152: [152-21.3_超进化的七个趋势.md]
+[epub2md]: 153: [153-21.4_土狼骗子般的自我进化.md]
+[epub2md]: 154: [154-第二十二章：预言机.md]
+[epub2md]: 155: [155-22.1_接球的大脑.md]
+[epub2md]: 156: [156-22.2_混沌的另一面.md]
+[epub2md]: 157: [157-22.3_具有正面意义的短视.md]
+[epub2md]: 158: [158-22.4_从可预测性范围里挣大钱.md]
+[epub2md]: 159: [159-22.5_前瞻：内视行动.md]
+[epub2md]: 160: [160-22.6_预测的多样性.md]
+[epub2md]: 161: [161-22.7_以万变求不变.md]
+[epub2md]: 162: [162-22.8_系统存在的目的就是揭示未来.md]
+[epub2md]: 163: [163-22.9_全球模型的诸多问题.md]
+[epub2md]: 164: [164-22.10_舵手是大家.md]
+[epub2md]: 165: [165-第二十三章：整体，空洞，以及空间.md]
+[epub2md]: 166: [166-23.1_控制论怎么了？.md]
+[epub2md]: 167: [167-23.2_科学知识网之缺口.md]
+[epub2md]: 168: [168-23.3_令人惊讶的琐碎小事.md]
+[epub2md]: 169: [169-23.4_超文本：权威的终结.md]
+[epub2md]: 170: [170-23.5_新的思考空间.md]
+[epub2md]: 171: [171-第二十四章：造物九律.md]
+[epub2md]: 172: [172-24.1_如何凭空造物.md]
+[epub2md]: 173: [173-24.2_劫持宇宙.md]
+[epub2md]: 174: [174-九问_KK.md]
+[epub2md]: 175: [175-《失控》的协作与进化——翻译后记.md]
+[epub2md]: [1/1] Conversion successful! output: <absolute path hidden from snapshot>/file-4
+",
+}

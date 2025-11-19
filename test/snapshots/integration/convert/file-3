@@ -1,0 +1,67 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 2,
+    "markdown file count": 7,
+    "output merged markdown": false,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "Batw0AOlb3RhnvYOlO7hhmeiYjI=",
+        "name": "1-part0000.md",
+      },
+      HashedFile {
+        "hash": "n4EawT3a2T19O60AROT6drgrPg4=",
+        "name": "2-part0001.md",
+      },
+      HashedFile {
+        "hash": "uPz03trWR50vo5QmEnwHI/1hWkY=",
+        "name": "3-第一章_回答在牛奶箱里.md",
+      },
+      HashedFile {
+        "hash": "3e9oKvrlOkw0VsLDmt0ypHb3/tA=",
+        "name": "4-第二章_深夜的口琴声.md",
+      },
+      HashedFile {
+        "hash": "Clva/BwdS5egqHKfDMeF4o1H2Kw=",
+        "name": "5-第三章_在思域车上等到天亮.md",
+      },
+      HashedFile {
+        "hash": "aRMwBL8zpZK9ZLktL4DippM7EWg=",
+        "name": "6-第四章_听着披头士默祷.md",
+      },
+      HashedFile {
+        "hash": "TnsRi226tkwAgS6oIH6nRmcAc80=",
+        "name": "7-第五章_来自天上的祈祷.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "f4CM6A4K238tjed6v1VONoYnFSg=",
+            "name": "00001.jpeg",
+          },
+          HashedFile {
+            "hash": "+q+bqYfas/lM+EHL0sigEXZ7fio=",
+            "name": "00002.jpeg",
+          },
+        ],
+        "hash": "MQ5KYGL1hKq5YHTZ84KD3WuJxI4=",
+        "name": "images",
+      },
+    ],
+    "hash": "2nUkjFxHJyXjL3SKWMJYLP6KlBA=",
+    "name": "file-3",
+  },
+  "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-3.epub...
+[epub2md]: 1: [1-part0000.md]
+[epub2md]: 2: [2-part0001.md]
+[epub2md]: 3: [3-第一章_回答在牛奶箱里.md]
+[epub2md]: 4: [4-第二章_深夜的口琴声.md]
+[epub2md]: 5: [5-第三章_在思域车上等到天亮.md]
+[epub2md]: 6: [6-第四章_听着披头士默祷.md]
+[epub2md]: 7: [7-第五章_来自天上的祈祷.md]
+[epub2md]: [1/1] Conversion successful! output: <absolute path hidden from snapshot>/file-3
+",
+}

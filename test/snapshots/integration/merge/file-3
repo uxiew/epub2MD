@@ -1,0 +1,43 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 2,
+    "markdown file count": 1,
+    "output merged markdown": true,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "f7Rg+mRCqqCwd/N1UrBWiWwpB2w=",
+        "name": "file-3-merged.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "f4CM6A4K238tjed6v1VONoYnFSg=",
+            "name": "00001.jpeg",
+          },
+          HashedFile {
+            "hash": "+q+bqYfas/lM+EHL0sigEXZ7fio=",
+            "name": "00002.jpeg",
+          },
+        ],
+        "hash": "MQ5KYGL1hKq5YHTZ84KD3WuJxI4=",
+        "name": "images",
+      },
+    ],
+    "hash": "h0lia0YyogLRudhB3RaVZmvYNlg=",
+    "name": "file-3",
+  },
+  "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-3.epub and merging...
+[epub2md]: 2: [1-part0000.md]
+[epub2md]: 3: [2-part0001.md]
+[epub2md]: 4: [3-第一章_回答在牛奶箱里.md]
+[epub2md]: 5: [4-第二章_深夜的口琴声.md]
+[epub2md]: 6: [5-第三章_在思域车上等到天亮.md]
+[epub2md]: 7: [6-第四章_听着披头士默祷.md]
+[epub2md]: 8: [7-第五章_来自天上的祈祷.md]
+[epub2md]: [1/1] Merging successful! Output file: <absolute path hidden from snapshot>/file-3/file-3-merged.md
+",
+}
