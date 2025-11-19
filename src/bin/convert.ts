@@ -34,9 +34,7 @@ const defaultOptions = {
 }
 
 export class Converter {
-  epub: Epub | undefined // epub parser object
-  epubFilePath: string // current epub 's path
-
+  epub: Epub // epub parser object
   outDir: string  // epub 's original directory to save markdown files
 
   // include images/html/css/js in the epub file
@@ -55,11 +53,12 @@ export class Converter {
    * @param RunOptions - Configuration options or boolean (backward compatibility)
    */
   constructor(epubPath: string, options?: Partial<RunOptions>) {
-    this.epubFilePath = epubPath
-    this.outDir = dirname(epubPath)
     this.options = { ...defaultOptions, ...options }
 
     const isUnzipOnly = this.options.cmd === 'unzip'
+
+    this.epub = parseEpub(epubPath, { convertToMarkdown: convertHTML })
+    this.outDir = epubPath.replace('.epub', '')
 
     this.getManifest(isUnzipOnly)
 
@@ -143,11 +142,6 @@ export class Converter {
    * the NCX file and title page, and generates appropriate output paths for other files.
    */
   getManifest(unzip?: boolean) {
-    this.epub = parseEpub(this.epubFilePath, {
-      convertToMarkdown: convertHTML
-    })
-    this.outDir = this.epubFilePath.replace('.epub', '')
-
     // for numbered output,and file's internal link
     let num = 0
     const padding = Math.floor(
