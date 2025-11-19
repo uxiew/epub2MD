@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["es6", "dom"],
+    "lib": ["es2021", "dom"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "experimentalDecorators": true,

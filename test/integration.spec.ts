@@ -50,7 +50,7 @@ suite('hash output of cli commands', () => {
         test(epub.fileStem, async () => {
           const outputDir = epub.pathStem
           const cliCommand = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${epub.fullPath} ${args}`
-          const stdout = dropLastLine(  // Don't want absolute path in snapshot
+          const stdout = hideAbsolutePath(epub.directory,
             execSync(cliCommand, { encoding: 'utf-8' }))
           const hashTree = await createFolderHash(outputDir)
             .catch(() => 'Output folder not created')
@@ -81,5 +81,5 @@ suite('hash output of cli commands', () => {
     })
 })
 
-const dropLastLine = (s: string) =>
-  s.replace(/\n[^\n]*\n?$/, '\n')
+const hideAbsolutePath = (absolutePath: string, stdout: string) =>
+   stdout.replaceAll(absolutePath, '<absolute path hidden from snapshot>')
