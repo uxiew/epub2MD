@@ -5,6 +5,8 @@ import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
 import { projectRoot } from './utilities'
 import { Path } from '../src/utils'
+import assert from 'node:assert'
+import { isObject } from 'lodash'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
@@ -54,8 +56,28 @@ suite('hash output of cli commands', () => {
           const hashTree = await createFolderHash(outputDir)
             .catch(() => 'Output folder not created')
           const snapshotPath = resolve(projectRoot, 'test/snapshots/integration', suiteName, epub.fileStem)
-          await expect({ stdout, hashTree }).toMatchFileSnapshot(snapshotPath)
+
+          const tree = isObject(hashTree) ? hashTree : undefined
+          const images = tree?.children.find(file => file.name === 'images')
+          const mdFiles = tree?.children.filter(file => file.name.endsWith('.md'))
+          const snapshot = {
+            stdout,
+            hashTree,
+            imageCount: images?.children.length,
+            mdFileCount: mdFiles?.length
+          }
+          await expect(snapshot).toMatchFileSnapshot(snapshotPath)
           rmSync(outputDir, { force: true, recursive: true })
+
+          if (suiteName === 'unzip') return
+          if (typeof hashTree === 'string')
+            assert.fail('Output folder not created')
+
+          assert.equal(hashTree.name, epub.fileStem)
+
+          if (suiteName === 'merge')
+            assert(hashTree.children.find(file =>
+              file.name === epub.fileStem + '-merged.md'))
         })
     })
 })
