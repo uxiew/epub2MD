@@ -1,0 +1,61 @@
+{
+  "_spine": {
+    "id10": 2,
+    "id11": 3,
+    "id12": 4,
+    "id13": 5,
+    "id14": 6,
+    "id15": 7,
+    "id9": 1,
+    "titlepage": 0,
+  },
+  "info": {
+    "author": [
+      "东野圭吾",
+    ],
+    "language": "zh",
+    "title": "解忧杂货店",
+  },
+  "structure": [
+    {
+      "children": undefined,
+      "name": "第一章 回答在牛奶箱里",
+      "nodeId": "num_1",
+      "path": "text/part0002.html",
+      "playOrder": "1",
+      "sectionId": "id11",
+    },
+    {
+      "children": undefined,
+      "name": "第二章 深夜的口琴声",
+      "nodeId": "num_2",
+      "path": "text/part0003.html",
+      "playOrder": "2",
+      "sectionId": "id12",
+    },
+    {
+      "children": undefined,
+      "name": "第三章 在思域车上等到天亮",
+      "nodeId": "num_3",
+      "path": "text/part0004.html",
+      "playOrder": "3",
+      "sectionId": "id13",
+    },
+    {
+      "children": undefined,
+      "name": "第四章 听着披头士默祷",
+      "nodeId": "num_4",
+      "path": "text/part0005.html",
+      "playOrder": "4",
+      "sectionId": "id14",
+    },
+    {
+      "children": undefined,
+      "name": "第五章 来自天上的祈祷",
+      "nodeId": "num_5",
+      "path": "text/part0006.html",
+      "playOrder": "5",
+      "sectionId": "id15",
+    },
+  ],
+}

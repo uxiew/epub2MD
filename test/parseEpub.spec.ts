@@ -1,45 +1,23 @@
-import parser from '../src/parseEpub'
-import _ from 'lodash'
-import * as path from 'path'
+import { pick } from 'lodash'
+import parse from '../src/parseEpub'
+import { readdirSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { describe, expect, test } from 'vitest'
+import { Path } from '../src/utils'
+import { projectRoot } from './utilities'
 
-const baseDir = process.cwd()
-const filesToBeTested = ['file-1', 'file-2', 'file-3', 'file-4', 'file-1-no-toc', 'wells']
 
-const testFile = (filename: string) => {
-  describe(`parser 测试 ${filename}.epub`, () => {
-    const fileContent = parser(path.join(baseDir, `test/fixtures/${filename}.epub`), {
-      type: 'path',
-      expand: true,
+const fixturesPath = resolve(projectRoot, 'test/fixtures')
+const epubs = readdirSync(fixturesPath)
+  .map(path => Path(resolve(fixturesPath, path)))
+  .filter(path => path.extension === 'epub')
+
+describe(`parseEpub`, () => {
+  for (const path of epubs)
+    test(path.fileStem, async () => {
+      const epub = await parse(path.fullPath)
+      const snapshot = pick(epub, ['structure', 'info', '_spine'])
+      const snapshotPath = resolve(projectRoot, 'test/snapshots/unit/parseEpub', path.fileName)
+      await expect(snapshot).toMatchFileSnapshot(snapshotPath)
     })
-
-    test('Result should have keys', async () => {
-      const keys = _.keys(await fileContent)
-      expect(keys.length).not.toBe(0)
-    })
-
-    test('toc', async () => {
-      const result = await fileContent
-      if (filename === 'file-1-no-toc') {
-        expect(result.structure).toBe(undefined)
-      } else {
-        expect(fileContent && typeof fileContent).toBe('object')
-      }
-    })
-
-    // it('key 分别为: flesh, nav, meta', done => {
-    //   const expectedKeys = ['flesh', 'nav', 'meta']
-
-    //   fileContent.then(result => {
-    //     const keys = _.keys(result)
-    //     keys.forEach(key => {
-    //       expect(expectedKeys.indexOf(key)).to.not.be(-1)
-    //     })
-    //     done()
-    //   })
-    // })
-  })
-}
-
-filesToBeTested.forEach((filename) => {
-  testFile(filename)
 })
