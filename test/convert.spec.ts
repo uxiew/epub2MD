@@ -2,18 +2,18 @@ import { resolve } from 'node:path'
 import { readdirSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import { Path } from '../src/utils'
-import { projectRoot } from './utilities'
+import { copyToTemporaryFolder, projectRoot } from './utilities'
 import { Converter } from '../src/bin/convert'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
 const tests = readdirSync(fixturesPath)
-  .map(path => Path(resolve(fixturesPath, path)))
-  .filter(path => path.extension === 'epub')
-  .flatMap(inputPath => [
-    { inputPath, shouldMerge: true },
-    { inputPath, shouldMerge: false },
-  ])
+  .filter(fileName => fileName.endsWith('.epub'))
+  .flatMap(fileName =>
+    [true, false].map(shouldMerge => ({
+      shouldMerge,
+      inputPath: copyToTemporaryFolder(fileName)
+    })))
 
 describe(`convert`, () => {
   for (const { inputPath, shouldMerge } of tests) {

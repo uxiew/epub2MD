@@ -3,15 +3,14 @@ import { readdirSync, rmSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
-import { projectRoot } from './utilities'
-import { Path } from '../src/utils'
+import { copyToTemporaryFolder, projectRoot } from './utilities'
 import { isObject } from 'lodash'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
 const epubs = readdirSync(fixturesPath)
-  .map(path => Path(resolve(fixturesPath, path)))
-  .filter(path => path.extension === 'epub')
+  .filter(fileName => fileName.endsWith('.epub'))
+  .map(fileName => copyToTemporaryFolder(fileName))
 
 const cliPath = resolve(projectRoot, 'lib/bin/cli.cjs')
 const networkMockPath = resolve(projectRoot, 'test/mock-network.cjs')
