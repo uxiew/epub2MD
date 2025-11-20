@@ -325,23 +325,35 @@ export class Converter {
    * Directly generate a single merged Markdown file
    */
   private generateMergedFile() {
+    for (const { type, num, outputPath, content } of this.quietGenerateMergedFile()) {
+      if (type === 'markdown file processed')
+        logger.success(`${num}: [${outputPath}]`)
+      if (type === 'file processed')
+        writeFileSync(outputPath, content, { overwrite: true })
+      if (type === 'markdown merged') {
+        writeFileSync(outputPath, content, { overwrite: true })
+        this.outDir = outputPath
+      }
+    }
+  }
+
+  * quietGenerateMergedFile() {
     // Save markdown content and sorting information
     let num = 1, mergedContent = ''
     // Process all chapters
     for (const s of this.structure) {
       let { id, filepath, outputPath, content } = this.getFileData(s)
       const { isHTML } = checkFileType(filepath)
-      if (isHTML) {
-        content = (`<a role="toc_link" id="${id}"></a>\n`) + content
-      }
+      if (isHTML)
+        content = `<a role="toc_link" id="${id}"></a>\n` + content
       if (extname(outputPath) === '.md' && content.toString() !== '') {
         num++
         mergedContent += content.toString() + '\n\n---\n\n'
         // Output conversion information
-        logger.success(`${num}: [${basename(outputPath)}]`)
+        yield { type: 'markdown file processed', num, outputPath: basename(outputPath) } as const
       } else if (extname(outputPath) !== '.md') {
-        //For non-Markdown files (such as images), output is still required.
-        writeFileSync(outputPath, content, { overwrite: true })
+        // For non-Markdown files (such as images), output is still required.
+        yield { type: 'file processed', outputPath, content } as const
       }
     }
 
@@ -351,7 +363,6 @@ export class Converter {
       this.options.mergedFilename || `${basename(this.outDir)}-merged.md`
     )
     // Write merged content
-    writeFileSync(outputPath, mergedContent, { overwrite: true })
-    this.outDir = outputPath
+    yield { type: 'markdown merged', outputPath, content: mergedContent } as const
   }
 }
