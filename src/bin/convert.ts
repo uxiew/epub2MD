@@ -300,18 +300,18 @@ export class Converter {
       filepath,
       content,
       links,
-      outFilePath: outpath,
+      outputPath: outpath,
     }
   }
 
   private generateFiles() {
     // Process all chapters
     let num = 1
-    for (const { type, outFilePath, content } of this.quietGenerateFiles()) {
+    for (const { type, outputPath, content } of this.quietGenerateFiles()) {
       if (content.length === 0) continue
       if (type === 'md')
-        logger.success(`${num++}: [${basename(outFilePath)}]`)
-      writeFileSync(outFilePath, content, { overwrite: true })
+        logger.success(`${num++}: [${basename(outputPath)}]`)
+      writeFileSync(outputPath, content, { overwrite: true })
     }
   }
 
@@ -329,19 +329,19 @@ export class Converter {
     let num = 1, mergedContent = ''
     // Process all chapters
     for (const s of this.structure) {
-      let { id, filepath, outFilePath, content } = this.getFileData(s)
+      let { id, filepath, outputPath, content } = this.getFileData(s)
       const { isHTML } = checkFileType(filepath)
       if (isHTML) {
         content = (`<a role="toc_link" id="${id}"></a>\n`) + content
       }
-      if (extname(outFilePath) === '.md' && content.toString() !== '') {
+      if (extname(outputPath) === '.md' && content.toString() !== '') {
         num++
         mergedContent += content.toString() + '\n\n---\n\n'
         // Output conversion information
-        logger.success(`${num}: [${basename(outFilePath)}]`)
-      } else if (extname(outFilePath) !== '.md') {
+        logger.success(`${num}: [${basename(outputPath)}]`)
+      } else if (extname(outputPath) !== '.md') {
         //For non-Markdown files (such as images), output is still required.
-        writeFileSync(outFilePath, content, { overwrite: true })
+        writeFileSync(outputPath, content, { overwrite: true })
       }
     }
 
