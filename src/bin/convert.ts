@@ -343,15 +343,12 @@ export class Converter {
     // Process all chapters
     for (const s of this.structure) {
       let { type, id, outputPath, content } = this.getFileData(s)
-      if (type === 'md')
-        content = `<a role="toc_link" id="${id}"></a>\n` + content
-      if (type === 'md' && content.length > 0) {
+      if (type === 'md') {
         num++
-        mergedContent += content.toString() + '\n\n---\n\n'
+        mergedContent += `<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n'
         // Output conversion information
         yield { type: 'markdown file processed', num, outputPath: basename(outputPath) } as const
-      }
-      if (type !== 'md') {
+      } else {
         // For non-Markdown files (such as images), output is still required.
         yield { type: 'file processed', outputPath, content } as const
       }
