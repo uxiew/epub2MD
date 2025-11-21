@@ -325,9 +325,10 @@ export class Converter {
    * Directly generate a single merged Markdown file
    */
   private generateMergedFile() {
-    for (const { type, num, outputPath, content } of this.quietGenerateMergedFile()) {
+    let markdownFileCount = 1
+    for (const { type, outputPath, content } of this.quietGenerateMergedFile()) {
       if (type === 'markdown file processed')
-        logger.success(`${num}: [${outputPath}]`)
+        logger.success(`${++markdownFileCount}: [${outputPath}]`)
       if (type === 'file processed')
         writeFileSync(outputPath, content, { overwrite: true })
       if (type === 'markdown merged') {
@@ -339,14 +340,13 @@ export class Converter {
 
   * quietGenerateMergedFile() {
     // Save markdown content and sorting information
-    let num = 1, mergedContent = ''
+    let mergedContent = ''
     // Process all chapters
     for (const { type, id, outputPath, content } of this.quietGenerateFiles()) {
       if (type === 'md') {
-        num++
         mergedContent += `<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n'
         // Output conversion information
-        yield { type: 'markdown file processed', num, outputPath: basename(outputPath) } as const
+        yield { type: 'markdown file processed', outputPath: basename(outputPath) } as const
       } else {
         // For non-Markdown files (such as images), output is still required.
         yield { type: 'file processed', outputPath, content } as const
