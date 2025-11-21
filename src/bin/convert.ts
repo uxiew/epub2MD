@@ -32,6 +32,8 @@ const defaultOptions = {
   localize: false,
 }
 
+const IMAGE_DIR = 'images'
+
 export class Converter {
   epub: Epub // epub parser object
   outDir: string  // epub 's original directory to save markdown files
@@ -42,9 +44,6 @@ export class Converter {
   mergeProgress?: MergeProgress
 
   options: RunOptions
-
-  IMAGE_DIR: string = 'images' // The directory to save images
-  MD_FILE_EXT: string = '.md' as const // out file extname
 
   /**
    * Constructor
@@ -89,7 +88,7 @@ export class Converter {
 
     const nav = _matchNav(id, this.epub!.structure);
 
-    const fileName = sanitizeFileName(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+    const fileName = sanitizeFileName(nav ? nav.name + '.md' : basename(outpath))
     const outDir = dirname(outpath)
 
     return {
@@ -109,8 +108,8 @@ export class Converter {
     const name = basename(filepath)
     const path = join(
       this.outDir,
-      isImage ? this.IMAGE_DIR : isHTML ? '' : 'static',
-      isHTML ? resolveHTMLId(name) + this.MD_FILE_EXT : name,
+      isImage ? IMAGE_DIR : isHTML ? '' : 'static',
+      isHTML ? resolveHTMLId(name) + '.md' : name,
     )
     return {
       // html => md
@@ -188,7 +187,7 @@ export class Converter {
 
           // fix link's path
           let validPath = sanitizeFileName(extname(internalNav.name)
-            ? internalNav.name : (internalNav.name + this.MD_FILE_EXT))
+            ? internalNav.name : (internalNav.name + '.md'))
 
           // Adjust internal link adjustment, files with numbers in the name
           for (const sfile of this.structure) {
@@ -217,14 +216,14 @@ export class Converter {
           if (link.startsWith('http')) {
             resLinks.push(link)
           }
-          return './' + this.IMAGE_DIR + '/' + basename(link)
+          return './' + IMAGE_DIR + '/' + basename(link)
         }
       })
 
       // Asynchronously localize http/https images again
       if (this.options.localize) {
         try {
-          downloadRemoteImages(resLinks, join(this.outDir, this.IMAGE_DIR))
+          downloadRemoteImages(resLinks, join(this.outDir, IMAGE_DIR))
         } catch (error) {
           logger.error('Failed to localize the image!', error)
         }
