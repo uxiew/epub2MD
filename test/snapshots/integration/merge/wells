@@ -31,11 +31,11 @@
         "name": "images",
       },
       HashedFile {
-        "hash": "lgRpm8dKHbT4WQQV/5xOdgfX8P0=",
+        "hash": "ylKsOkBThudwvYykfWGSsSNKcRs=",
         "name": "wells-merged.md",
       },
     ],
-    "hash": "nvLSWWBfYPZ5YVrruCWZKa95hQM=",
+    "hash": "fa+ZGE2WCMzkeJUg2Cm3MTWMDW8=",
     "name": "wells",
   },
   "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/wells.epub and merging...

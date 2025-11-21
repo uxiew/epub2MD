@@ -19,11 +19,11 @@
         "name": "images",
       },
       HashedFile {
-        "hash": "ZmUtxx/eO99P1r5mEhMcFwKeP2Q=",
+        "hash": "qwQwGIuDvQHVCzsE/o1QvDWWn+g=",
         "name": "online-imgs-merged.md",
       },
     ],
-    "hash": "3PfQJyMgDyVbssAh1iWfczKytt0=",
+    "hash": "5h4zOB07tlOLfZ2e5LMfpF5SdXA=",
     "name": "online-imgs",
   },
   "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/online-imgs.epub and merging...

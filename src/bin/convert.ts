@@ -314,7 +314,7 @@ export class Converter {
     const chapters: string[] = []
     for (const { type, id, outputPath, content } of this.files)
       if (type === 'md') {
-        chapters.push(`<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n')
+        chapters.push(`<a role="toc_link" id="${id}"></a>\n` + content)
         yield { type: 'markdown file processed', outputPath: basename(outputPath) } as const
       } else {
         yield { type: 'file processed', outputPath, content } as const
@@ -323,7 +323,7 @@ export class Converter {
       this.outDir,
       this.options.mergedFilename || `${basename(this.outDir)}-merged.md`
     )
-    yield { type: 'markdown merged', outputPath, content: chapters.join('') } as const
+    yield { type: 'markdown merged', outputPath, content: chapters.join('\n\n---\n\n') } as const
   }
 }
 

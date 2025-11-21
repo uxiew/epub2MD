@@ -163,11 +163,11 @@
         "name": "images",
       },
       HashedFile {
-        "hash": "dvDRzotkLNmnVvu4w/oZBVmUIng=",
+        "hash": "YrOTPadB0Ac+Cf7tk7hucR3gXag=",
         "name": "zhihu-merged.md",
       },
     ],
-    "hash": "NzaWKjs2XpRdxVlFElAF7VIPRuY=",
+    "hash": "IWtiqFPIDLHb0+XwXpdje0hzcaY=",
     "name": "zhihu",
   },
   "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/zhihu.epub and merging...

@@ -9,7 +9,7 @@
   "hashTree": HashedFolder {
     "children": [
       HashedFile {
-        "hash": "SPsHMqODZaFK1JuTz/10RGHK61U=",
+        "hash": "pBjV1yN5sgAVqrAGCAdSZ1BtYU4=",
         "name": "file-2-merged.md",
       },
       HashedFolder {
@@ -23,7 +23,7 @@
         "name": "images",
       },
     ],
-    "hash": "aONBRVv2qCyApHLdt88U3xeJBmo=",
+    "hash": "Peyt2qbYKOJZn3QAoCZdW9NGbJw=",
     "name": "file-2",
   },
   "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-2.epub and merging...
