@@ -23,6 +23,9 @@ importers:
       fast-xml-parser:
         specifier: ^5.2.0
         version: 5.2.0
+      iterator-helpers-polyfill:
+        specifier: ^3.0.1
+        version: 3.0.1
       jsdom:
         specifier: ^24.0.0
         version: 24.1.1
@@ -1599,6 +1602,10 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  iterator-helpers-polyfill@3.0.1:
+    resolution: {integrity: sha512-9uSoKErC0+TG7uoXlv5k7rs196/l/VGr9hb9KbptpMhszsSksxJCwetp0p7FvgM3SwxlxgEkvokmeOi02PARlQ==}
+    engines: {chrome: '>=63', firefox: '>=57', node: '>=10.0.0', safari: '>=11'}
 
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
@@ -4047,6 +4054,8 @@ snapshots:
       '@types/estree': 1.0.5
 
   isexe@2.0.0: {}
+
+  iterator-helpers-polyfill@3.0.1: {}
 
   jackspeak@3.4.3:
     dependencies:

@@ -2,8 +2,10 @@
 import args from 'args'
 import process from 'node:process'
 import fs from 'node:fs'
+import { basename } from 'node:path'
+import { writeFileSync } from 'write-file-safe'
 import parseEpub from '../parseEpub'
-import { Converter } from './convert'
+import { Converter, FileData, MergeProgress, RunOptions } from './convert'
 import { mergeMarkdowns } from './merge'
 import logger from '../logger'
 import { expandWildcard } from './utils'
@@ -103,7 +105,7 @@ if (!hasRun && flags[Commands.unzip]) {
     logger.info('unzipping...')
 
     try {
-      const { outDir } = new Converter(epubPath, options)
+      const outDir = convert(epubPath, options)
       logger.info(`Unzip successful! output: ${outDir}`)
     } catch (error) {
       logger.error(error as string)
@@ -227,7 +229,7 @@ async function run(cmd: CommandType) {
         localize,
       }
       try {
-        const { outDir } = new Converter(epubPath, options)
+        const outDir = convert(epubPath, options)
 
         // If direct merge, return value is the merged file path
         if (shouldMerge) {
@@ -260,4 +262,40 @@ async function run(cmd: CommandType) {
   } else {
     logger.error(`Path must be a string, got ${typeof cmdPath}`)
   }
+}
+
+
+function convert(epubPath: string, options?: Partial<RunOptions>) {
+  const converter = new Converter(epubPath, options)
+  if (options?.shouldMerge)
+    return handleMergedFile(converter.mergeProgress!)
+  else {
+    handleFiles(converter.files)
+    return converter.outDir
+  }
+}
+
+function handleFiles(files: FileData) {
+  let markdownFileCount = 0
+  for (const { type, outputPath, content } of files) {
+    if (content.length === 0) continue
+    if (type === 'md')
+      logger.success(`${++markdownFileCount}: [${basename(outputPath)}]`)
+    writeFileSync(outputPath, content, { overwrite: true })
+  }
+}
+
+function handleMergedFile(mergeFileProcess: MergeProgress) {
+  let markdownFileCount = 1
+  for (const { type, outputPath, content } of mergeFileProcess) {
+    if (type === 'markdown file processed')
+      logger.success(`${++markdownFileCount}: [${outputPath}]`)
+    if (type === 'file processed')
+      writeFileSync(outputPath, content, { overwrite: true })
+    if (type === 'markdown merged') {
+      writeFileSync(outputPath, content, { overwrite: true })
+      return outputPath
+    }
+  }
+  throw 'No merged markdown file created'
 }

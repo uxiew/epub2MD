@@ -14,7 +14,7 @@ const tests = readdirSync(fixturesPath)
 describe(`convert`, () => {
   for (const inputPath of tests)
     test(inputPath.fileStem, async () => {
-      const markdown = new Converter(inputPath.fullPath).quietGenerateFiles()
+      const markdown = new Converter(inputPath.fullPath).files
         .toArray()
         .map(({ outputPath, content }) => ({
           outputPath: getRelativePath(inputPath, outputPath),

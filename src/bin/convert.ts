@@ -3,6 +3,8 @@ import { existsSync } from 'node:fs'
 import logger, { name } from '../logger'
 import _ from 'lodash'
 import { writeFileSync } from 'write-file-safe'
+import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
+iteratorHelpersPolyfill.installIntoGlobal()
 
 import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
@@ -19,7 +21,7 @@ interface Structure {
   filepath: string
 }
 
-interface RunOptions {
+export interface RunOptions {
   cmd: CommandType
   shouldMerge: boolean      // Whether to directly generate the merged file
   localize: boolean         // Whether to retain the original online image link
@@ -39,6 +41,8 @@ export class Converter {
 
   // include images/html/css/js in the epub file
   structure: Structure[] = [] // epub dir structure
+  files: FileData
+  mergeProgress?: MergeProgress
 
   options: RunOptions
 
@@ -59,10 +63,12 @@ export class Converter {
 
     this.getManifest(isUnzipOnly)
 
+    this.files = this.structure
+      .values()
+      .map(x => this.getFileData(x))
+
     if (this.options.shouldMerge && !isUnzipOnly)
-      this.generateMergedFile()
-    else
-      this.generateFiles()
+      this.mergeProgress = this.quietGenerateMergedFile()
   }
 
 
@@ -304,45 +310,11 @@ export class Converter {
     }
   }
 
-  private generateFiles() {
-    // Process all chapters
-    let num = 1
-    for (const { type, outputPath, content } of this.quietGenerateFiles()) {
-      if (content.length === 0) continue
-      if (type === 'md')
-        logger.success(`${num++}: [${basename(outputPath)}]`)
-      writeFileSync(outputPath, content, { overwrite: true })
-    }
-  }
-
-  quietGenerateFiles () {
-    return this.structure
-      .values()
-      .map(x => this.getFileData(x))
-  }
-
-  /**
-   * Directly generate a single merged Markdown file
-   */
-  private generateMergedFile() {
-    let markdownFileCount = 1
-    for (const { type, outputPath, content } of this.quietGenerateMergedFile()) {
-      if (type === 'markdown file processed')
-        logger.success(`${++markdownFileCount}: [${outputPath}]`)
-      if (type === 'file processed')
-        writeFileSync(outputPath, content, { overwrite: true })
-      if (type === 'markdown merged') {
-        writeFileSync(outputPath, content, { overwrite: true })
-        this.outDir = outputPath
-      }
-    }
-  }
-
   * quietGenerateMergedFile() {
     // Save markdown content and sorting information
     let mergedContent = ''
     // Process all chapters
-    for (const { type, id, outputPath, content } of this.quietGenerateFiles()) {
+    for (const { type, id, outputPath, content } of this.files) {
       if (type === 'md') {
         mergedContent += `<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n'
         // Output conversion information
@@ -362,3 +334,6 @@ export class Converter {
     yield { type: 'markdown merged', outputPath, content: mergedContent } as const
   }
 }
+
+export type FileData = IteratorObject<ReturnType<Converter['getFileData']>>
+export type MergeProgress = ReturnType<Converter['quietGenerateMergedFile']>
