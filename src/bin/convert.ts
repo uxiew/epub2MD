@@ -6,7 +6,7 @@ iteratorHelpersPolyfill.installIntoGlobal()
 
 import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
-import { checkFileType, convertHTML, fixLinkPath, getClearFilename, resolveHTMLId } from './helper'
+import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName, resolveHTMLId } from './helper'
 import { matchTOC } from '../utils'
 import parseHref from '../parseLink'
 import { type CommandType } from './cli'
@@ -89,7 +89,7 @@ export class Converter {
 
     const nav = _matchNav(id, this.epub!.structure);
 
-    const fileName = getClearFilename(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
+    const fileName = sanitizeFileName(nav ? nav.name + this.MD_FILE_EXT : basename(outpath))
     const outDir = dirname(outpath)
 
     return {
@@ -186,10 +186,10 @@ export class Converter {
           const sectionId = this.epub!.getItemId(url)
 
           const internalNav = matchTOC(sectionId, this.epub?.structure)
-            || { name: link, sectionId: getClearFilename(basename(link)) }
+            || { name: link, sectionId: sanitizeFileName(basename(link)) }
 
           // fix link's path
-          let validPath = getClearFilename(extname(internalNav.name)
+          let validPath = sanitizeFileName(extname(internalNav.name)
             ? internalNav.name : (internalNav.name + this.MD_FILE_EXT))
 
           // Adjust internal link adjustment, files with numbers in the name

@@ -38,12 +38,6 @@ export function matchTOC(id: string, navs?: TOCItem[]): TOCItem | undefined {
   }
 }
 
-// 函数用于清理文件名，将非法字符替换为下划线
-export const sanitizeFileName = (fileName: string, replacementChar = '_') => {
-  const invalidCharsPattern = /[\\/:*?"<>|]/g;
-  return fileName.replace(invalidCharsPattern, replacementChar);
-}
-
 export const xmlToJson = (xml: string) => {
   return xmlParser.parse(xml)
   // new Promise<any>((resolve, reject) => {
