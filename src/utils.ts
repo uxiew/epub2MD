@@ -150,3 +150,6 @@ export function Path(path: string) {
     pathStem: nodePath.join(dir, name),
   }
 }
+export namespace Path {
+  export const fileStem = (path: string) => Path(path).fileStem
+}

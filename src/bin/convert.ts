@@ -6,8 +6,8 @@ iteratorHelpersPolyfill.installIntoGlobal()
 
 import parseEpub from '../parseEpub'
 import type { Epub, TOCItem } from '../parseEpub'
-import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName, resolveHTMLId } from './helper'
-import { matchTOC } from '../utils'
+import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName } from './helper'
+import { matchTOC, Path } from '../utils'
 import parseHref from '../parseLink'
 import { type CommandType } from './cli'
 import { downloadRemoteImages } from '../convert/download-images'
@@ -109,7 +109,7 @@ export class Converter {
     const path = join(
       this.outDir,
       isImage ? IMAGE_DIR : isHTML ? '' : 'static',
-      isHTML ? resolveHTMLId(name) + '.md' : name,
+      isHTML ? Path.fileStem(name) + '.md' : name,
     )
     return {
       // html => md

@@ -72,10 +72,6 @@ export function checkFileType(filepath: string) {
   }
 }
 
-export function resolveHTMLId(fileName: string) {
-  return fileName.replace(/\.x?html?(?:.*)/, '')
-}
-
 // 将非法字符替换为下划线
 export function sanitizeFileName(fileName: string, ext = '', replacementChar = '_') {
   const invalidCharsPattern = /[\\/:*?"<>|]/g;
