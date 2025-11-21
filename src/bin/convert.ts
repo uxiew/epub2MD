@@ -68,7 +68,7 @@ export class Converter {
       .map(x => this.getFileData(x))
 
     if (this.options.shouldMerge && !isUnzipOnly)
-      this.mergeProgress = this.quietGenerateMergedFile()
+      this.mergeProgress = this.mergeFiles()
   }
 
 
@@ -310,7 +310,7 @@ export class Converter {
     }
   }
 
-  * quietGenerateMergedFile() {
+  * mergeFiles() {
     // Save markdown content and sorting information
     let mergedContent = ''
     // Process all chapters
@@ -336,4 +336,4 @@ export class Converter {
 }
 
 export type FileData = IteratorObject<ReturnType<Converter['getFileData']>>
-export type MergeProgress = ReturnType<Converter['quietGenerateMergedFile']>
+export type MergeProgress = ReturnType<Converter['mergeFiles']>
