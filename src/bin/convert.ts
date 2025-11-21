@@ -149,10 +149,7 @@ export class Converter {
 
   private getFileData(structure: Structure) {
     let { id, type, filepath, outpath } = structure
-    let content: Buffer | string = '',
-      // nav: TOCItem | undefined,
-      // current content's internal links
-      links: { url: string, hash: string, id: string, toId: string }[] = []
+    let content: Buffer | string = ''
 
     const needAutoCorrect = this.options.cmd === 'autocorrect'
 
@@ -202,13 +199,6 @@ export class Converter {
             join(dirname(filepath), url)
           )
 
-          links.push({
-            url,
-            hash,
-            id: internalNav.sectionId,
-            toId
-          })
-
           return this.options.shouldMerge
             ? linkStartSep + toId + (hash ? '#' + hash : '')
             : linkStartSep + validPath + `${hash ? '#' + hash : ''}`
@@ -240,7 +230,6 @@ export class Converter {
       type,
       filepath,
       content,
-      links,
       outputPath: outpath,
     }
   }
