@@ -341,8 +341,7 @@ export class Converter {
     // Save markdown content and sorting information
     let num = 1, mergedContent = ''
     // Process all chapters
-    for (const s of this.structure) {
-      let { type, id, outputPath, content } = this.getFileData(s)
+    for (const { type, id, outputPath, content } of this.quietGenerateFiles()) {
       if (type === 'md') {
         num++
         mergedContent += `<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n'
