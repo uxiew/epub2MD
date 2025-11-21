@@ -285,7 +285,7 @@ function handleFiles(files: FileData) {
 }
 
 function handleMergedFile(mergeFileProcess: MergeProgress) {
-  let markdownFileCount = 1
+  let markdownFileCount = 0
   for (const { type, outputPath, content } of mergeFileProcess) {
     if (type === 'markdown file processed')
       logger.success(`${++markdownFileCount}: [${outputPath}]`)
