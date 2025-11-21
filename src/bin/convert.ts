@@ -311,27 +311,19 @@ export class Converter {
   }
 
   * mergeFiles() {
-    // Save markdown content and sorting information
-    let mergedContent = ''
-    // Process all chapters
-    for (const { type, id, outputPath, content } of this.files) {
+    const chapters: string[] = []
+    for (const { type, id, outputPath, content } of this.files)
       if (type === 'md') {
-        mergedContent += `<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n'
-        // Output conversion information
+        chapters.push(`<a role="toc_link" id="${id}"></a>\n` + content + '\n\n---\n\n')
         yield { type: 'markdown file processed', outputPath: basename(outputPath) } as const
       } else {
-        // For non-Markdown files (such as images), output is still required.
         yield { type: 'file processed', outputPath, content } as const
       }
-    }
-
-    // Generate merged file name
     const outputPath = join(
       this.outDir,
       this.options.mergedFilename || `${basename(this.outDir)}-merged.md`
     )
-    // Write merged content
-    yield { type: 'markdown merged', outputPath, content: mergedContent } as const
+    yield { type: 'markdown merged', outputPath, content: chapters.join('') } as const
   }
 }
 
