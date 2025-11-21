@@ -342,16 +342,16 @@ export class Converter {
     let num = 1, mergedContent = ''
     // Process all chapters
     for (const s of this.structure) {
-      let { id, filepath, outputPath, content } = this.getFileData(s)
-      const { isHTML } = checkFileType(filepath)
-      if (isHTML)
+      let { type, id, outputPath, content } = this.getFileData(s)
+      if (type === 'md')
         content = `<a role="toc_link" id="${id}"></a>\n` + content
-      if (extname(outputPath) === '.md' && content.toString() !== '') {
+      if (type === 'md' && content.length > 0) {
         num++
         mergedContent += content.toString() + '\n\n---\n\n'
         // Output conversion information
         yield { type: 'markdown file processed', num, outputPath: basename(outputPath) } as const
-      } else if (extname(outputPath) !== '.md') {
+      }
+      if (type !== 'md') {
         // For non-Markdown files (such as images), output is still required.
         yield { type: 'file processed', outputPath, content } as const
       }
