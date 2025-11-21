@@ -155,9 +155,8 @@ export class Converter {
 
     if (type === 'md') {
       const section = this.epub?.getSection(id)
-      if (section) {
+      if (section)
         content = section.toMarkdown()
-      }
 
       // clear readable filename
       const { outPath, fileName } = this.clearOutpath(structure)
@@ -172,27 +171,19 @@ export class Converter {
       content = fixLinkPath(content, (link, isText) => {
         if (isText) {
           const { hash = '', url } = parseHref(link, true)
-
-          if (link.startsWith("#")) {
+          if (link.startsWith("#"))
             return linkStartSep + this.options.shouldMerge ? id : fileName + link
-          }
-
           const sectionId = this.epub!.getItemId(url)
-
-          const internalNav = matchTOC(sectionId, this.epub?.structure)
-            || { name: link, sectionId: sanitizeFileName(basename(link)) }
+          const internalNavName = matchTOC(sectionId, this.epub?.structure)?.name || link
 
           // fix link's path
-          let validPath = sanitizeFileName(extname(internalNav.name)
-            ? internalNav.name : (internalNav.name + '.md'))
+          let validPath = sanitizeFileName(extname(internalNavName)
+            ? internalNavName : (internalNavName + '.md'))
 
           // Adjust internal link adjustment, files with numbers in the name
-          for (const sfile of this.structure) {
-            if (sectionId === sfile.id) {
-              validPath = basename(this.clearOutpath(sfile).outPath)
-              break;
-            }
-          }
+          const file = this.structure.find(file => file.id === sectionId)
+          if (file)
+            validPath = basename(this.clearOutpath(file).outPath)
 
           // content's id
           const toId = this.epub!.getItemId(
@@ -228,7 +219,6 @@ export class Converter {
     return {
       id,
       type,
-      filepath,
       content,
       outputPath: outpath,
     }
