@@ -1,8 +1,6 @@
 import { basename, dirname, extname, format, join, parse } from 'node:path'
-import { existsSync } from 'node:fs'
 import logger, { name } from '../logger'
 import _ from 'lodash'
-import { writeFileSync } from 'write-file-safe'
 import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
 iteratorHelpersPolyfill.installIntoGlobal()
 
@@ -12,6 +10,7 @@ import { checkFileType, convertHTML, fixLinkPath, getClearFilename, resolveHTMLI
 import { matchTOC } from '../utils'
 import parseHref from '../parseLink'
 import { type CommandType } from './cli'
+import { downloadRemoteImages } from '../convert/download-images'
 
 interface Structure {
   id: string
@@ -170,37 +169,6 @@ export class Converter {
     }
   }
 
-  /**
-   * Download remote images to the local images directory
-   */
-  private async downloadImage(url: string, dest: string): Promise<void> {
-    if (existsSync(dest)) return // 已存在则跳过
-
-    // fetch  > node 18
-    const res = await fetch(url)
-    if (!res.ok) throw new Error(`Failed to download image: ${url}`)
-
-    // 获取响应的二进制数据
-    const arrayBuffer = await res.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
-    // 写入文件
-    writeFileSync(dest, buffer, { overwrite: true })
-  }
-
-  /**
-   * 本地化 markdown 内容中的所有 http/https 图片链接
-   */
-  private async localizeImages(links: string[], outDir: string) {
-    const downloadTasks: Promise<void>[] = []
-    for (const link of links) {
-      const imgName = basename(link.split('?')[0])
-      const localPath = join(outDir, imgName)
-      downloadTasks.push(this.downloadImage(link, localPath))
-    }
-    if (downloadTasks.length) await Promise.all(downloadTasks)
-  }
-
   private getFileData(structure: Structure) {
     let { id, type, filepath, outpath } = structure
     let content: Buffer | string = '',
@@ -279,7 +247,7 @@ export class Converter {
       // Asynchronously localize http/https images again
       if (this.options.localize) {
         try {
-          this.localizeImages(resLinks, join(this.outDir, this.IMAGE_DIR))
+          downloadRemoteImages(resLinks, join(this.outDir, this.IMAGE_DIR))
         } catch (error) {
           logger.error('Failed to localize the image!', error)
         }
