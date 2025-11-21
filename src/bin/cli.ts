@@ -278,7 +278,6 @@ function convert(epubPath: string, options?: Partial<RunOptions>) {
 function handleFiles(files: FileData) {
   let markdownFileCount = 0
   for (const { type, outputPath, content } of files) {
-    if (content.length === 0) continue
     if (type === 'md')
       logger.success(`${++markdownFileCount}: [${basename(outputPath)}]`)
     writeFileSync(outputPath, content, { overwrite: true })

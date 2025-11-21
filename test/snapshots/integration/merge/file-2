@@ -9,7 +9,7 @@
   "hashTree": HashedFolder {
     "children": [
       HashedFile {
-        "hash": "pBjV1yN5sgAVqrAGCAdSZ1BtYU4=",
+        "hash": "MQQToSgUwa/tgUYQYuaKnZJbY0c=",
         "name": "file-2-merged.md",
       },
       HashedFolder {
@@ -23,27 +23,26 @@
         "name": "images",
       },
     ],
-    "hash": "Peyt2qbYKOJZn3QAoCZdW9NGbJw=",
+    "hash": "uthzBfBBsJmQj+lT8Ihzuk6Q+cs=",
     "name": "file-2",
   },
   "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-2.epub and merging...
-[epub2md]: 2: [01-封面.md]
-[epub2md]: 3: [02-围城.md]
-[epub2md]: 4: [03-目录.md]
-[epub2md]: 5: [04-校书记略.md]
-[epub2md]: 6: [05-作者简介.md]
-[epub2md]: 7: [06-重印前记.md]
-[epub2md]: 8: [07-序.md]
-[epub2md]: 9: [08-第一章.md]
-[epub2md]: 10: [09-第二章.md]
-[epub2md]: 11: [10-第三章.md]
-[epub2md]: 12: [11-第四章.md]
-[epub2md]: 13: [12-第五章.md]
-[epub2md]: 14: [13-第六章.md]
-[epub2md]: 15: [14-第七章.md]
-[epub2md]: 16: [15-第八章.md]
-[epub2md]: 17: [16-第九章.md]
-[epub2md]: 18: [17-附录_记钱锺书与《围城》.md]
+[epub2md]: 2: [02-围城.md]
+[epub2md]: 3: [03-目录.md]
+[epub2md]: 4: [04-校书记略.md]
+[epub2md]: 5: [05-作者简介.md]
+[epub2md]: 6: [06-重印前记.md]
+[epub2md]: 7: [07-序.md]
+[epub2md]: 8: [08-第一章.md]
+[epub2md]: 9: [09-第二章.md]
+[epub2md]: 10: [10-第三章.md]
+[epub2md]: 11: [11-第四章.md]
+[epub2md]: 12: [12-第五章.md]
+[epub2md]: 13: [13-第六章.md]
+[epub2md]: 14: [14-第七章.md]
+[epub2md]: 15: [15-第八章.md]
+[epub2md]: 16: [16-第九章.md]
+[epub2md]: 17: [17-附录_记钱锺书与《围城》.md]
 [epub2md]: [1/1] Merging successful! Output file: <absolute path hidden from snapshot>/file-2/file-2-merged.md
 ",
 }

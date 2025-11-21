@@ -65,6 +65,7 @@ export class Converter {
     this.files = this.structure
       .values()
       .map(x => this.getFileData(x))
+      .filter(x => x.content.length > 0)
 
     if (this.options.shouldMerge && !isUnzipOnly)
       this.mergeProgress = this.mergeFiles()
