@@ -128,7 +128,7 @@ export class Converter {
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
-      content = this.epub.resolve(filepath).asNodeBuffer()
+      content = this.epub.getFile(filepath).asNodeBuffer()
     }
 
     return {

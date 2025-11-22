@@ -1,13 +1,13 @@
 import { Buffer } from 'node:buffer'
+import path from 'node:path'
 import _ from 'lodash'
 
 import type { GeneralObject } from '../types'
-// @ts-ignore
-import nodeZip from 'node-zip'
 import parseLink from '../parseLink'
 import parseSection, { Section } from '../parseSection'
 import { xmlToJson, determineRoot } from '../utils'
 import { parseOptions, ParserOptions } from './options'
+import { Zip } from './zip'
 
 type MetaInfo = Partial<{
   title: string,
@@ -63,9 +63,9 @@ interface Manifest {
 }
 
 export class Epub {
-  private _zip: any // nodeZip instance
+  private zip: Zip
   private _opfPath?: string
-  private _root?: string
+  private _root!: string
   private _content?: GeneralObject
   private _manifest?: Manifest[]
   // only for html/xhtml, not include images/css/js
@@ -80,33 +80,20 @@ export class Epub {
   tocFile?: string
 
   constructor(fileContent: Buffer, private options: ParserOptions) {
-    this._zip = new nodeZip(fileContent, { binary: true, base64: false, checkCRC32: true })
+    this.zip = new Zip(fileContent)
   }
 
-  /**
-   * get specific file from epub book.
-   */
-  resolve(path: string): {
-    asText: () => string
-    asNodeBuffer: () => Buffer
-  } {
-    let _path
-    if (path[0] === '/') {
-      // use absolute path, root is zip root
-      _path = path.substr(1)
-    } else {
-      _path = this._root + path
-    }
-    const file = this._zip.file(decodeURI(_path))
-    if (file) {
-      return file
-    } else {
-      throw new Error(`${_path} not found!`)
-    }
+  getFile(filePath: string) {
+    const isAbsolute = filePath.startsWith('/')
+    const absolutePath = isAbsolute
+      ? filePath.slice(1)
+      : path.join(this._root, filePath)
+    const file = this.zip.getFile(absolutePath)
+    return file
   }
 
   _resolveXMLAsJsObject(path: string): GeneralObject {
-    const xml = this.resolve(path).asText()
+    const xml = this.getFile(path).asText()
     return xmlToJson(xml)
   }
 
@@ -292,12 +279,12 @@ export class Epub {
     }
     return list.map((id) => {
       const path = _.find(this._manifest, { id })!.href
-      const html = this.resolve(path).asText()
+      const html = this.getFile(path).asText()
 
       const section = parseSection({
         id,
         htmlString: html,
-        resourceResolver: this.resolve.bind(this),
+        resourceResolver: this.getFile.bind(this),
         idResolver: this._resolveIdFromLink.bind(this),
         expand: this.options.expand,
       })
