@@ -77,7 +77,7 @@ export class Epub {
 
   structure!: TOCItem[]
   info?: MetaInfo
-  sections?: Section[]
+  sections!: Section[]
   tocFile?: string
 
   constructor(buffer: Buffer, options?: ParserOptions) {

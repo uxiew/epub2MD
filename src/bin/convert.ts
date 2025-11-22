@@ -69,7 +69,7 @@ export class Converter {
     const needAutoCorrect = this.options.cmd === 'autocorrect'
 
     if (type === 'md') {
-      const section = this.epub?.getSection(id)
+      const section = this.epub.getSection(id)
       if (section)
         content = section.toMarkdown()
 
@@ -88,8 +88,8 @@ export class Converter {
           const { hash = '', url } = parseHref(link, true)
           if (link.startsWith("#"))
             return linkStartSep + this.options.shouldMerge ? id : fileName + link
-          const sectionId = this.epub!.getItemId(url)
-          const internalNavName = matchTOC(sectionId, this.epub?.structure)?.name || link
+          const sectionId = this.epub.getItemId(url)
+          const internalNavName = matchTOC(sectionId, this.epub.structure)?.name || link
 
           // fix link's path
           let validPath = sanitizeFileName(extname(internalNavName)
@@ -101,7 +101,7 @@ export class Converter {
             validPath = basename(clearOutpath(this.epub.structure, file).outPath)
 
           // content's id
-          const toId = this.epub!.getItemId(
+          const toId = this.epub.getItemId(
             join(dirname(filepath), url)
           )
 
@@ -128,7 +128,7 @@ export class Converter {
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
-      content = this.epub!.resolve(filepath).asNodeBuffer()
+      content = this.epub.resolve(filepath).asNodeBuffer()
     }
 
     return {
@@ -171,7 +171,7 @@ export type MergeProgress = ReturnType<Converter['mergeFiles']>
 function processManifest(epub: Epub, unzip: boolean, outDir: string) {
   const structure: Structure[] = []
   const orderPrefix = new OrderPrefix({
-    maximum: epub.sections?.length ?? 0
+    maximum: epub.sections.length
   })
   for (const { href: filepath, id } of epub.getManifest()) {
     if (filepath.endsWith('ncx') || id === 'titlepage') continue
