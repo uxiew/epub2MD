@@ -75,7 +75,7 @@ export class Epub {
   private _metadata?: GeneralObject
   private _options: ParserOptions = defaultOptions
 
-  structure?: TOCItem[]
+  structure!: TOCItem[]
   info?: MetaInfo
   sections?: Section[]
   tocFile?: string

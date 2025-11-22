@@ -67,36 +67,6 @@ export class Converter {
       this.mergeProgress = this.mergeFiles()
   }
 
-  private clearOutpath({ id, outpath, orderPrefix }: Structure) {
-    /*get readable name from toc items*/
-    function _matchNav(id: Structure['id'], tocItems?: TOCItem[]): TOCItem | undefined {
-      if (Array.isArray(tocItems))
-        for (let i = 0; i < tocItems.length; i++) {
-          const item = tocItems[i];
-          if (item.sectionId === id) {
-            return item;
-          }
-          if (item.children) {
-            const childMatch = _matchNav(id, item.children);
-            if (childMatch) {
-              return childMatch;
-            }
-          }
-        }
-      return undefined;
-    }
-
-    const nav = _matchNav(id, this.epub!.structure);
-
-    const fileName = sanitizeFileName(nav ? nav.name + '.md' : basename(outpath))
-    const outDir = dirname(outpath)
-
-    return {
-      fileName,
-      outDir,
-      outPath: join(outDir, orderPrefix + '-' + fileName)
-    }
-  }
 
   /**
   * Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
@@ -159,7 +129,7 @@ export class Converter {
         content = section.toMarkdown()
 
       // clear readable filename
-      const { outPath, fileName } = this.clearOutpath(structure)
+      const { outPath, fileName } = clearOutpath(this.epub.structure, structure)
       outpath = outPath
 
       // resources links
@@ -183,7 +153,7 @@ export class Converter {
           // Adjust internal link adjustment, files with numbers in the name
           const file = this.structure.find(file => file.id === sectionId)
           if (file)
-            validPath = basename(this.clearOutpath(file).outPath)
+            validPath = basename(clearOutpath(this.epub.structure, file).outPath)
 
           // content's id
           const toId = this.epub!.getItemId(
@@ -252,5 +222,36 @@ class OrderPrefix {
   }
   next() {
     return (++this.count).toString().padStart(this.length, '0')
+  }
+}
+
+function clearOutpath(toc: TOCItem[], { id, outpath, orderPrefix }: Structure) {
+  /*get readable name from toc items*/
+  function _matchNav(id: Structure['id'], tocItems?: TOCItem[]): TOCItem | undefined {
+    if (Array.isArray(tocItems))
+      for (let i = 0; i < tocItems.length; i++) {
+        const item = tocItems[i];
+        if (item.sectionId === id) {
+          return item;
+        }
+        if (item.children) {
+          const childMatch = _matchNav(id, item.children);
+          if (childMatch) {
+            return childMatch;
+          }
+        }
+      }
+    return undefined;
+  }
+
+  const nav = _matchNav(id, toc)
+
+  const fileName = sanitizeFileName(nav ? nav.name + '.md' : basename(outpath))
+  const outDir = dirname(outpath)
+
+  return {
+    fileName,
+    outDir,
+    outPath: join(outDir, orderPrefix + '-' + fileName)
   }
 }
