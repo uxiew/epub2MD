@@ -65,11 +65,11 @@
     "beauty-json": "^1.0.0",
     "fast-glob": "^3.3.3",
     "fast-xml-parser": "^5.2.0",
+    "fflate": "^0.8.2",
     "iterator-helpers-polyfill": "^3.0.1",
     "jsdom": "^24.0.0",
     "lodash": "^4.17.15",
     "node-html-markdown": "^1.3.0",
-    "node-zip": "^1.1.1",
     "picocolors": "^1.1.1",
     "write-file-safe": "^1.3.1"
   },

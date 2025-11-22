@@ -1,25 +1,25 @@
-// @ts-ignore
-import nodeZip from 'node-zip'
+import { Unzipped, unzipSync } from 'fflate'
 
 export class Zip {
-  private zip: NodeZip
+  private zip: Unzipped
   constructor(fileContent: Buffer) {
-    this.zip = new nodeZip(fileContent, { binary: true, base64: false, checkCRC32: true })
+    this.zip = unzipSync(fileContent)
   }
   
   getFile(path: string) {
     const normalisedPath = decodeURI(path)
-      .replace(/^\//, '') // drop initial forward slash
-    const file = this.zip.file(normalisedPath)
+      .replace(/^\//, '') // drop initial slash
+    const file = this.zip[normalisedPath]
     if (!file)
       throw new Error(`Error in epub. File not found: ${normalisedPath}`)
-    return file
+    return {
+      asText: () => toString(file),
+      asNodeBuffer: () => Buffer.from(file)
+    }
   }
 }
 
-interface NodeZip {
-  file(path: string): {
-    asText: () => string
-    asNodeBuffer: () => Buffer
-  }
+function toString(buffer: Uint8Array) {
+  const decoder = new TextDecoder('utf-8')
+  return decoder.decode(buffer)
 }
