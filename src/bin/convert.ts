@@ -37,7 +37,6 @@ const IMAGE_DIR = 'images'
 export class Converter {
   epub: Epub // epub parser object
   outDir: string  // epub 's original directory to save markdown files
-  structure: Structure[]
   files: FileData
   mergeProgress?: MergeProgress
 
@@ -50,22 +49,20 @@ export class Converter {
    */
   constructor(epubPath: string, options?: Partial<RunOptions>) {
     this.options = { ...defaultOptions, ...options }
-
     this.epub = parseEpub(epubPath, { convertToMarkdown: convertHTML })
     this.outDir = epubPath.replace('.epub', '')
 
-    this.structure = processManifest(this.epub, this.options.cmd !== 'unzip', this.outDir)
-
-    this.files = this.structure
+    const structures = processManifest(this.epub, this.options.cmd !== 'unzip', this.outDir)
+    this.files = structures
       .values()
-      .map(x => this.getFileData(x))
+      .map(x => this.getFileData(x, structures))
       .filter(x => x.content.length > 0)
 
     if (this.options.shouldMerge)
       this.mergeProgress = this.mergeFiles()
   }
 
-  private getFileData(structure: Structure) {
+  private getFileData(structure: Structure, structures: Structure[]) {
     let { id, type, filepath, outpath } = structure
     let content: Buffer | string = ''
 
@@ -99,7 +96,7 @@ export class Converter {
             ? internalNavName : (internalNavName + '.md'))
 
           // Adjust internal link adjustment, files with numbers in the name
-          const file = this.structure.find(file => file.id === sectionId)
+          const file = structures.find(file => file.id === sectionId)
           if (file)
             validPath = basename(clearOutpath(this.epub.structure, file).outPath)
 
