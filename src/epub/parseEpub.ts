@@ -2,12 +2,12 @@ import fs from 'node:fs'
 import { Buffer } from 'node:buffer'
 import _ from 'lodash'
 
-import type { ParserOptions, GeneralObject } from './types'
+import type { ParserOptions, GeneralObject } from '../types'
 // @ts-ignore
 import nodeZip from 'node-zip'
-import parseLink from './parseLink'
-import parseSection, { Section } from './parseSection'
-import { xmlToJson, determineRoot } from './utils'
+import parseLink from '../parseLink'
+import parseSection, { Section } from '../parseSection'
+import { xmlToJson, determineRoot } from '../utils'
 
 type MetaInfo = Partial<{
   title: string,

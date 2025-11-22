@@ -4,8 +4,8 @@ import _ from 'lodash'
 import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
 iteratorHelpersPolyfill.installIntoGlobal()
 
-import parseEpub from '../parseEpub'
-import { Epub, TOCItem } from '../parseEpub'
+import parseEpub from '../epub/parseEpub'
+import { Epub, TOCItem } from '../epub/parseEpub'
 import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName } from './helper'
 import { matchTOC, Path } from '../utils'
 import parseHref from '../parseLink'

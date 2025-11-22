@@ -2,7 +2,7 @@ import nodePath from 'node:path'
 import _ from 'lodash'
 import { XMLParser } from 'fast-xml-parser'
 import { GeneralObject } from './types'
-import type { TOCItem } from './parseEpub'
+import { TOCItem } from './epub/parseEpub'
 
 
 export interface TraverseNestedObject {

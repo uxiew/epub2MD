@@ -1,5 +1,5 @@
 import { pick } from 'lodash'
-import parse from '../src/parseEpub'
+import parse from '../src/epub/parseEpub'
 import { readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, test } from 'vitest'
