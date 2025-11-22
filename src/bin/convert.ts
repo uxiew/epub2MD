@@ -181,8 +181,6 @@ export class Converter {
             return linkStartSep + this.options.shouldMerge ? id : fileName + link
           }
 
-          link = resolveHTMLId(basename(url))
-
           const sectionId = this.epub!.getItemId(url)
 
           const internalNav = matchTOC(sectionId, this.epub?.structure)
