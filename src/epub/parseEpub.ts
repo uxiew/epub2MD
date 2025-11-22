@@ -162,7 +162,6 @@ export class Epub {
 
   getSpine(): Record<string, number> {
     const spine: Record<string, number> = {}
-    this.getManifest()
     let itemRefs = _.get(this._content, ['package', 'spine', 'itemref'], [])
     if (!Array.isArray(itemRefs)) itemRefs = [itemRefs]
     itemRefs.map(

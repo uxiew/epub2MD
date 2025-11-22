@@ -1,5 +1,5 @@
-import { basename, dirname, extname, format, join, parse } from 'node:path'
-import logger, { name } from '../logger'
+import { basename, dirname, extname, join } from 'node:path'
+import logger from '../logger'
 import _ from 'lodash'
 import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
 iteratorHelpersPolyfill.installIntoGlobal()
