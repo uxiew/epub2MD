@@ -5,7 +5,7 @@ import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
 iteratorHelpersPolyfill.installIntoGlobal()
 
 import parseEpub from '../parseEpub'
-import type { Epub, TOCItem } from '../parseEpub'
+import { Epub, TOCItem } from '../parseEpub'
 import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName } from './helper'
 import { matchTOC, Path } from '../utils'
 import parseHref from '../parseLink'
@@ -37,9 +37,7 @@ const IMAGE_DIR = 'images'
 export class Converter {
   epub: Epub // epub parser object
   outDir: string  // epub 's original directory to save markdown files
-
-  // include images/html/css/js in the epub file
-  structure: Structure[] = [] // epub dir structure
+  structure: Structure[]
   files: FileData
   mergeProgress?: MergeProgress
 
@@ -56,7 +54,7 @@ export class Converter {
     this.epub = parseEpub(epubPath, { convertToMarkdown: convertHTML })
     this.outDir = epubPath.replace('.epub', '')
 
-    this.getManifest()
+    this.structure = processManifest(this.epub, this.options.cmd !== 'unzip', this.outDir)
 
     this.files = this.structure
       .values()
@@ -65,34 +63,6 @@ export class Converter {
 
     if (this.options.shouldMerge)
       this.mergeProgress = this.mergeFiles()
-  }
-
-  /**
-   * Retrieves and processes the manifest of an EPUB file.
-   *
-   * @returns Populates the structure array with manifest items
-   *
-   * This method parses the EPUB file, extracts its manifest, and creates a structure
-   * representing the file contents. When unzip is false, it skips certain files like
-   * the NCX file and title page, and generates appropriate output paths for other files.
-   */
-  private getManifest() {
-    const orderPrefix = new OrderPrefix({
-      maximum: this.epub.sections?.length ?? 0
-    })
-    for (const { href: filepath, id } of this.epub.getManifest()) {
-      if (filepath.endsWith('ncx') || id === 'titlepage') continue
-      const { type, path: outpath } = parseFileInfo(filepath, this.outDir)
-      if (type === '' && this.options.cmd !== 'unzip') continue
-      this.structure.push({
-        // current only label markdown file
-        orderPrefix: type === 'md' ? orderPrefix.next() : '',
-        id,
-        type,
-        outpath,
-        filepath
-      })
-    }
   }
 
   private getFileData(structure: Structure) {
@@ -191,6 +161,36 @@ export class Converter {
 
 export type FileData = IteratorObject<ReturnType<Converter['getFileData']>>
 export type MergeProgress = ReturnType<Converter['mergeFiles']>
+
+/**
+ * Retrieves and processes the manifest of an EPUB file.
+ *
+ * @returns Populates the structure array with manifest items
+ *
+ * This method parses the EPUB file, extracts its manifest, and creates a structure
+ * representing the file contents. When unzip is false, it skips certain files like
+ * the NCX file and title page, and generates appropriate output paths for other files.
+ */
+function processManifest(epub: Epub, unzip: boolean, outDir: string) {
+  const structure: Structure[] = []
+  const orderPrefix = new OrderPrefix({
+    maximum: epub.sections?.length ?? 0
+  })
+  for (const { href: filepath, id } of epub.getManifest()) {
+    if (filepath.endsWith('ncx') || id === 'titlepage') continue
+    const { type, path: outpath } = parseFileInfo(filepath, outDir)
+    if (type === '' && unzip) continue
+    structure.push({
+      // current only label markdown file
+      orderPrefix: type === 'md' ? orderPrefix.next() : '',
+      id,
+      type,
+      outpath,
+      filepath
+    })
+  }
+  return structure
+}
 
 class OrderPrefix {
   private count = 0
