@@ -2,7 +2,8 @@ import path from 'node:path'
 import parseLink from './parseLink'
 import parseHTML from './parseHTML'
 import convert from './converter'
-import type { HtmlNodeObject, convertFuncType } from './types'
+import type { HtmlNodeObject } from './types'
+import { ConvertToMarkdown } from './epub/options'
 
 const isInternalUri = (uri: string) => {
   return uri.indexOf('http://') === -1 && uri.indexOf('https://') === -1
@@ -22,7 +23,7 @@ export class Section {
   htmlObjects?: HtmlNodeObject[]
   private _resourceResolver?: (path: string) => any
   private _idResolver?: (link: string) => string
-  private _convertToMarkdown: convertFuncType = convert
+  private _convertToMarkdown: ConvertToMarkdown = convert
 
   constructor({ id, htmlString, resourceResolver, idResolver, expand }: ParseSectionConfig) {
     this.id = id
@@ -34,7 +35,7 @@ export class Section {
     }
   }
 
-  register(convertFunc: convertFuncType): Section {
+  register(convertFunc: ConvertToMarkdown): Section {
     this._convertToMarkdown = convertFunc;
     return this
   }
