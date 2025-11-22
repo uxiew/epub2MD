@@ -67,28 +67,6 @@ export class Converter {
       this.mergeProgress = this.mergeFiles()
   }
 
-
-  /**
-  * Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
-  * @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
-  */
-  parseFileInfo(filepath: string) {
-    const { isImage, isHTML } = checkFileType(filepath)
-    // other files skipped
-    const name = basename(filepath)
-    const path = join(
-      this.outDir,
-      isImage ? IMAGE_DIR : isHTML ? '' : 'static',
-      isHTML ? Path.fileStem(name) + '.md' : name,
-    )
-    return {
-      // html => md
-      type: isHTML ? 'md' : isImage ? 'img' : '' as Structure['type'],
-      name,
-      path
-    }
-  }
-
   /**
    * Retrieves and processes the manifest of an EPUB file.
    *
@@ -104,7 +82,7 @@ export class Converter {
     })
     for (const { href: filepath, id } of this.epub.getManifest()) {
       if (filepath.endsWith('ncx') || id === 'titlepage') continue
-      const { type, path: outpath } = this.parseFileInfo(filepath)
+      const { type, path: outpath } = parseFileInfo(filepath, this.outDir)
       if (type === '' && this.options.cmd !== 'unzip') continue
       this.structure.push({
         // current only label markdown file
@@ -253,5 +231,25 @@ function clearOutpath(toc: TOCItem[], { id, outpath, orderPrefix }: Structure) {
     fileName,
     outDir,
     outPath: join(outDir, orderPrefix + '-' + fileName)
+  }
+}
+
+/**
+* Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
+* @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
+*/
+function parseFileInfo(filepath: string, outDir: string) {
+  const { isImage, isHTML } = checkFileType(filepath)
+  // other files skipped
+  const name = basename(filepath)
+  const path = join(
+    outDir,
+    isImage ? IMAGE_DIR : isHTML ? '' : 'static',
+    isHTML ? Path.fileStem(name) + '.md' : name,
+  )
+  return {
+    // html => md
+    type: isHTML ? 'md' : isImage ? 'img' : '' as Structure['type'],
+    path
   }
 }
