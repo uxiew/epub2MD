@@ -9,8 +9,8 @@ import { Epub, TOCItem } from '../parseEpub'
 import { checkFileType, convertHTML, fixLinkPath, sanitizeFileName } from './helper'
 import { matchTOC, Path } from '../utils'
 import parseHref from '../parseLink'
-import { type CommandType } from './cli'
-import { downloadRemoteImages } from '../convert/download-images'
+import { type CommandType } from '../bin/cli'
+import { downloadRemoteImages } from './download-images'
 
 interface Structure {
   id: string

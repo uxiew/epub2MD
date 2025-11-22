@@ -3,7 +3,7 @@ import { readdirSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import { Path } from '../src/utils'
 import { copyToTemporaryFolder, projectRoot } from './utilities'
-import { Converter } from '../src/bin/convert'
+import { Converter } from '../src/convert/convert'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
@@ -15,7 +15,7 @@ const tests = readdirSync(fixturesPath)
       inputPath: copyToTemporaryFolder(fileName)
     })))
 
-describe(`convert`, () => {
+describe('convert', () => {
   for (const { inputPath, shouldMerge } of tests) {
     const testName = inputPath.fileStem + (shouldMerge ? ' merge' : '')
     test(testName, async () => {
