@@ -16,7 +16,10 @@ describe(`parseEpub`, () => {
   for (const path of epubs)
     test(path.fileStem, async () => {
       const epub = parse(path.fullPath)
-      const snapshot = pick(epub, ['structure', 'info', '_spine'])
+      const snapshot = {
+        ...pick(epub, ['info', '_spine']),
+        structure: epub.structure?.tree
+      }
       const snapshotPath = resolve(projectRoot, 'test/snapshots/unit/parseEpub', path.fileName)
       await expect(snapshot).toMatchFileSnapshot(snapshotPath)
     })

@@ -6,7 +6,7 @@ import parseLink from '../parseLink'
 import parseSection, { Section } from '../parseSection'
 import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
-import xml, { Opf, TocItem } from '../xml'
+import xml, { Opf, Toc } from '../xml'
 
 
 export const defaultOptions = { type: "path", expand: false } as ParserOptions
@@ -17,7 +17,7 @@ export class Epub {
   private _spine?: Record<string, number> // array of ids defined in manifest
   private contentRoot!: string
   opf!: Opf
-  structure?: TocItem[]
+  structure?: Toc
   info?: Opf['metadata']
   sections!: Section[]
   tocFile?: string
