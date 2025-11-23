@@ -15,7 +15,7 @@ const epubs = readdirSync(fixturesPath)
 describe(`parseEpub`, () => {
   for (const path of epubs)
     test(path.fileStem, async () => {
-      const epub = await parse(path.fullPath)
+      const epub = parse(path.fullPath)
       const snapshot = pick(epub, ['structure', 'info', '_spine'])
       const snapshotPath = resolve(projectRoot, 'test/snapshots/unit/parseEpub', path.fileName)
       await expect(snapshot).toMatchFileSnapshot(snapshotPath)
