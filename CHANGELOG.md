@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [1.5.0](https://github.com/uxiew/epub2MD/compare/v1.4.1...v1.5.0) (2025-11-28)
+
+
+### Bug Fixes
+
+* 🐛 修复可能存在的解析问题 ([553917c](https://github.com/uxiew/epub2MD/commit/553917c494895c675d1e0c954f8bea9bc89a1470))
+* update lockfile to resolve CI installation error ([ab951cb](https://github.com/uxiew/epub2MD/commit/ab951cb37606a31c9a35b746bbbe711fbff60d4d))
+
+
+### Features
+
+* 🎸 add tests for new features ([c2631ef](https://github.com/uxiew/epub2MD/commit/c2631ef69d0d979e4487ed17f9e183307f42ed42))
+
+
+
 ## [1.4.1](https://github.com/uxiew/epub2MD/compare/v1.4.0...v1.4.1) (2025-05-02)
 
 
