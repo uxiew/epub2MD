@@ -20,7 +20,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9.12.0
+          version: 10.15.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,11 +36,11 @@ jobs:
 
       # Build is handled by prepublishOnly, but we run it here explicitly to fail fast if build fails
       # and to have artifacts ready for JSR (if needed)
-      # However, prepublishOnly will run again. To save time, we could skip it here, 
-      # but we need build for JSR publish probably? 
+      # However, prepublishOnly will run again. To save time, we could skip it here,
+      # but we need build for JSR publish probably?
       # JSR usually takes source. Let's assume standard npm publish flow.
       # We will just let prepublishOnly handle the build for npm publish.
-      
+
       - name: Publish to jsr.io
         run: pnpm dlx jsr publish --allow-dirty
         continue-on-error: true
