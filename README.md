@@ -126,6 +126,11 @@ The return value is an object which contains`structure`, `sections`, `info`(priv
 
 - `Section.prototype.toHtmlObjects`: convert to html object. And a note about `src` and`href`, the`src` and`href` in raw html stay untouched, but the `toHtmlObjects` method resolves `src` to base64 string, and alters `href` so that they make sense in the parsed epub.And the parsed `href` is something like`#{sectionId},{hash}`.
 
+## 发布流程：
+
+1. 本地发版 ：运行 `pnpm release` （或 release:patch / minor / major ）。会自动更新版本号、生成 CHANGELOG 并打 git tag。
+2. 推送 ：运行 `git push --follow-tags` 。这会将提交和 tags 推送到 GitHub，触发 CI。
+
 ## How to contribute
 
 - Raise an issue in the issue section.
