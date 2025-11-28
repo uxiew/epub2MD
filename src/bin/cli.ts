@@ -2,11 +2,11 @@
 import args from 'args'
 import process from 'node:process'
 import fs from 'node:fs'
-import fg from 'fast-glob'
 import parseEpub from '../parseEpub'
 import { Converter } from './convert'
 import { mergeMarkdowns } from './merge'
 import logger from '../logger'
+import { expandWildcard } from './utils'
 
 const name = 'epub2md'
 
@@ -42,30 +42,6 @@ const commands: [CommandType, string, (boolean | string)?][] = [
 ]
 
 const DEFAULT_COMMAND = Commands.convert
-
-/**
- * Expands wildcard patterns to actual file paths
- * @param pattern - File path or glob pattern (e.g., "*.epub", "books/*.epub")
- * @returns Array of matching file paths
- */
-async function expandWildcard(pattern: string): Promise<string[]> {
-  // Check if pattern contains wildcard characters
-  if (pattern.includes('*') || pattern.includes('?') || pattern.includes('[')) {
-    try {
-      const files = await fg(pattern, {
-        onlyFiles: true,
-        absolute: false,
-        cwd: process.cwd(),
-      })
-      return files
-    } catch (error) {
-      logger.error(`Failed to expand pattern "${pattern}": ${error}`)
-      return []
-    }
-  }
-  // Not a wildcard, return as-is
-  return [pattern]
-}
 
 // define options
 commands.forEach((cmd) => args.option(cmd[0], cmd[1], cmd[2]))
@@ -114,8 +90,8 @@ if (!hasRun && flags[Commands.unzip]) {
     typeof flags[Commands.unzip] === 'string'
       ? flags[Commands.unzip]
       : unprocessedArgs.length > 0
-      ? unprocessedArgs[0]
-      : null
+        ? unprocessedArgs[0]
+        : null
 
   if (epubPath) {
     logger.info('unzipping...')
@@ -242,8 +218,7 @@ async function run(cmd: CommandType) {
       const currentFile = epubFiles[i]
 
       logger.info(
-        `[${i + 1}/${epubFiles.length}] Converting ${currentFile}${
-          cmd === Commands.autocorrect ? ' with autocorrect' : ''
+        `[${i + 1}/${epubFiles.length}] Converting ${currentFile}${cmd === Commands.autocorrect ? ' with autocorrect' : ''
         }${flags[Commands.merge] ? ' and merging' : ''}...`,
       )
 
