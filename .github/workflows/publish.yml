@@ -8,7 +8,6 @@ on:
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
       id-token: write
@@ -18,29 +17,42 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup node and pnpm
-        uses: uxiew/action-setup-node-pnpm@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20.x
-          pnpm-version: 9.12.0
-          registry-url: https://registry.npmjs.org/
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: install, build, and test
-        run: |
-          pnpm install
-          pnpm build
-          pnpm test
+      - name: Install Dependencies
+        run: pnpm install
 
+      - name: Test
+        run: pnpm test
+
+      # Build is handled by prepublishOnly, but we run it here explicitly to fail fast if build fails
+      # and to have artifacts ready for JSR (if needed)
+      # However, prepublishOnly will run again. To save time, we could skip it here, 
+      # but we need build for JSR publish probably? 
+      # JSR usually takes source. Let's assume standard npm publish flow.
+      # We will just let prepublishOnly handle the build for npm publish.
+      
       - name: Publish to jsr.io
         run: pnpm dlx jsr publish --allow-dirty
+        continue-on-error: true
 
       - name: Publish to NPM
-        continue-on-error: true
+        run: pnpm publish --no-git-checks
         env:
-          # setting the "npm_config_//registry.npmjs.org/:_authToken" env variable directly doesn't work.
-          # probably "pnpm release" doesn't pass auth tokens to child processes
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          # pnpm config set is broken
-          npm config set "//registry.npmjs.org/:_authToken" "${NPM_TOKEN}"
-          pnpm publish --no-git-checks
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+          prerelease: false

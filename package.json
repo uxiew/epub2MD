@@ -33,8 +33,10 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md,css,scss}\"",
     "test": "jest",
     "test-debug": "node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
-    "v": "pnpm dlx commit-and-tag-version --preset angular --release-as",
-    "postv": "git push --follow-tags origin main"
+    "release": "pnpm dlx commit-and-tag-version --preset angular",
+    "release:patch": "pnpm run release --release-as patch",
+    "release:minor": "pnpm run release --release-as minor",
+    "release:major": "pnpm run release --release-as major"
   },
   "repository": {
     "type": "git",
