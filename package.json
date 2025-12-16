@@ -31,7 +31,7 @@
     "watch": "tsc --watch",
     "clean": "rimraf lib dist",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md,css,scss}\"",
-    "test": "vitest",
+    "test": "pnpm i && unbuild && vitest",
     "test-debug": "vitest --inspect-brk --test-timeout=0 --no-file-parallelism",
     "release": "pnpm dlx commit-and-tag-version --preset angular",
     "release:patch": "pnpm run release --release-as patch",
