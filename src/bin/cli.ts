@@ -167,18 +167,18 @@ if (!hasRun) {
 
 async function run(cmd: CommandType) {
   if (cmd === Commands.convert || cmd === Commands.autocorrect) {
-    const epubPath = typeof flags[cmd] === 'string' ? flags[cmd] : null
+    const pathArg = typeof flags[cmd] === 'string' ? flags[cmd] : null
 
-    if (!epubPath) {
+    if (!pathArg) {
       logger.error('No valid epub file path provided')
       return
     }
 
     // Expand wildcard patterns
-    const epubFiles = await expandWildcard(epubPath)
+    const epubPaths = await expandWildcard(pathArg)
 
-    if (epubFiles.length === 0) {
-      logger.error(`No files found matching pattern: ${epubPath}`)
+    if (epubPaths.length === 0) {
+      logger.error(`No files found matching pattern: ${pathArg}`)
       return
     }
 
@@ -194,7 +194,7 @@ async function run(cmd: CommandType) {
     }
 
     // Warn if user specified a custom merge filename with wildcards
-    if (mergedFilename && epubFiles.length > 1) {
+    if (mergedFilename && epubPaths.length > 1) {
       logger.warn(
         `Warning: Using custom merge filename "${mergedFilename}" with multiple files. Each file will overwrite the previous merged output.`,
       )
@@ -207,16 +207,16 @@ async function run(cmd: CommandType) {
     const localize = flags.localize === true
 
     // Process multiple files if wildcards were expanded
-    if (epubFiles.length > 1) {
-      logger.info(`Found ${epubFiles.length} files matching pattern "${epubPath}"`)
+    if (epubPaths.length > 1) {
+      logger.info(`Found ${epubPaths.length} files matching pattern "${pathArg}"`)
     }
 
     // ====== convert to markdown ====
-    for (let i = 0; i < epubFiles.length; i++) {
-      const currentFile = epubFiles[i]
+    for (let i = 0; i < epubPaths.length; i++) {
+      const epubPath = epubPaths[i]
 
       logger.info(
-        `[${i + 1}/${epubFiles.length}] Converting ${currentFile}${cmd === Commands.autocorrect ? ' with autocorrect' : ''
+        `[${i + 1}/${epubPaths.length}] Converting ${epubPath}${cmd === Commands.autocorrect ? ' with autocorrect' : ''
         }${flags[Commands.merge] ? ' and merging' : ''}...`,
       )
 
@@ -227,21 +227,21 @@ async function run(cmd: CommandType) {
         localize,
       }
       try {
-        const { outDir } = new Converter(currentFile, options)
+        const { outDir } = new Converter(epubPath, options)
 
         // If direct merge, return value is the merged file path
         if (shouldMerge) {
-          logger.info(`[${i + 1}/${epubFiles.length}] Merging successful! Output file: ${outDir}`)
+          logger.info(`[${i + 1}/${epubPaths.length}] Merging successful! Output file: ${outDir}`)
         } else {
-          logger.info(`[${i + 1}/${epubFiles.length}] Conversion successful! output: ${outDir}`)
+          logger.info(`[${i + 1}/${epubPaths.length}] Conversion successful! output: ${outDir}`)
         }
       } catch (error) {
-        logger.error(`[${i + 1}/${epubFiles.length}] Failed to convert ${currentFile}:`, error)
+        logger.error(`[${i + 1}/${epubPaths.length}] Failed to convert ${epubPath}:`, error)
       }
     }
 
-    if (epubFiles.length > 1) {
-      logger.success(`Completed processing ${epubFiles.length} files`)
+    if (epubPaths.length > 1) {
+      logger.success(`Completed processing ${epubPaths.length} files`)
     }
 
     return
