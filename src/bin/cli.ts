@@ -254,8 +254,13 @@ async function run(cmd: CommandType) {
   if (typeof cmdPath === 'string') {
     try {
       const epub = parseEpub(cmdPath)
+      const data = {
+        info: epub.structure.opf.metadata,
+        structure: epub.structure.toc?.tree,
+        sections: epub.sections,
+      }[cmd as 'info' | 'structure' | 'sections']
       logger.success(`This book ${cmd}:`)
-      logger.json(epub[cmd as 'info' | 'structure' | 'sections'])
+      logger.json(data)
     } catch (error) {
       logger.error(error as string)
     }

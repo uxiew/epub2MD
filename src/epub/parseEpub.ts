@@ -5,65 +5,27 @@ import _ from 'lodash'
 import parseSection, { Section } from '../parseSection'
 import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
-import xml, { Opf, Toc } from '../xml'
+import { parseStructure, Structure } from '../xml'
 
 
 export const defaultOptions = { type: "path", expand: false } as ParserOptions
 
 export class Epub {
   private zip: Zip
-  // only for html/xhtml, not include images/css/js
-  private _spine?: Record<string, number> // array of ids defined in manifest
-  private contentRoot!: string
-  opf!: Opf
-  structure?: Toc
-  info?: Opf['metadata']
-  sections!: Section[]
-  tocFile?: string
+  structure: Structure
+  sections: Section[]
 
   constructor(fileContent: Buffer, private options: ParserOptions) {
     this.zip = new Zip(fileContent)
-  }
-
-  parse() {
-    const { opfPath, contentRoot } = this.parseMetaContainer()
-    this.contentRoot = contentRoot
-    const opf = this.opf = this.parseOpf(opfPath)
-    this.info = opf.metadata
-    this._spine = opf.spine
-
-    // https://github.com/gaoxiaoliangz/epub-parser/issues/13
-    // https://www.w3.org/publishing/epub32/epub-packages.html#sec-spine-elem
-    const tocPath = opf.manifest.getById('ncx')?.href
-    const toc = tocPath === undefined ? undefined :
-      this.parseToc(tocPath)
-    this.structure = toc
-
+    this.structure = parseStructure(this.zip)
     this.sections = this._resolveSections()
-
-    return this
-  }
-  
-  parseMetaContainer() {
-    const fileText = this.getFile('/META-INF/container.xml').asText()
-    return xml.parseMetaContainer(fileText)
-  }
-
-  parseOpf(path: string) {
-    const fileText = this.getFile('/' + path).asText()
-    return xml.parseOpf(fileText)
-  }
-
-  parseToc(path: string) {
-    const fileText = this.getFile(path).asText()
-    return xml.parseToc(fileText, href => this.opf.manifest.getItemId(href))
   }
 
   getFile(filePath: string) {
     const isAbsolute = filePath.startsWith('/')
     const absolutePath = isAbsolute
       ? filePath.slice(1)
-      : path.join(this.contentRoot, filePath)
+      : path.join(this.structure.contentRoot, filePath)
     const file = this.zip.getFile(absolutePath)
     return file
   }
@@ -92,19 +54,19 @@ export class Epub {
    * @private
    */
   private _resolveSections(id?: string) {
-    let list: any[] = _.union(Object.keys(this.opf.spine!))
+    let list: any[] = _.union(Object.keys(this.structure.opf.spine!))
     // no chain
     if (id) {
       list = [id];
     }
     return list.map((id) => {
-      const path = this.opf.manifest.getById(id)!.href
+      const path = this.structure.opf.manifest.getById(id)!.href
       const html = this.getFile(path).asText()
       const section = parseSection({
         id,
         htmlString: html,
         getFile: this.getFile.bind(this),
-        getItemId: href => this.opf.manifest.getItemId(href),
+        getItemId: href => this.structure.opf.manifest.getItemId(href),
         expand: this.options.expand,
       })
 
@@ -117,7 +79,7 @@ export class Epub {
 
   getSection(id: string): Section | null {
     let sectionIndex = -1
-    if (this.opf.spine) sectionIndex = this.opf.spine[id]
+    if (this.structure.opf.spine) sectionIndex = this.structure.opf.spine[id]
     // fix other html ont include spine structure
     if (sectionIndex === undefined) {
       return this._resolveSections(id)[0]
@@ -128,5 +90,5 @@ export class Epub {
 
 export default function parse(pathOrFileContent: string | Buffer, options?: ParserOptions) {
   const { fileContent, parsedOptions } = parseOptions(pathOrFileContent, options)
-  return new Epub(fileContent as Buffer, parsedOptions).parse()
+  return new Epub(fileContent as Buffer, parsedOptions)
 }

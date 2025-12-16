@@ -76,7 +76,7 @@ export class Converter {
         content = section.toMarkdown()
 
       // clear readable filename
-      const { outPath, fileName } = clearOutpath(structure, this.epub.structure)
+      const { outPath, fileName } = clearOutpath(structure, this.epub.structure.toc)
       outpath = outPath
 
       // resources links
@@ -90,8 +90,8 @@ export class Converter {
           const { hash = '', url } = parseHref(link, true)
           if (link.startsWith("#"))
             return linkStartSep + this.options.shouldMerge ? id : fileName + link
-          const sectionId = this.epub.opf.manifest.getItemId(url)
-          const internalNavName = this.epub.structure?.getBySectionId(sectionId)?.name || link
+          const sectionId = this.epub.structure.opf.manifest.getItemId(url)
+          const internalNavName = this.epub.structure.toc?.getBySectionId(sectionId)?.name || link
 
           // fix link's path
           let validPath = sanitizeFileName(extname(internalNavName)
@@ -100,10 +100,10 @@ export class Converter {
           // Adjust internal link adjustment, files with numbers in the name
           const file = structures.find(file => file.id === sectionId)
           if (file)
-            validPath = basename(clearOutpath(file, this.epub.structure).outPath)
+            validPath = basename(clearOutpath(file, this.epub.structure.toc).outPath)
 
           // content's id
-          const toId = this.epub.opf.manifest.getItemId(
+          const toId = this.epub.structure.opf.manifest.getItemId(
             join(dirname(filepath), url)
           )
 
@@ -175,7 +175,7 @@ function processManifest(epub: Epub, unzip: boolean, outDir: string) {
   const orderPrefix = new OrderPrefix({
     maximum: epub.sections.length
   })
-  for (const { href: filepath, id } of epub.opf.manifest) {
+  for (const { href: filepath, id } of epub.structure.opf.manifest) {
     if (filepath.endsWith('ncx') || id === 'titlepage') continue
     const { type, path: outpath } = parseFileInfo(filepath, outDir)
     if (type === '' && unzip) continue

@@ -1,4 +1,3 @@
-import { pick } from 'lodash'
 import parse from '../src/epub/parseEpub'
 import { readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -17,8 +16,9 @@ describe(`parseEpub`, () => {
     test(path.fileStem, async () => {
       const epub = parse(path.fullPath)
       const snapshot = {
-        ...pick(epub, ['info', '_spine']),
-        structure: epub.structure?.tree
+        info: epub.structure.opf.metadata,
+        _spine: epub.structure.opf.spine,
+        structure: epub.structure.toc?.tree
       }
       const snapshotPath = resolve(projectRoot, 'test/snapshots/unit/parseEpub', path.fileName)
       await expect(snapshot).toMatchFileSnapshot(snapshotPath)
