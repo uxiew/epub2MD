@@ -19,7 +19,6 @@ export interface TraverseNestedObject {
 const xmlParser = new XMLParser({
   attributeNamePrefix: '@',
   ignoreAttributes: false,
-  parseAttributeValue: true,
 });
 
 const cacheNavPool: Record<string, TOCItem> = {
