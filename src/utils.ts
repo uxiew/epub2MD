@@ -16,12 +16,6 @@ export function matchTOC(id: string, navs?: TocItem[]): TocItem | undefined {
   }
 }
 
-// 函数用于清理文件名，将非法字符替换为下划线
-export const sanitizeFileName = (fileName: string, replacementChar = '_') => {
-  const invalidCharsPattern = /[\\/:*?"<>|]/g;
-  return fileName.replace(invalidCharsPattern, replacementChar);
-}
-
 export type Path = ReturnType<typeof Path>
 export function Path(path: string) {
   const { dir, base, ext, name } = nodePath.parse(path)
