@@ -78,7 +78,7 @@
     "@types/folder-hash": "^4.0.4",
     "@types/jsdom": "^21.1.1",
     "@types/lodash": "^4.14.137",
-    "@types/node": "^20.2.3",
+    "@types/node": "^25.0.2",
     "cross-env": "^5.2.0",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
@@ -90,7 +90,7 @@
     "source-map-support": "^0.5.13",
     "ts-node": "^10.9.2",
     "tslint": "^5.19.0",
-    "typescript": "^5.5.4",
+    "typescript": "^5.9.3",
     "unbuild": "3.0.0-rc.7",
     "vitest": "^4.0.15",
     "vrsource-tslint-rules": "^6.0.0"
