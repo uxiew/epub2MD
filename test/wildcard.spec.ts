@@ -1,15 +1,15 @@
 import { execSync } from 'node:child_process'
-import fs from 'node:fs'
+import fs, { mkdtempSync } from 'node:fs'
 import path from 'node:path'
 import { promisify } from 'node:util'
+import * as os from 'node:os'
 
-const mkdir = promisify(fs.mkdir)
 const copyFile = promisify(fs.copyFile)
 const rmdir = promisify(fs.rm)
 const exists = fs.existsSync
 
 const cli = './lib/bin/cli.cjs'
-const testDir = './test-wildcards'
+const testDir = mkdtempSync(path.resolve(os.tmpdir(), 'epub2md-test-wildcard-'))
 const source = './test/fixtures/file-1.epub'
 
 function safeExecSync(command: string): string {
@@ -22,10 +22,6 @@ function safeExecSync(command: string): string {
 
 describe('CLI Wildcard Support', () => {
   beforeAll(async () => {
-    if (exists(testDir)) {
-      await rmdir(testDir, { recursive: true, force: true })
-    }
-    await mkdir(testDir)
     // Prepare dummy epub files
     // We use file-1.epub as a lightweight fixture
     await copyFile(source, path.join(testDir, 'book-1.epub'))
@@ -36,11 +32,8 @@ describe('CLI Wildcard Support', () => {
     await copyFile(source, path.join(testDir, 'test-c.epub'))
   })
 
-  afterAll(async () => {
-    if (exists(testDir)) {
-      await rmdir(testDir, { recursive: true, force: true })
-    }
-  })
+  afterAll(() =>
+    rmdir(testDir, { recursive: true, force: true }))
 
   it('should convert multiple files using * wildcard', () => {
     // Pattern: book-*.epub -> matches book-1.epub, book-2.epub
