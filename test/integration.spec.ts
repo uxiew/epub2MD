@@ -3,10 +3,9 @@ import { readdirSync, rmSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
-import { packageDirectorySync } from 'package-directory'
+import { projectRoot } from './utilities'
 
 
-const projectRoot = packageDirectorySync()!
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
 const epubs = readdirSync(fixturesPath)
   .filter(path => path.endsWith('.epub'))
