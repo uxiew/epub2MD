@@ -26,23 +26,23 @@
     "hash": "uthzBfBBsJmQj+lT8Ihzuk6Q+cs=",
     "name": "file-2",
   },
-  "stdout": "[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-2.epub and merging...
-[epub2md]: 1: [02-围城.md]
-[epub2md]: 2: [03-目录.md]
-[epub2md]: 3: [04-校书记略.md]
-[epub2md]: 4: [05-作者简介.md]
-[epub2md]: 5: [06-重印前记.md]
-[epub2md]: 6: [07-序.md]
-[epub2md]: 7: [08-第一章.md]
-[epub2md]: 8: [09-第二章.md]
-[epub2md]: 9: [10-第三章.md]
-[epub2md]: 10: [11-第四章.md]
-[epub2md]: 11: [12-第五章.md]
-[epub2md]: 12: [13-第六章.md]
-[epub2md]: 13: [14-第七章.md]
-[epub2md]: 14: [15-第八章.md]
-[epub2md]: 15: [16-第九章.md]
-[epub2md]: 16: [17-附录_记钱锺书与《围城》.md]
-[epub2md]: [1/1] Merging successful! Output file: <absolute path hidden from snapshot>/file-2/file-2-merged.md
+  "stdout": "[34m[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-2.epub and merging...[39m
+[32m[epub2md]: 1: [02-围城.md][39m
+[32m[epub2md]: 2: [03-目录.md][39m
+[32m[epub2md]: 3: [04-校书记略.md][39m
+[32m[epub2md]: 4: [05-作者简介.md][39m
+[32m[epub2md]: 5: [06-重印前记.md][39m
+[32m[epub2md]: 6: [07-序.md][39m
+[32m[epub2md]: 7: [08-第一章.md][39m
+[32m[epub2md]: 8: [09-第二章.md][39m
+[32m[epub2md]: 9: [10-第三章.md][39m
+[32m[epub2md]: 10: [11-第四章.md][39m
+[32m[epub2md]: 11: [12-第五章.md][39m
+[32m[epub2md]: 12: [13-第六章.md][39m
+[32m[epub2md]: 13: [14-第七章.md][39m
+[32m[epub2md]: 14: [15-第八章.md][39m
+[32m[epub2md]: 15: [16-第九章.md][39m
+[32m[epub2md]: 16: [17-附录_记钱锺书与《围城》.md][39m
+[34m[epub2md]: [1/1] Merging successful! Output file: <absolute path hidden from snapshot>/file-2/file-2-merged.md[39m
 ",
 }

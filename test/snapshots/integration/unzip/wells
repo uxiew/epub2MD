@@ -104,21 +104,21 @@
     "hash": "YpOyd89x9t6cWlRV9iUwf/p2KVQ=",
     "name": "wells",
   },
-  "stdout": "[epub2md]: unzipping...
-[epub2md]: 1: [01-chapter-1.md]
-[epub2md]: 2: [02-chapter-2.md]
-[epub2md]: 3: [03-chapter-3.md]
-[epub2md]: 4: [04-chapter-4.md]
-[epub2md]: 5: [05-chapter-5.md]
-[epub2md]: 6: [06-chapter-6.md]
-[epub2md]: 7: [07-chapter-7.md]
-[epub2md]: 8: [08-chapter-8.md]
-[epub2md]: 9: [09-chapter-9.md]
-[epub2md]: 10: [10-chapter-10.md]
-[epub2md]: 11: [11-halftitlepage.md]
-[epub2md]: 12: [12-preface.md]
-[epub2md]: 13: [13-titlepage.md]
-[epub2md]: 14: [14-toc.md]
-[epub2md]: Unzip successful! output: <absolute path hidden from snapshot>/wells
+  "stdout": "[34m[epub2md]: unzipping...[39m
+[32m[epub2md]: 1: [01-chapter-1.md][39m
+[32m[epub2md]: 2: [02-chapter-2.md][39m
+[32m[epub2md]: 3: [03-chapter-3.md][39m
+[32m[epub2md]: 4: [04-chapter-4.md][39m
+[32m[epub2md]: 5: [05-chapter-5.md][39m
+[32m[epub2md]: 6: [06-chapter-6.md][39m
+[32m[epub2md]: 7: [07-chapter-7.md][39m
+[32m[epub2md]: 8: [08-chapter-8.md][39m
+[32m[epub2md]: 9: [09-chapter-9.md][39m
+[32m[epub2md]: 10: [10-chapter-10.md][39m
+[32m[epub2md]: 11: [11-halftitlepage.md][39m
+[32m[epub2md]: 12: [12-preface.md][39m
+[32m[epub2md]: 13: [13-titlepage.md][39m
+[32m[epub2md]: 14: [14-toc.md][39m
+[34m[epub2md]: Unzip successful! output: <absolute path hidden from snapshot>/wells[39m
 ",
 }

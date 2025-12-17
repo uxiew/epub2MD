@@ -50,7 +50,7 @@ suite('hash output of cli commands', () => {
           const outputDir = epub.pathStem
           const cliCommand = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${epub.fullPath} ${args}`
           const stdout = hideAbsolutePath(epub.directory,
-            execSync(cliCommand, { encoding: 'utf-8' }))
+            execSync(cliCommand, { encoding: 'utf-8', env: { FORCE_COLOR: '1' } }))
           const hashTree = await createFolderHash(outputDir)
             .catch(() => 'Output folder not created')
           const snapshotPath = resolve(projectRoot, 'test/snapshots/integration', suiteName, epub.fileStem)

@@ -68,14 +68,14 @@
     "hash": "uZyxvwDqd9z3hl5A+g58MX4Q+xA=",
     "name": "file-3",
   },
-  "stdout": "[epub2md]: unzipping...
-[epub2md]: 1: [1-part0000.md]
-[epub2md]: 2: [2-part0001.md]
-[epub2md]: 3: [3-第一章_回答在牛奶箱里.md]
-[epub2md]: 4: [4-第二章_深夜的口琴声.md]
-[epub2md]: 5: [5-第三章_在思域车上等到天亮.md]
-[epub2md]: 6: [6-第四章_听着披头士默祷.md]
-[epub2md]: 7: [7-第五章_来自天上的祈祷.md]
-[epub2md]: Unzip successful! output: <absolute path hidden from snapshot>/file-3
+  "stdout": "[34m[epub2md]: unzipping...[39m
+[32m[epub2md]: 1: [1-part0000.md][39m
+[32m[epub2md]: 2: [2-part0001.md][39m
+[32m[epub2md]: 3: [3-第一章_回答在牛奶箱里.md][39m
+[32m[epub2md]: 4: [4-第二章_深夜的口琴声.md][39m
+[32m[epub2md]: 5: [5-第三章_在思域车上等到天亮.md][39m
+[32m[epub2md]: 6: [6-第四章_听着披头士默祷.md][39m
+[32m[epub2md]: 7: [7-第五章_来自天上的祈祷.md][39m
+[34m[epub2md]: Unzip successful! output: <absolute path hidden from snapshot>/file-3[39m
 ",
 }
