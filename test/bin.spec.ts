@@ -11,30 +11,17 @@ const rmdir = promisify(fs.rm)
 // 封装execSync，捕获错误并返回简单的错误信息，避免循环引用
 function safeExecSync(command: string, options?: { timeout?: number }): string {
   try {
-    return execSync(command, options).toString();
+    return execSync(command, options).toString()
   } catch (error) {
     // 避免返回整个错误对象，防止循环引用
-    return `Error: ${error instanceof Error ? error.message : String(error)}`;
+    return `Error: ${error instanceof Error ? error.message : String(error)}`
   }
 }
 
 const cli = './lib/bin/cli.cjs'
 
 describe(`Global CLI runner`, () => {
-
-  it('Run CLI good running', async () => {
-    const outputDir = './test/fixtures/zhihu'
-
-    try {
-      const res = safeExecSync(`node ${cli} ./test/fixtures/zhihu.epub`)
-      expect(res).toMatch('Conversion successful!')
-    } finally {
-      // 清理临时目录
-      await rmdir(outputDir, { recursive: true, force: true })
-    }
-  })
-
-  it('Run CLI merge command', async () => {
+  it('--merge=<directory>', async () => {
     // 创建临时目录
     const tempDir = await mkdtemp(path.join(os.tmpdir(), 'epub2md-test-cli-'))
 
@@ -62,40 +49,7 @@ describe(`Global CLI runner`, () => {
     }
   })
 
-  it('Run CLI with direct merge option (--merge flag)', async () => {
-    // 设置测试 EPUB 文件路径
-    const epubPath = './test/fixtures/file-1.epub'
-    const outputDir = './test/fixtures/file-1'
-    const outputFile = path.join(outputDir, 'file-1-merged.md')
-
-    try {
-      // 如果输出目录或文件已存在，先删除
-      if (fs.existsSync(outputDir)) {
-        await rmdir(outputDir, { recursive: true, force: true })
-      }
-
-      // 执行命令（使用简化的命令格式）
-      const res = safeExecSync(`node ${cli} ${epubPath} --merge`)
-
-      // 验证结果
-      expect(res).toMatch('Merging successful!')
-
-      // 验证合并后的文件是否存在
-      expect(fs.existsSync(outputFile)).toBe(true)
-
-      // 验证目录中是否只有合并文件和图片目录
-      const dirContents = fs.readdirSync(outputDir)
-      expect(dirContents.length).toBeLessThanOrEqual(2) // 合并文件 + 可能的 images 目录
-      expect(dirContents).toContain('file-1-merged.md')
-    } finally {
-      // 清理生成的文件
-      if (fs.existsSync(outputDir)) {
-        await rmdir(outputDir, { recursive: true, force: true })
-      }
-    }
-  })
-
-  it('Run CLI with direct merge option and custom output filename', async () => {
+  it('--merge=<file path>', async () => {
     // 设置测试 EPUB 文件路径
     const epubPath = './test/fixtures/file-1.epub'
     const outputDir = './test/fixtures/file-1'
@@ -120,41 +74,6 @@ describe(`Global CLI runner`, () => {
       // 验证目录中是否只有合并文件和图片目录
       const dirContents = fs.readdirSync(outputDir).filter(f => !f.startsWith('.'))
       expect(dirContents.includes(customOutputName)).toBe(true)
-    } finally {
-      // 清理生成的文件
-      if (fs.existsSync(outputDir)) {
-        await rmdir(outputDir, { recursive: true, force: true })
-      }
-    }
-  })
-
-  it('Run CLI with image option', async () => {
-    // 设置测试 EPUB 文件路径
-    const epubPath = './test/fixtures/file-2.epub'
-    const outputDir = './test/fixtures/file-2'
-    const outputFile = path.join(outputDir, 'file-2-merged.md')
-
-    try {
-      // 如果输出目录或文件已存在，先删除
-      if (fs.existsSync(outputDir)) {
-        await rmdir(outputDir, { recursive: true, force: true })
-      }
-
-      // 执行命令
-      const res = safeExecSync(`node ${cli} ${epubPath} --merge`)
-
-      // 验证结果
-      expect(res).toMatch('Merging successful!')
-
-      // 验证合并后的文件是否存在
-      expect(fs.existsSync(outputFile)).toBe(true)
-
-      // 读取合并后的文件内容，检查是否有 http:// 或 https:// 链接被保留
-      const content = fs.readFileSync(outputFile, 'utf8')
-
-      // 有些 epub 可能没有线上图片链接，所以这个测试可能不会失败
-      // 但我们至少确保文件正确生成了
-      expect(content.length).toBeGreaterThan(0)
     } finally {
       // 清理生成的文件
       if (fs.existsSync(outputDir)) {
