@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { readdirSync, readFileSync, rmSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
@@ -8,9 +8,11 @@ import { isObject } from 'lodash'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')
-const epubs = readdirSync(fixturesPath)
-  .filter(fileName => fileName.endsWith('.epub'))
-  .map(fileName => copyToTemporaryFolder(fileName))
+const epubs =
+  readdirSync(fixturesPath)
+    .filter(fileName => fileName.endsWith('.epub'))
+const tempEpubs = () =>
+  epubs.map(copyToTemporaryFolder)
 
 const cliPath = resolve(projectRoot, 'lib/bin/cli.cjs')
 const networkMockPath = resolve(projectRoot, 'test/utilities/mock-network.cjs')
@@ -46,7 +48,7 @@ const suites = Suites({
 suite('hash output of cli commands', () => {
   for (const { name: suiteName, args } of suites)
     suite(suiteName, () => {
-      for (const epub of epubs) {
+      for (const epub of tempEpubs()) {
         const localize = suiteName.includes('localize')
         // localize tests only test online-imgs.epub
         if (localize && epub.fileStem !== 'online-imgs') continue
@@ -92,7 +94,6 @@ suite('hash output of cli commands', () => {
               ...localize ? { 'localized images': localizedImages } : {},
             }
           }
-          rmSync(outputDir, { force: true, recursive: true })
           await expect(snapshot).toMatchFileSnapshot(snapshotPath)
         })
       }
