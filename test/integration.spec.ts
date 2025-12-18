@@ -45,7 +45,9 @@ const suites = Suites({
 suite('hash output of cli commands', () => {
   for (const { name: suiteName, args } of suites)
     suite(suiteName, () => {
-      for (const epub of epubs)
+      for (const epub of epubs) {
+        // localize test only tests online-imgs.epub
+        if (suiteName === 'localize' && epub.fileStem !== 'online-imgs') continue
         test(epub.fileStem, async () => {
           const outputDir = epub.pathStem
           const cliCommand = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${epub.fullPath} ${args}`
@@ -77,8 +79,9 @@ suite('hash output of cli commands', () => {
           rmSync(outputDir, { force: true, recursive: true })
           await expect(snapshot).toMatchFileSnapshot(snapshotPath)
         })
+      }
     })
 })
 
 const hideAbsolutePath = (absolutePath: string, stdout: string) =>
-   stdout.replaceAll(absolutePath, '<absolute path hidden from snapshot>')
+  stdout.replaceAll(absolutePath, '<absolute path hidden from snapshot>')
