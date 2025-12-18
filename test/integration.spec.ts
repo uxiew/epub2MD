@@ -40,14 +40,15 @@ const suites = Suites({
   localize: 'l',
   unzip: 'u',
   merge: 'm',
+  'merge+localize': 'ml',
 })
 
 suite('hash output of cli commands', () => {
   for (const { name: suiteName, args } of suites)
     suite(suiteName, () => {
       for (const epub of epubs) {
-        // localize test only tests online-imgs.epub
-        if (suiteName === 'localize' && epub.fileStem !== 'online-imgs') continue
+        // localize tests only test online-imgs.epub
+        if (suiteName.includes('localize') && epub.fileStem !== 'online-imgs') continue
         test(epub.fileStem, async () => {
           const outputDir = epub.pathStem
           const cliCommand = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${epub.fullPath} ${args}`
