@@ -6,10 +6,11 @@ import { Path } from '../../src/utils'
 
 
 export const projectRoot = packageDirectorySync()!
+export const rootTempDir = path.join(os.tmpdir(), 'epub2md-test/')
 
 export function copyToTemporaryFolder(fileName: string) {
   const originalEpubPath = path.resolve(projectRoot, 'test/fixtures', fileName)
-  const tempDirPath = mkdtempSync(path.join(os.tmpdir(), 'epub2md-test-'))
+  const tempDirPath = mkdtempSync(rootTempDir)
   const newEpubPath = path.resolve(tempDirPath, fileName)
   copyFileSync(originalEpubPath, newEpubPath)
   return Path(newEpubPath)
