@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { readdirSync, rmSync } from 'node:fs'
+import { readdirSync, readFileSync, rmSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
@@ -47,8 +47,9 @@ suite('hash output of cli commands', () => {
   for (const { name: suiteName, args } of suites)
     suite(suiteName, () => {
       for (const epub of epubs) {
+        const localize = suiteName.includes('localize')
         // localize tests only test online-imgs.epub
-        if (suiteName.includes('localize') && epub.fileStem !== 'online-imgs') continue
+        if (localize && epub.fileStem !== 'online-imgs') continue
         test(epub.fileStem, async () => {
           const outputDir = epub.pathStem
           const cliCommand = `NODE_OPTIONS='-r ${networkMockPath}' node ${cliPath} ${epub.fullPath} ${args}`
@@ -62,6 +63,19 @@ suite('hash output of cli commands', () => {
           const images = tree?.children.find(file => file.name === 'images')
           const mdFiles = tree?.children.filter(file => file.name.endsWith('.md'))
 
+          const localizedImages: string[] = []
+          if (localize) {
+            for (const image of images?.children ?? []) {
+              const path = resolve(epub.pathStem, 'images', image.name)
+              const fileContent = readFileSync(path, 'utf-8')
+              const networkMockMarker = '<mocked network response>'
+              if (fileContent.startsWith(networkMockMarker)) {
+                const imageUrl = fileContent.slice(networkMockMarker.length).trim()
+                localizedImages.push(imageUrl)
+              }
+            }
+          }
+
           const mergedMarkdown = !!
             tree?.children.find(file =>
               file.name === epub.fileStem + '-merged.md')
@@ -74,7 +88,8 @@ suite('hash output of cli commands', () => {
               'markdown file count': mdFiles?.length,
               'created output folder': typeof hashTree === 'object',
               'folder name = file stem': tree?.name === epub.fileStem,
-              'output merged markdown': mergedMarkdown
+              'output merged markdown': mergedMarkdown,
+              ...localize ? { 'localized images': localizedImages } : {},
             }
           }
           rmSync(outputDir, { force: true, recursive: true })
