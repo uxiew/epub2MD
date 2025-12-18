@@ -6,4 +6,5 @@ const nock = require('nock')
 nock.disableNetConnect()
 
 // Catch all gets
-nock(/.*/).persist().get(/.*/).reply(uri => [200, '<mocked network response>' + uri])
+nock(/.*/).persist().get(/.*/)
+  .reply(function () { return [200, '<mocked network response>' + this.req.options.href] })
