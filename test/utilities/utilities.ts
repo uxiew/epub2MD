@@ -2,7 +2,7 @@ import { copyFileSync, mkdtempSync } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { packageDirectorySync } from 'package-directory'
-import { Path } from '../src/utils'
+import { Path } from '../../src/utils'
 
 
 export const projectRoot = packageDirectorySync()!

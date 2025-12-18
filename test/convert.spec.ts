@@ -2,7 +2,7 @@ import { resolve } from 'node:path'
 import { readdirSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import { Path } from '../src/utils'
-import { copyToTemporaryFolder, projectRoot } from './utilities'
+import { copyToTemporaryFolder, projectRoot } from './utilities/utilities'
 import { Converter } from '../src/convert/convert'
 
 

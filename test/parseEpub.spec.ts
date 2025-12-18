@@ -3,7 +3,7 @@ import { readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, test } from 'vitest'
 import { Path } from '../src/utils'
-import { projectRoot } from './utilities'
+import { projectRoot } from './utilities/utilities'
 
 
 const fixturesPath = resolve(projectRoot, 'test/fixtures')

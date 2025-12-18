@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, rmSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { suite, test, expect } from 'vitest'
 import { hashElement as createFolderHash } from 'folder-hash'
-import { copyToTemporaryFolder, projectRoot } from './utilities'
+import { copyToTemporaryFolder, projectRoot } from './utilities/utilities'
 import { isObject } from 'lodash'
 
 
@@ -13,7 +13,7 @@ const epubs = readdirSync(fixturesPath)
   .map(fileName => copyToTemporaryFolder(fileName))
 
 const cliPath = resolve(projectRoot, 'lib/bin/cli.cjs')
-const networkMockPath = resolve(projectRoot, 'test/mock-network.cjs')
+const networkMockPath = resolve(projectRoot, 'test/utilities/mock-network.cjs')
 const onlySkip =
   process.env.command === 'skip'
   ? { skip: process.env.tests!.split(',') } :
