@@ -6,7 +6,6 @@ import { newTempDir } from './utilities/utilities'
 
 const writeFile = promisify(fs.writeFile)
 const readFile = promisify(fs.readFile)
-const mkdir = promisify(fs.mkdir)
 
 describe('mergeMarkdowns', () => {
   let tempDir: string
@@ -52,12 +51,11 @@ describe('mergeMarkdowns', () => {
   })
 
   it('应该在没有找到markdown文件时抛出错误', async () => {
-    // 创建一个空目录
-    const emptyDir = path.join(tempDir, 'empty')
-    await mkdir(emptyDir)
+    const emptyDir = tempDir
 
     // 期望函数抛出错误
-    await expect(mergeMarkdowns(emptyDir)).rejects.toThrow("No Markdown file was found!")
+    const promise = suppressConsoleLog(() => mergeMarkdowns(emptyDir))
+    await expect(promise).rejects.toThrow("No Markdown file was found!")
   })
 
   it('应该在各章节之间添加分隔符', async () => {
@@ -81,3 +79,14 @@ describe('mergeMarkdowns', () => {
     expect(merged).toBe('内容1\n\n---\n\n内容2')
   })
 })
+
+/**
+ * Disable console.log during the execution of the given function
+ */
+const suppressConsoleLog = <T>(fn: () => T) => {
+  const original = console.log
+  console.log = () => {}
+  const result = fn()
+  console.log = original
+  return result
+}
