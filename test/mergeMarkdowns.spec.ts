@@ -1,28 +1,16 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import os from 'node:os'
-import { mergeMarkdowns } from '../src/bin/merge'
 import { promisify } from 'node:util'
+import { mergeMarkdowns } from '../src/bin/merge'
+import { newTempDir } from './utilities/utilities'
 
-const mkdtemp = promisify(fs.mkdtemp)
 const writeFile = promisify(fs.writeFile)
 const readFile = promisify(fs.readFile)
 const mkdir = promisify(fs.mkdir)
-const rmdir = promisify(fs.rm)
 
 describe('mergeMarkdowns', () => {
   let tempDir: string
-
-  beforeEach(async () => {
-    // 创建临时目录
-    tempDir = await mkdtemp(path.join(os.tmpdir(), 'epub2md-test-'))
-  })
-
-  afterEach(async () => {
-    // 清理临时目录
-    await rmdir(tempDir, { recursive: true, force: true })
-    await rmdir('./test/fixtures/merge', { recursive: true, force: true })
-  })
+  beforeEach(() => tempDir = newTempDir())
 
   it('应该按照数字顺序合并markdown文件', async () => {
     // 创建测试用的markdown文件
