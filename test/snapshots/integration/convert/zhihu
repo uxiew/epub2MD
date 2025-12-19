@@ -1,0 +1,327 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 37,
+    "markdown file count": 31,
+    "output merged markdown": false,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "T9spZW1rqpcz4Au1ieUbB1BpaHc=",
+        "name": "01-扉页.md",
+      },
+      HashedFile {
+        "hash": "6OoddP/tgHrNyZQGxMA7vHPBkzk=",
+        "name": "02-part0001_split_000.md",
+      },
+      HashedFile {
+        "hash": "ctsXBJUHAiipBarzS4jA9dZju68=",
+        "name": "03-版权页.md",
+      },
+      HashedFile {
+        "hash": "Nsiafz0JyVOEgAhLORrMcQD/9PI=",
+        "name": "04-插图.md",
+      },
+      HashedFile {
+        "hash": "oduVdG6e0mNjbsGSpuIhMk5mq0c=",
+        "name": "05-目录.md",
+      },
+      HashedFile {
+        "hash": "70KfMsvpzZLOvu+pgG5mwWLe24I=",
+        "name": "06-第一部分_种子期.md",
+      },
+      HashedFile {
+        "hash": "fdUEpRBwsuL2vltnYh/qpI46zAA=",
+        "name": "07-第1章_审视自己.md",
+      },
+      HashedFile {
+        "hash": "ENnE1g4bD40FzmMiVPtHK6jzuDE=",
+        "name": "08-你为什么要创业？.md",
+      },
+      HashedFile {
+        "hash": "FW+b2UqzqL7UjYEBIU0GEBBghsk=",
+        "name": "09-第2章_选择方向.md",
+      },
+      HashedFile {
+        "hash": "IXNFbC2iRFZ38heDW9J10u1pJHU=",
+        "name": "10-如何选择创业的方向？.md",
+      },
+      HashedFile {
+        "hash": "5WHQempjbkZT8iIsoJSTU+SGpag=",
+        "name": "11-第二部分_助跑期.md",
+      },
+      HashedFile {
+        "hash": "LEtFlK8xN+D/yaTkHBjYGdEEa+w=",
+        "name": "12-第2章_找合伙人.md",
+      },
+      HashedFile {
+        "hash": "ZBwCYPBP6TCym46Qv34VJmVmoUE=",
+        "name": "13-有项目和少量投资，怎么寻找技术合伙人？.md",
+      },
+      HashedFile {
+        "hash": "gw7QxbIQLXtUpOR1mleOx5C1xR8=",
+        "name": "14-第4章_初次找钱.md",
+      },
+      HashedFile {
+        "hash": "66briQUVcaMfwPjMxrO2GPQKQNA=",
+        "name": "15-创业是自筹资金好还是找天使投资好？.md",
+      },
+      HashedFile {
+        "hash": "qLC1Txpnjk8w3D7ljwihAvq3oew=",
+        "name": "16-第5章_早期的产品规划.md",
+      },
+      HashedFile {
+        "hash": "x73sdM8yt9yhTrznflefrS5chK8=",
+        "name": "17-互联网创业早期，启动产品开发时有哪些注意事项？.md",
+      },
+      HashedFile {
+        "hash": "g4HVu4EA2jZq2ZwE5//evsRQniQ=",
+        "name": "18-第6章_早期的团队构建.md",
+      },
+      HashedFile {
+        "hash": "mUOk99DutyEpyOg6XgBgrzqqPbU=",
+        "name": "19-创业公司如何招人？.md",
+      },
+      HashedFile {
+        "hash": "gzdkVL5/C1FVQkLi6yPuGnx15rY=",
+        "name": "20-第三部分_起步期（0~1万用户）.md",
+      },
+      HashedFile {
+        "hash": "+2BiqniPgiley6WF/zncGo15T+Y=",
+        "name": "21-第7章_产品上线.md",
+      },
+      HashedFile {
+        "hash": "rU6j+ugr/mlOUu7V9PmJ6J1/DxQ=",
+        "name": "22-一个有效的新产品上线策略应考虑哪些因素？.md",
+      },
+      HashedFile {
+        "hash": "PRkyJlFZwndbKQ7hXB2CG20fwCs=",
+        "name": "23-第8章_人才与团队管理.md",
+      },
+      HashedFile {
+        "hash": "0I3YyldU6o/rvAjh7ZgFRWeYa3k=",
+        "name": "24-如何管理问题员工？.md",
+      },
+      HashedFile {
+        "hash": "E7vT30LFgQcTOq3y2UYhtmMVoHc=",
+        "name": "25-第四部分_加速期（1万~100万用户）.md",
+      },
+      HashedFile {
+        "hash": "9xRhWgkYqDKh3nu5FfQpO22yJcY=",
+        "name": "26-第9章_产品的迭代.md",
+      },
+      HashedFile {
+        "hash": "MAgpm5+IZ/dDdWycPlAbn1dgX/4=",
+        "name": "27-当产品基本成型，如何把产品做得更好？.md",
+      },
+      HashedFile {
+        "hash": "njjYCWYdrNnzayPgxsZwlX2LXoE=",
+        "name": "28-第10章_找机构投资.md",
+      },
+      HashedFile {
+        "hash": "aASc5PFk5ORHp0stLF/ANi5DCP8=",
+        "name": "29-创业公司第一轮融资时应该注意些什么？.md",
+      },
+      HashedFile {
+        "hash": "9l4Au7bVwi1LfJkwRomcmQNrz58=",
+        "name": "30-第11章_团队初次扩容.md",
+      },
+      HashedFile {
+        "hash": "xFRzUlckTM+T+F2ROFKMRsgMB7U=",
+        "name": "31-拿到A轮投资之后，怎样把握招人的节奏？.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "ZQGaNi4Cu42I7hemouae2uMs4sc=",
+            "name": "00002.jpeg",
+          },
+          HashedFile {
+            "hash": "UXW+r7au3568wsGMUKo3tVgGnS8=",
+            "name": "00003.jpeg",
+          },
+          HashedFile {
+            "hash": "jmgeFXfICLAX2s9otUb/vIiws+s=",
+            "name": "00004.jpeg",
+          },
+          HashedFile {
+            "hash": "Xoygu6ShbAiW+1lro4PkKvKO9+I=",
+            "name": "00005.jpeg",
+          },
+          HashedFile {
+            "hash": "4C0C4h2bW5aDXJ19b8fNGJnVMZc=",
+            "name": "00006.jpeg",
+          },
+          HashedFile {
+            "hash": "mrJ2vZy5CgEfW7ob09QYbL+GeBI=",
+            "name": "00007.jpeg",
+          },
+          HashedFile {
+            "hash": "qvEI2hP85WUcawSwLKZlfxJCVQE=",
+            "name": "00008.jpeg",
+          },
+          HashedFile {
+            "hash": "tFed27XJkAQ0Y24X2XxoVOP6pT8=",
+            "name": "00009.jpeg",
+          },
+          HashedFile {
+            "hash": "xQ1lIjRxr3LViWz8Y+2B6FpzMME=",
+            "name": "00010.jpeg",
+          },
+          HashedFile {
+            "hash": "+/67BLvSncM7IVqG3UyKAjfBMPQ=",
+            "name": "00011.jpeg",
+          },
+          HashedFile {
+            "hash": "zhYt+prmlLCkptyvyJbrY5JX9fY=",
+            "name": "00012.jpeg",
+          },
+          HashedFile {
+            "hash": "WmrsHWXd4R4L0WtV7V751XF7pkQ=",
+            "name": "00013.jpeg",
+          },
+          HashedFile {
+            "hash": "GncKjao8ry2HPwvvuNIff0MsJPE=",
+            "name": "00014.jpeg",
+          },
+          HashedFile {
+            "hash": "k/87BTSsc11lvrUgYRIb45+Owlk=",
+            "name": "00015.jpeg",
+          },
+          HashedFile {
+            "hash": "xUFLizu/8oQz2pkpByenLWBqJpY=",
+            "name": "00016.jpeg",
+          },
+          HashedFile {
+            "hash": "XPVgkskrAI6S0uRj5WFxUMsUW5s=",
+            "name": "00017.jpeg",
+          },
+          HashedFile {
+            "hash": "QhPFtyRBlruPI+iRRyGqU3UNx/4=",
+            "name": "00018.jpeg",
+          },
+          HashedFile {
+            "hash": "28Djxi+VrW6Yjvi1YYW1Kkfum7c=",
+            "name": "00019.jpeg",
+          },
+          HashedFile {
+            "hash": "NiO8/YJdwQxmGs64qhvawFdMMxU=",
+            "name": "00020.jpeg",
+          },
+          HashedFile {
+            "hash": "XSt5MOx8CrjVnhE0bAZv6eEkoNY=",
+            "name": "00021.jpeg",
+          },
+          HashedFile {
+            "hash": "FFnBQXItg1J+zHat9TrL+aEzTHM=",
+            "name": "00022.jpeg",
+          },
+          HashedFile {
+            "hash": "tWFDZ7UQ3sRNFPx9qJ3eRu1n5hY=",
+            "name": "00023.jpeg",
+          },
+          HashedFile {
+            "hash": "dIUHElXCi9fObOzj8bY5q3xY7bg=",
+            "name": "00024.jpeg",
+          },
+          HashedFile {
+            "hash": "jRFIraMh92nvf2gorCs7QhmkTBU=",
+            "name": "00025.jpeg",
+          },
+          HashedFile {
+            "hash": "7QLpNSb+j+04LqLDItjnYJGPUU4=",
+            "name": "00026.jpeg",
+          },
+          HashedFile {
+            "hash": "cbBEQ+DgFrleBo9IFPV5EUUK9XI=",
+            "name": "00027.jpeg",
+          },
+          HashedFile {
+            "hash": "WG3MEXsJOaQ55oNiSg0Q9Vi7aBU=",
+            "name": "00028.jpeg",
+          },
+          HashedFile {
+            "hash": "76x7/bHS5KkqoMh9VkClD5LBj7I=",
+            "name": "00029.jpeg",
+          },
+          HashedFile {
+            "hash": "uOYPXOdLAZb5mN3MMg3fvqrsH9M=",
+            "name": "00030.jpeg",
+          },
+          HashedFile {
+            "hash": "T5g8UYU0TZ6c1VzfQuK27Axfe8U=",
+            "name": "00031.jpeg",
+          },
+          HashedFile {
+            "hash": "UgbIJRfvVxRHMQFJ5JMg8yAcY6w=",
+            "name": "00032.jpeg",
+          },
+          HashedFile {
+            "hash": "hJENVNEUw017mftbUEc1syzJXL4=",
+            "name": "00033.jpeg",
+          },
+          HashedFile {
+            "hash": "ghEy8wdn3T2nQwIYCLcOi3q5ccU=",
+            "name": "00034.jpeg",
+          },
+          HashedFile {
+            "hash": "p64YxgAIf5Xhv+p5/SOb+uR0lWA=",
+            "name": "00035.jpeg",
+          },
+          HashedFile {
+            "hash": "bA1vUVRLXNEJyGf4MeZpeBa12BQ=",
+            "name": "00036.jpeg",
+          },
+          HashedFile {
+            "hash": "/qmmeegLfy9dx+jNAZSZPovQLZI=",
+            "name": "00037.jpeg",
+          },
+          HashedFile {
+            "hash": "lY3OdzJmu9hnt0u6DlhECKUAdso=",
+            "name": "cover.jpeg",
+          },
+        ],
+        "hash": "yUKSRAZFVFIlLShRIELohvBLZMw=",
+        "name": "images",
+      },
+    ],
+    "hash": "fBzDAeEfgBKE49zgC3dXXVU5OhA=",
+    "name": "zhihu",
+  },
+  "stdout": "[34m[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/zhihu.epub...[39m
+[32m[epub2md]: 1: [01-扉页.md][39m
+[32m[epub2md]: 2: [02-part0001_split_000.md][39m
+[32m[epub2md]: 3: [03-版权页.md][39m
+[32m[epub2md]: 4: [04-插图.md][39m
+[32m[epub2md]: 5: [05-目录.md][39m
+[32m[epub2md]: 6: [06-第一部分_种子期.md][39m
+[32m[epub2md]: 7: [07-第1章_审视自己.md][39m
+[32m[epub2md]: 8: [08-你为什么要创业？.md][39m
+[32m[epub2md]: 9: [09-第2章_选择方向.md][39m
+[32m[epub2md]: 10: [10-如何选择创业的方向？.md][39m
+[32m[epub2md]: 11: [11-第二部分_助跑期.md][39m
+[32m[epub2md]: 12: [12-第2章_找合伙人.md][39m
+[32m[epub2md]: 13: [13-有项目和少量投资，怎么寻找技术合伙人？.md][39m
+[32m[epub2md]: 14: [14-第4章_初次找钱.md][39m
+[32m[epub2md]: 15: [15-创业是自筹资金好还是找天使投资好？.md][39m
+[32m[epub2md]: 16: [16-第5章_早期的产品规划.md][39m
+[32m[epub2md]: 17: [17-互联网创业早期，启动产品开发时有哪些注意事项？.md][39m
+[32m[epub2md]: 18: [18-第6章_早期的团队构建.md][39m
+[32m[epub2md]: 19: [19-创业公司如何招人？.md][39m
+[32m[epub2md]: 20: [20-第三部分_起步期（0~1万用户）.md][39m
+[32m[epub2md]: 21: [21-第7章_产品上线.md][39m
+[32m[epub2md]: 22: [22-一个有效的新产品上线策略应考虑哪些因素？.md][39m
+[32m[epub2md]: 23: [23-第8章_人才与团队管理.md][39m
+[32m[epub2md]: 24: [24-如何管理问题员工？.md][39m
+[32m[epub2md]: 25: [25-第四部分_加速期（1万~100万用户）.md][39m
+[32m[epub2md]: 26: [26-第9章_产品的迭代.md][39m
+[32m[epub2md]: 27: [27-当产品基本成型，如何把产品做得更好？.md][39m
+[32m[epub2md]: 28: [28-第10章_找机构投资.md][39m
+[32m[epub2md]: 29: [29-创业公司第一轮融资时应该注意些什么？.md][39m
+[32m[epub2md]: 30: [30-第11章_团队初次扩容.md][39m
+[32m[epub2md]: 31: [31-拿到A轮投资之后，怎样把握招人的节奏？.md][39m
+[34m[epub2md]: [1/1] Conversion successful! output: <absolute path hidden from snapshot>/zhihu[39m
+",
+}

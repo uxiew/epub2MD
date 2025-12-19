@@ -1,0 +1,33 @@
+{
+  "_spine": {
+    "chapter-1.xhtml": 3,
+    "chapter-10.xhtml": 12,
+    "chapter-2.xhtml": 4,
+    "chapter-3.xhtml": 5,
+    "chapter-4.xhtml": 6,
+    "chapter-5.xhtml": 7,
+    "chapter-6.xhtml": 8,
+    "chapter-7.xhtml": 9,
+    "chapter-8.xhtml": 10,
+    "chapter-9.xhtml": 11,
+    "halftitlepage.xhtml": 2,
+    "preface.xhtml": 1,
+    "titlepage.xhtml": 0,
+  },
+  "info": {
+    "author": [
+      "Ida B. Wells-Barnett",
+    ],
+    "language": "en-US",
+    "publisher": {
+      "#text": "Threadable",
+      "@id": "publisher",
+    },
+    "rights": "The source text in this ebook edition are believed to be in the U.S. public domain.",
+    "title": {
+      "#text": "The Red Record",
+      "@id": "title",
+    },
+  },
+  "structure": undefined,
+}
