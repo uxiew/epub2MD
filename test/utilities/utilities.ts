@@ -10,8 +10,10 @@ export const rootTempDir = path.join(os.tmpdir(), 'epub2md-test/')
 
 export function copyToTemporaryFolder(fileName: string) {
   const originalEpubPath = path.resolve(projectRoot, 'test/fixtures', fileName)
-  const tempDirPath = mkdtempSync(rootTempDir)
+  const tempDirPath = newTempDir()
   const newEpubPath = path.resolve(tempDirPath, fileName)
   copyFileSync(originalEpubPath, newEpubPath)
   return Path(newEpubPath)
 }
+
+export const newTempDir = () => mkdtempSync(rootTempDir)
