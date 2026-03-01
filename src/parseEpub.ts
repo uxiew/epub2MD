@@ -232,7 +232,8 @@ export class Epub {
     const parseNavPoint = (navPoint: GeneralObject) => {
       // link to section
       const path = _.get(navPoint, ['content', '@src'], '')
-      const name = _.get(navPoint, ['navLabel', 'text'])
+      const rawName = _.get(navPoint, ['navLabel', 'text'])
+      const name = rawName != null ? String(rawName) : ''
 
       const playOrder = _.get(navPoint, ['@playOrder']) as string
       const { hash } = parseLink(path)
