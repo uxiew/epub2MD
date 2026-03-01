@@ -6,9 +6,7 @@ import { Manifest } from './opf'
 
 export function parseToc(text: string, getItemId: Manifest['getItemId']) {
   const object = parseXml(text) as any
-  const toc = object.html
-    ? html(object, getItemId)
-    : ncx(object, getItemId)
+  const toc = object.html ? html(object, getItemId) : ncx(object, getItemId)
   return toc && new Toc(toc)
 }
 
@@ -18,7 +16,8 @@ function ncx(tocObj: GeneralObject, getItemId: Manifest['getItemId']): TocItem[]
   const parseNavPoint = (navPoint: GeneralObject) => {
     // link to section
     const path = _.get(navPoint, ['content', '@src'], '')
-    const name = _.get(navPoint, ['navLabel', 'text'])
+    const rawName = _.get(navPoint, ['navLabel', 'text'])
+    const name = rawName != null ? String(rawName) : ''
 
     const playOrder = _.get(navPoint, ['@playOrder']) as string
     const { hash } = parseLink(path)
@@ -42,8 +41,7 @@ function ncx(tocObj: GeneralObject, getItemId: Manifest['getItemId']): TocItem[]
   }
 
   const parseNavPoints = (navPoints: GeneralObject[]) => {
-    return (Array.isArray(navPoints) ? navPoints : [navPoints])
-      .map((point) => parseNavPoint(point))
+    return (Array.isArray(navPoints) ? navPoints : [navPoints]).map((point) => parseNavPoint(point))
   }
 
   return parseNavPoints(rootNavPoints)
@@ -67,11 +65,8 @@ function html(tocObj: GeneralObject, getItemId: Manifest['getItemId']) {
 
     let children = navPoint?.ol?.[0]?.li
 
-    if (children)
-      children = parseOuterHTML(children)
-    if (children && !Array.isArray(children))
-      children = [children]
-      
+    if (children) children = parseOuterHTML(children)
+    if (children && !Array.isArray(children)) children = [children]
 
     runningIndex++
 
@@ -102,25 +97,20 @@ export interface TocItem {
 }
 
 export class Toc {
-  constructor(
-    public tree: TocItem[]
-  ) {}
+  constructor(public tree: TocItem[]) {}
 
-  private * visitAll(items = this.tree): Generator<TocItem> {
+  private *visitAll(items = this.tree): Generator<TocItem> {
     for (const item of items) {
       yield item
-      if (item.children)
-        yield* this.visitAll(item.children)
+      if (item.children) yield* this.visitAll(item.children)
     }
   }
-  
+
   find(predicate: (item: TocItem) => unknown) {
-    for (const item of this.visitAll())
-      if (predicate(item))
-        return item
+    for (const item of this.visitAll()) if (predicate(item)) return item
   }
 
   getBySectionId(id: string) {
-    return this.find(item => item.sectionId === id)
+    return this.find((item) => item.sectionId === id)
   }
 }

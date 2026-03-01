@@ -13,7 +13,7 @@ Even though the package is primarily intended for CLI is to convert EPUB to Mark
   - Retain the original online image links.
   - Download and localize online images (save remote images locally).
 - **View Information**: Easy to View the basic information, structure, and chapters of the EPUB.
-- **Extraction Function**: Dont need convert, just extract the useful contents of the EPUB file.
+- **Extraction Function**: Just extract the useful contents of the EPUB file.
 
 ## Global Install for CLI
 
@@ -41,10 +41,17 @@ $ npm install @uxiew/epub2md
 # Show usage help
 $ epub2md -h
 
-# Convert directly to markdown format
-$ epub2md ../../fixtures/zhihu.epub
-# or use -m
-$ epub2md -m ../../fixtures/zhihu.epub
+# ========== Basic Conversion ==========
+
+# Convert directly to markdown format (default command)
+$ epub2md book.epub
+$ epub2md /path/to/book.epub
+
+# Convert with autocorrect (spaces and punctuation between Chinese and English)
+$ epub2md -a book.epub
+$ epub2md --autocorrect book.epub
+
+# ========== Batch Conversion (Wildcard Support) ==========
 
 # Convert multiple files using wildcards
 $ epub2md "fixtures/*.epub"
@@ -56,33 +63,58 @@ $ epub2md "fixtures/*.epub" --merge
 
 # Note: Quotes are required around patterns with wildcards to prevent shell expansion
 
-# Convert to markdown and automatically correct spaces and punctuation between Chinese and English (CLI only)
-$ epub2md -M ../../fixtures/zhihu.epub
+# ========== Merge Options ==========
 
-# Convert and directly generate a single merged markdown file (no intermediate files)
-$ epub2md -m ../../fixtures/zhihu.epub --merge
-# You can also use the epub file path as the first parameter directly
-$ epub2md ../../fixtures/zhihu.epub --merge
+# Convert and directly generate a single merged markdown file
+$ epub2md -m book.epub 
+$ epub2md --merge book.epub
 
-# Use --merge=filename.md
-$ epub2md ../../fixtures/zhihu.epub --merge="merged-book.md"
+# Specify custom output filename for merged file
+$ epub2md --merge=custom-name.md book.epub
 
-# By default, DONT downloaded. Basically, the images in the epub are already included, so there is no need to download.
-# However, some epub image links are remote, You will see some warning，maybe they need to be downloaded.
-# Download and localize online images (download remote images to local) (need node > 18.0)
-$ epub2md ../../fixtures/zhihu.epub --localize
-
-# Download and localize online images, while merging all chapters into a single file
-$ epub2md ../../fixtures/zhihu.epub --merge --localize
-
-# Merge existing markdown files in a directory
+# Merge existing markdown files in a directory (without conversion)
 $ epub2md --merge ./path/to/markdown/dir
 
-# Show additional information
-$ epub2md -u ../../fixtures/zhihu.epub  # Extract epub
-$ epub2md -i ../../fixtures/zhihu.epub  # Show basic information
-$ epub2md -S ../../fixtures/zhihu.epub  # Show structure information
-$ epub2md -s ../../fixtures/zhihu.epub  # Show chapter information
+# ========== Image Processing ==========
+
+# By default, remote images are NOT downloaded (only a warning is shown)
+# Images embedded in EPUB are always extracted
+
+# Download and localize remote images (requires Node.js >= 18.0)
+$ epub2md -l book.epub
+$ epub2md --localize book.epub
+
+# Combine: convert + merge + download remote images
+$ epub2md -m -l book.epub
+$ epub2md --merge --localize book.epub
+
+# ========== Information Display ==========
+
+# Show basic information (title, author, language)
+$ epub2md -i book.epub
+$ epub2md --info book.epub
+
+# Show structure/table of contents
+$ epub2md -s book.epub
+$ epub2md --structure book.epub
+
+# Show all sections/chapters
+$ epub2md -S book.epub
+$ epub2md --sections book.epub
+
+# ========== Extraction ==========
+
+# Extract/unzip EPUB contents
+$ epub2md -u book.epub
+$ epub2md --unzip book.epub
+
+# ========== Command Priority ==========
+
+# Info commands have highest priority
+$ epub2md book.epub --info          # Shows info (doesn't convert)
+$ epub2md --convert --info book.epub # Shows info (info takes precedence)
+
+# Priority order: info/structure/sections > unzip > merge(dir) > convert/autocorrect
 ```
 
 ## Usage
@@ -126,10 +158,21 @@ The return value is an object which contains`structure`, `sections`, `info`(priv
 
 - `Section.prototype.toHtmlObjects`: convert to html object. And a note about `src` and`href`, the`src` and`href` in raw html stay untouched, but the `toHtmlObjects` method resolves `src` to base64 string, and alters `href` so that they make sense in the parsed epub.And the parsed `href` is something like`#{sectionId},{hash}`.
 
-## 发布流程：
+## Testing
 
-1. 本地发版 ：运行 `pnpm release` （或 release:patch / minor / major ）。会自动更新版本号、生成 CHANGELOG 并打 git tag。
-2. 推送 ：运行 `git push --follow-tags` 。这会将提交和 tags 推送到 GitHub，触发 CI。
+```bash
+# Run all tests
+$ npm test
+
+# Run specific test file
+$ npm test -- test/bin.spec.ts
+
+# Run tests with verbose output
+$ npm test -- --reporter=verbose
+
+# Run integration tests only
+$ npm test -- test/integration.spec.ts
+```
 
 ## How to contribute
 

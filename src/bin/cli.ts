@@ -26,21 +26,17 @@ export const Commands = {
 export type CommandType = (typeof Commands)[keyof typeof Commands]
 
 const commands: [CommandType, string, (boolean | string)?][] = [
-  [Commands.convert, 'convert the epub file to markdown format'],
-  [Commands.autocorrect, 'convert the epub file to markdown format with autocorrect'],
-  [Commands.unzip, 'unzip epub file'],
-  [Commands.info, 'get epub file basic info'],
-  [Commands.structure, 'get epub file structure'],
-  [Commands.sections, 'get epub file sections'],
+  [Commands.convert, 'convert the EPUB file to markdown format'],
+  [Commands.autocorrect, 'convert the EPUB file to markdown format with autocorrect'],
+  [Commands.unzip, 'unzip EPUB file'],
+  [Commands.info, 'get EPUB file basic info'],
+  [Commands.structure, 'get EPUB file structure'],
+  [Commands.sections, 'get EPUB file sections'],
   [
     Commands.merge,
-    'merge all markdown files into a single file, can also specify output filename with --merge=filename.md',
+    'Merge all Markdown files into one; specify output filename with --merge=filename.md',
   ],
-  [
-    Commands.localize,
-    'Retain the original online link and do not convert it to a local path',
-    false,
-  ],
+  [Commands.localize, 'Download all remotes images to the local "images" folder'],
 ]
 
 const DEFAULT_COMMAND = Commands.convert

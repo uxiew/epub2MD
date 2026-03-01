@@ -13,7 +13,6 @@ import { type CommandType } from '../bin/cli'
 import { downloadRemoteImages } from './download-images'
 import { Toc } from '../xml'
 
-
 interface Structure {
   id: string
   type: 'md' | 'img' | ''
@@ -24,8 +23,8 @@ interface Structure {
 
 export interface RunOptions {
   cmd: CommandType
-  shouldMerge: boolean      // Whether to directly generate the merged file
-  localize: boolean         // Whether to retain the original online image link
+  shouldMerge: boolean // Whether to directly generate the merged file
+  localize: boolean // Whether to retain the original online image link
   mergedFilename?: string
 }
 const defaultOptions = {
@@ -38,7 +37,7 @@ const IMAGE_DIR = 'images'
 
 export class Converter {
   epub: Epub // epub parser object
-  outDir: string  // epub 's original directory to save markdown files
+  outDir: string // epub 's original directory to save markdown files
   files: FileData
   mergeProgress?: MergeProgress
 
@@ -57,11 +56,10 @@ export class Converter {
     const structures = processManifest(this.epub, this.options.cmd !== 'unzip', this.outDir)
     this.files = structures
       .values()
-      .map(x => this.getFileData(x, structures))
-      .filter(x => x.content.length > 0)
+      .map((x) => this.getFileData(x, structures))
+      .filter((x) => x.content.length > 0)
 
-    if (this.options.shouldMerge)
-      this.mergeProgress = this.mergeFiles()
+    if (this.options.shouldMerge) this.mergeProgress = this.mergeFiles()
   }
 
   private getFileData(structure: Structure, structures: Structure[]) {
@@ -72,8 +70,7 @@ export class Converter {
 
     if (type === 'md') {
       const section = this.epub.getSection(id)
-      if (section)
-        content = section.toMarkdown()
+      if (section) content = section.toMarkdown()
 
       // clear readable filename
       const { outPath, fileName } = clearOutpath(structure, this.epub.structure.toc)
@@ -88,24 +85,22 @@ export class Converter {
       content = fixLinkPath(content, (link, isText) => {
         if (isText) {
           const { hash = '', url } = parseHref(link, true)
-          if (link.startsWith("#"))
+          if (link.startsWith('#'))
             return linkStartSep + this.options.shouldMerge ? id : fileName + link
           const sectionId = this.epub.structure.opf.manifest.getItemId(url)
           const internalNavName = this.epub.structure.toc?.getBySectionId(sectionId)?.name || link
 
           // fix link's path
-          let validPath = sanitizeFileName(extname(internalNavName)
-            ? internalNavName : (internalNavName + '.md'))
+          let validPath = sanitizeFileName(
+            extname(internalNavName) ? internalNavName : internalNavName + '.md',
+          )
 
           // Adjust internal link adjustment, files with numbers in the name
-          const file = structures.find(file => file.id === sectionId)
-          if (file)
-            validPath = basename(clearOutpath(file, this.epub.structure.toc).outPath)
+          const file = structures.find((file) => file.id === sectionId)
+          if (file) validPath = basename(clearOutpath(file, this.epub.structure.toc).outPath)
 
           // content's id
-          const toId = this.epub.structure.opf.manifest.getItemId(
-            join(dirname(filepath), url)
-          )
+          const toId = this.epub.structure.opf.manifest.getItemId(join(dirname(filepath), url))
 
           return this.options.shouldMerge
             ? linkStartSep + toId + (hash ? '#' + hash : '')
@@ -126,7 +121,7 @@ export class Converter {
           logger.error('Failed to localize the image!', error)
         }
       } else if (resLinks.length > 0) {
-        logger.warn('Remote images are detected, you can set --localize to true to localize the remote images')
+        logger.warn('Remote images are detected, use --localize to download the images')
       }
       content = needAutoCorrect ? require('autocorrect-node').format(content) : content
     } else {
@@ -141,7 +136,7 @@ export class Converter {
     }
   }
 
-  * mergeFiles() {
+  *mergeFiles() {
     const chapters: string[] = []
     for (const { type, id, outputPath, content } of this.files)
       if (type === 'md') {
@@ -152,7 +147,7 @@ export class Converter {
       }
     const outputPath = join(
       this.outDir,
-      this.options.mergedFilename || `${basename(this.outDir)}-merged.md`
+      this.options.mergedFilename || `${basename(this.outDir)}-merged.md`,
     )
     yield { type: 'markdown merged', outputPath, content: chapters.join('\n\n---\n\n') } as const
   }
@@ -173,7 +168,7 @@ export type MergeProgress = ReturnType<Converter['mergeFiles']>
 function processManifest(epub: Epub, unzip: boolean, outDir: string) {
   const structure: Structure[] = []
   const orderPrefix = new OrderPrefix({
-    maximum: epub.sections.length
+    maximum: epub.sections.length,
   })
   for (const { href: filepath, id } of epub.structure.opf.manifest) {
     if (filepath.endsWith('ncx') || id === 'titlepage') continue
@@ -185,7 +180,7 @@ function processManifest(epub: Epub, unzip: boolean, outDir: string) {
       id,
       type,
       outpath,
-      filepath
+      filepath,
     })
   }
   return structure
@@ -211,14 +206,14 @@ function clearOutpath({ id, outpath, orderPrefix }: Structure, toc?: Toc) {
   return {
     fileName,
     outDir,
-    outPath: join(outDir, orderPrefix + '-' + fileName)
+    outPath: join(outDir, orderPrefix + '-' + fileName),
   }
 }
 
 /**
-* Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
-* @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
-*/
+ * Make a path，and normalize assets's path. normally markdowns dont need those css/js files, So i skip them
+ * @return these target file's path will be created，like "xxx/xxx.md","xxx/images"
+ */
 function parseFileInfo(filepath: string, outDir: string) {
   const { isImage, isHTML } = checkFileType(filepath)
   // other files skipped
@@ -230,7 +225,7 @@ function parseFileInfo(filepath: string, outDir: string) {
   )
   return {
     // html => md
-    type: isHTML ? 'md' : isImage ? 'img' : '' as Structure['type'],
-    path
+    type: isHTML ? 'md' : isImage ? 'img' : ('' as Structure['type']),
+    path,
   }
 }

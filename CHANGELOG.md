@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+# [1.6.0](https://github.com/uxiew/epub2MD/compare/v1.5.0...v1.6.0) (2026-03-01)
+
+
+### Bug Fixes
+
+* throws when xml string is a number ([#25](https://github.com/uxiew/epub2MD/issues/25)) ([f96b0ce](https://github.com/uxiew/epub2MD/commit/f96b0ce7a452993100592d86eed073a5c95c7e89))
+
+
+
+## [1.5.1](https://github.com/uxiew/epub2MD/compare/v1.5.0...v1.5.1) (2026-03-01)
+
+
+### Bug Fixes
+
+* throws when xml string is a number ([#25](https://github.com/uxiew/epub2MD/issues/25)) ([f96b0ce](https://github.com/uxiew/epub2MD/commit/f96b0ce7a452993100592d86eed073a5c95c7e89))
+
+
+
 # [1.5.0](https://github.com/uxiew/epub2MD/compare/v1.4.1...v1.5.0) (2025-11-28)
 
 

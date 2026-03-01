@@ -1,37 +1,5 @@
-import { extname } from 'node:path';
-import convert from '../converter';
-
-/**
- * Matches the image syntax in Markdown
- */
-function handleImagePath(markdownContent: string, replaceFn: (imgUrl: string) => string) {
-  const imgPattern = /!\[[^\]]*\]\(([^)]+)\)/g;
-
-  // 使用 replace 方法和提供的替换函数处理所有匹配项
-  return markdownContent.replace(imgPattern, (match: string, imagePath: string) => {
-    // 替换函数应用逻辑，将原始 URL 替换为新的路径
-    const newImagePath = replaceFn(imagePath);
-
-    // 用新路径重构图片语法
-    return `![${match.slice(2, match.indexOf(']'))}](${newImagePath})`;
-  });
-}
-
-/**
- * Matches the inline link syntax in Markdown
- *
- */
-function handleFileLinkPath(markdownContent: string, replaceFn: (url: string, text: string) => string) {
-  const inlineLinkPattern = /\[([^\]]*)]\(([^)]+)\)/g;
-
-  // 使用 replace 方法和提供的替换函数处理所有匹配项
-  return markdownContent.replace(inlineLinkPattern, (match, linkText, linkUrl) => {
-    let newLinkUrl = linkUrl
-    // 替换函数应用逻辑，将原始URL替换为新的路径
-    newLinkUrl = replaceFn(linkUrl, linkText);
-    return `[${linkText}](${newLinkUrl})`;
-  });
-}
+import { extname } from 'node:path'
+import convert from '../converter'
 
 /**
  * Matches the image/link syntax in Markdown
@@ -43,17 +11,17 @@ export function fixLinkPath(result: string, replaceFn: (url: string, isText?: bo
 
   // 首先处理图片标签 ![text](url)
   result = result.replace(/!\[(.*?)\]\(([^)]+)\)/g, (match, alt, url) => {
-    const newUrl = replaceFn(url, false);
-    return `![${alt}](${newUrl})`;
-  });
+    const newUrl = replaceFn(url, false)
+    return `![${alt}](${newUrl})`
+  })
 
   // 然后处理普通链接，使用否定前瞻确保不匹配图片链接
   result = result.replace(/(?<!!)\[(.*?)\]\(([^)]+)\)/g, (match, text, url) => {
-    const newUrl = replaceFn(url, true);
-    return `[${text}](${newUrl})`;
-  });
+    const newUrl = replaceFn(url, true)
+    return `[${text}](${newUrl})`
+  })
 
-  return result;
+  return result
 }
 
 export function checkFileType(filepath: string) {
@@ -74,11 +42,11 @@ export function checkFileType(filepath: string) {
 
 // 将非法字符替换为下划线
 export function sanitizeFileName(fileName: string, ext = '', replacementChar = '_') {
-  const invalidCharsPattern = /[\\/:*?"<>|]/g;
-  return fileName
-    .replace(invalidCharsPattern, replacementChar)
-    .trim()
-    .replace(/\s/g, replacementChar) + ext
+  const invalidCharsPattern = /[\\/:*?"<>|]/g
+  return (
+    fileName.replace(invalidCharsPattern, replacementChar).trim().replace(/\s/g, replacementChar) +
+    ext
+  )
 }
 
 // clean some redundant html string

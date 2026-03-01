@@ -61,5 +61,93 @@ describe(`Global CLI runner`, () => {
     const dirContents = fs.readdirSync(outputDir)
     expect(dirContents.includes(customOutputName)).toBe(true)
   })
-})
 
+  describe('Info query commands', () => {
+    it('should display book info with --info', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} --info ${epubPath.fullPath}`)
+
+      expect(res).toMatch('This book info:')
+      expect(res).toMatch('title:')
+      expect(res).toMatch('创业时,我们在知乎聊什么?')
+    })
+
+    it('should display book structure with --structure', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} --structure ${epubPath.fullPath}`)
+
+      expect(res).toMatch('This book structure:')
+      expect(res).toMatch('扉页')
+      expect(res).toMatch('版权页')
+    })
+
+    it('should display book sections with --sections', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} --sections ${epubPath.fullPath}`)
+
+      expect(res).toMatch('This book sections:')
+      expect(res).toMatch('htmlString')
+      expect(res).toMatch('id:')
+    })
+
+    it('should use unprocessed arg when --info has no value', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} ${epubPath.fullPath} --info`)
+
+      expect(res).toMatch('This book info:')
+      expect(res).toMatch('创业时,我们在知乎聊什么?')
+    })
+  })
+
+  describe('Error handling', () => {
+    it('should handle non-existent file gracefully', () => {
+      const res = safeExecSync(`node ${cli} non-existent-file.epub`)
+
+      expect(res).toMatch(/Error|ENOENT|No such file/)
+    })
+
+    it('should handle invalid file path for info command', () => {
+      const res = safeExecSync(`node ${cli} --info invalid-file.epub`)
+
+      expect(res).toMatch(/Error|ENOENT|No such file/)
+    })
+
+    it('should show help when no arguments provided', () => {
+      const res = safeExecSync(`node ${cli}`)
+
+      expect(res).toMatch('Usage:')
+      expect(res).toMatch('epub2md')
+    })
+  })
+
+  describe('Localize option (-l)', () => {
+    it('should NOT download images by default (without -l flag)', () => {
+      const epubPath = copyToTemporaryFolder('online-imgs.epub')
+      const res = safeExecSync(`node ${cli} ${epubPath.fullPath}`)
+
+      // Should warn about remote images
+      expect(res).toMatch(/Remote images are detected/)
+      expect(res).toMatch(/--localize/)
+
+      // Should show conversion success
+      expect(res).toMatch(/Conversion successful/)
+
+      // Images directory should exist with local images from epub
+      const imagesDir = path.join(epubPath.pathStem, 'images')
+      expect(fs.existsSync(imagesDir)).toBe(true)
+    })
+
+    it('should process -l flag without network errors in unit test', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      // Use file-1.epub which doesn't have remote images to avoid network calls
+      const res = safeExecSync(`node ${cli} ${epubPath.fullPath} -l`)
+
+      // Should not show remote image warning for file-1.epub
+      expect(res).not.toMatch(/Remote images are detected/)
+      expect(res).toMatch(/Conversion successful/)
+
+      // Verify output directory exists
+      expect(fs.existsSync(epubPath.pathStem)).toBe(true)
+    })
+  })
+})
