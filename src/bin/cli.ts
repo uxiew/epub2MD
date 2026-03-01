@@ -88,8 +88,8 @@ if (!hasRun && flags[Commands.unzip]) {
     typeof flags[Commands.unzip] === 'string'
       ? flags[Commands.unzip]
       : unprocessedArgs.length > 0
-      ? unprocessedArgs[0]
-      : null
+        ? unprocessedArgs[0]
+        : null
 
   const options = {
     cmd: Commands.unzip,
@@ -214,8 +214,7 @@ async function run(cmd: CommandType) {
       const epubPath = epubPaths[i]
 
       logger.info(
-        `[${i + 1}/${epubPaths.length}] Converting ${epubPath}${
-          cmd === Commands.autocorrect ? ' with autocorrect' : ''
+        `[${i + 1}/${epubPaths.length}] Converting ${epubPath}${cmd === Commands.autocorrect ? ' with autocorrect' : ''
         }${flags[Commands.merge] ? ' and merging' : ''}...`,
       )
 
@@ -266,9 +265,11 @@ async function run(cmd: CommandType) {
   }
 }
 
+
 function convert(epubPath: string, options?: Partial<RunOptions>) {
   const converter = new Converter(epubPath, options)
-  if (options?.shouldMerge) return handleMergedFile(converter.mergeProgress!)
+  if (options?.shouldMerge)
+    return handleMergedFile(converter.mergeProgress!)
   else {
     handleFiles(converter.files)
     return converter.outDir
@@ -278,7 +279,8 @@ function convert(epubPath: string, options?: Partial<RunOptions>) {
 function handleFiles(files: FileData) {
   let markdownFileCount = 0
   for (const { type, outputPath, content } of files) {
-    if (type === 'md') logger.success(`${++markdownFileCount}: [${basename(outputPath)}]`)
+    if (type === 'md')
+      logger.success(`${++markdownFileCount}: [${basename(outputPath)}]`)
     writeFileSync(outputPath, content, { overwrite: true })
   }
 }
@@ -288,7 +290,8 @@ function handleMergedFile(mergeFileProcess: MergeProgress) {
   for (const { type, outputPath, content } of mergeFileProcess) {
     if (type === 'markdown file processed')
       logger.success(`${++markdownFileCount}: [${outputPath}]`)
-    if (type === 'file processed') writeFileSync(outputPath, content, { overwrite: true })
+    if (type === 'file processed')
+      writeFileSync(outputPath, content, { overwrite: true })
     if (type === 'markdown merged') {
       writeFileSync(outputPath, content, { overwrite: true })
       return outputPath

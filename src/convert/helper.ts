@@ -6,7 +6,7 @@ import convert from '../converter'
  */
 export function fixLinkPath(result: string, replaceFn: (url: string, isText?: boolean) => string) {
   if (!result || typeof result !== 'string') {
-    return ''
+    return '';
   }
 
   // 首先处理图片标签 ![text](url)
