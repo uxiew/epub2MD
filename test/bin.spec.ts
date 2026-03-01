@@ -1,165 +1,153 @@
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import os from 'node:os'
 import { promisify } from 'node:util'
+import { copyToTemporaryFolder, newTempDir, projectRoot } from './utilities/utilities'
 
-const mkdtemp = promisify(fs.mkdtemp)
 const writeFile = promisify(fs.writeFile)
-const rmdir = promisify(fs.rm)
 
 // 封装execSync，捕获错误并返回简单的错误信息，避免循环引用
 function safeExecSync(command: string, options?: { timeout?: number }): string {
-    try {
-        return execSync(command, options).toString();
-    } catch (error) {
-        // 避免返回整个错误对象，防止循环引用
-        return `Error: ${error instanceof Error ? error.message : String(error)}`;
-    }
+  try {
+    return execSync(command, options).toString()
+  } catch (error) {
+    // 避免返回整个错误对象，防止循环引用
+    return `Error: ${error instanceof Error ? error.message : String(error)}`
+  }
 }
 
-const cli = './lib/bin/cli.cjs'
+const cli = path.join(projectRoot, 'lib/bin/cli.cjs')
 
 describe(`Global CLI runner`, () => {
+  it('--merge=<directory>', async () => {
+    // 创建临时目录
+    const tempDir = newTempDir()
 
-    it('Run CLI good running', async () => {
-        const outputDir = './fixtures/zhihu'
+    // 创建测试用的markdown文件
+    await writeFile(path.join(tempDir, '01-test1.md'), '测试内容1')
+    await writeFile(path.join(tempDir, '02-test2.md'), '测试内容2')
 
-        try {
-            const res = safeExecSync(`node ${cli} ./fixtures/zhihu.epub`)
-            expect(res).toMatch('Conversion successful!')
-        } finally {
-            // 清理临时目录
-            await rmdir(outputDir, { recursive: true, force: true })
-        }
+    // 执行合并命令
+    const res = safeExecSync(`node ${cli} --merge="${tempDir}"`)
+
+    // 验证结果
+    expect(res).toMatch('Merging successful!')
+
+    // 验证文件是否被创建
+    const mergedFile = path.join(tempDir, `${path.basename(tempDir)}-merged.md`)
+    expect(fs.existsSync(mergedFile)).toBe(true)
+
+    // 验证内容
+    const content = fs.readFileSync(mergedFile, 'utf8')
+    expect(content).toBe('测试内容1\n\n---\n\n测试内容2')
+  })
+
+  it('--merge=<file path>', async () => {
+    // 设置测试 EPUB 文件路径
+    const epubPath = copyToTemporaryFolder('file-1.epub')
+    const outputDir = epubPath.pathStem
+    const customOutputName = 'custom-output.md'
+    const outputFile = path.join(outputDir, customOutputName)
+    // 执行命令
+    const res = safeExecSync(`node ${cli} ${epubPath.fullPath} --merge=${customOutputName}`)
+
+    // 验证结果
+    expect(res).toMatch('Merging successful!')
+
+    // 验证自定义名称的合并文件是否存在
+    expect(fs.existsSync(outputFile)).toBe(true)
+
+    // 验证目录中是否只有合并文件和图片目录
+    const dirContents = fs.readdirSync(outputDir)
+    expect(dirContents.includes(customOutputName)).toBe(true)
+  })
+
+  describe('Info query commands', () => {
+    it('should display book info with --info', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} --info ${epubPath.fullPath}`)
+
+      expect(res).toMatch('This book info:')
+      expect(res).toMatch('title:')
+      expect(res).toMatch('创业时,我们在知乎聊什么?')
     })
 
-    it('Run CLI merge command', async () => {
-        // 创建临时目录
-        const tempDir = await mkdtemp(path.join(os.tmpdir(), 'epub2md-test-cli-'))
+    it('should display book structure with --structure', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} --structure ${epubPath.fullPath}`)
 
-        try {
-            // 创建测试用的markdown文件
-            await writeFile(path.join(tempDir, '01-test1.md'), '测试内容1')
-            await writeFile(path.join(tempDir, '02-test2.md'), '测试内容2')
-
-            // 执行合并命令
-            const res = safeExecSync(`node ${cli} --merge="${tempDir}"`)
-
-            // 验证结果
-            expect(res).toMatch('Merging successful!')
-
-            // 验证文件是否被创建
-            const mergedFile = path.join(tempDir, `${path.basename(tempDir)}-merged.md`)
-            expect(fs.existsSync(mergedFile)).toBe(true)
-
-            // 验证内容
-            const content = fs.readFileSync(mergedFile, 'utf8')
-            expect(content).toBe('测试内容1\n\n---\n\n测试内容2')
-        } finally {
-            // 清理临时目录
-            await rmdir(tempDir, { recursive: true, force: true })
-        }
+      expect(res).toMatch('This book structure:')
+      expect(res).toMatch('扉页')
+      expect(res).toMatch('版权页')
     })
 
-    it('Run CLI with direct merge option (--merge flag)', async () => {
-        // 设置测试 EPUB 文件路径
-        const epubPath = './fixtures/file-1.epub'
-        const outputDir = './fixtures/file-1'
-        const outputFile = path.join(outputDir, 'file-1-merged.md')
+    it('should display book sections with --sections', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} --sections ${epubPath.fullPath}`)
 
-        try {
-            // 如果输出目录或文件已存在，先删除
-            if (fs.existsSync(outputDir)) {
-                await rmdir(outputDir, { recursive: true, force: true })
-            }
-
-            // 执行命令（使用简化的命令格式）
-            const res = safeExecSync(`node ${cli} ${epubPath} --merge`)
-
-            // 验证结果
-            expect(res).toMatch('Merging successful!')
-
-            // 验证合并后的文件是否存在
-            expect(fs.existsSync(outputFile)).toBe(true)
-
-            // 验证目录中是否只有合并文件和图片目录
-            const dirContents = fs.readdirSync(outputDir)
-            expect(dirContents.length).toBeLessThanOrEqual(2) // 合并文件 + 可能的 images 目录
-            expect(dirContents).toContain('file-1-merged.md')
-        } finally {
-            // 清理生成的文件
-            if (fs.existsSync(outputDir)) {
-                await rmdir(outputDir, { recursive: true, force: true })
-            }
-        }
+      expect(res).toMatch('This book sections:')
+      expect(res).toMatch('htmlString')
+      expect(res).toMatch('id:')
     })
 
-    it('Run CLI with direct merge option and custom output filename', async () => {
-        // 设置测试 EPUB 文件路径
-        const epubPath = './fixtures/file-1.epub'
-        const outputDir = './fixtures/file-1'
-        const customOutputName = 'custom-output.md'
-        const outputFile = path.join(outputDir, customOutputName)
+    it('should use unprocessed arg when --info has no value', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      const res = safeExecSync(`node ${cli} ${epubPath.fullPath} --info`)
 
-        try {
-            // 如果输出目录或文件已存在，先删除
-            if (fs.existsSync(outputDir)) {
-                await rmdir(outputDir, { recursive: true, force: true })
-            }
+      expect(res).toMatch('This book info:')
+      expect(res).toMatch('创业时,我们在知乎聊什么?')
+    })
+  })
 
-            // 执行命令
-            const res = safeExecSync(`node ${cli} ${epubPath} --merge=${customOutputName}`)
+  describe('Error handling', () => {
+    it('should handle non-existent file gracefully', () => {
+      const res = safeExecSync(`node ${cli} non-existent-file.epub`)
 
-            // 验证结果
-            expect(res).toMatch('Merging successful!')
-
-            // 验证自定义名称的合并文件是否存在
-            expect(fs.existsSync(outputFile)).toBe(true)
-
-            // 验证目录中是否只有合并文件和图片目录
-            const dirContents = fs.readdirSync(outputDir).filter(f => !f.startsWith('.'))
-            expect(dirContents.includes(customOutputName)).toBe(true)
-        } finally {
-            // 清理生成的文件
-            if (fs.existsSync(outputDir)) {
-                await rmdir(outputDir, { recursive: true, force: true })
-            }
-        }
+      expect(res).toMatch(/Error|ENOENT|No such file/)
     })
 
-    it('Run CLI with image option', async () => {
-        // 设置测试 EPUB 文件路径
-        const epubPath = './fixtures/file-2.epub'
-        const outputDir = './fixtures/file-2'
-        const outputFile = path.join(outputDir, 'file-2-merged.md')
+    it('should handle invalid file path for info command', () => {
+      const res = safeExecSync(`node ${cli} --info invalid-file.epub`)
 
-        try {
-            // 如果输出目录或文件已存在，先删除
-            if (fs.existsSync(outputDir)) {
-                await rmdir(outputDir, { recursive: true, force: true })
-            }
-
-            // 执行命令
-            const res = safeExecSync(`node ${cli} ${epubPath} --merge`)
-
-            // 验证结果
-            expect(res).toMatch('Merging successful!')
-
-            // 验证合并后的文件是否存在
-            expect(fs.existsSync(outputFile)).toBe(true)
-
-            // 读取合并后的文件内容，检查是否有 http:// 或 https:// 链接被保留
-            const content = fs.readFileSync(outputFile, 'utf8')
-
-            // 有些 epub 可能没有线上图片链接，所以这个测试可能不会失败
-            // 但我们至少确保文件正确生成了
-            expect(content.length).toBeGreaterThan(0)
-        } finally {
-            // 清理生成的文件
-            if (fs.existsSync(outputDir)) {
-                await rmdir(outputDir, { recursive: true, force: true })
-            }
-        }
+      expect(res).toMatch(/Error|ENOENT|No such file/)
     })
+
+    it('should show help when no arguments provided', () => {
+      const res = safeExecSync(`node ${cli}`)
+
+      expect(res).toMatch('Usage:')
+      expect(res).toMatch('epub2md')
+    })
+  })
+
+  describe('Localize option (-l)', () => {
+    it('should NOT download images by default (without -l flag)', () => {
+      const epubPath = copyToTemporaryFolder('online-imgs.epub')
+      const res = safeExecSync(`node ${cli} ${epubPath.fullPath}`)
+
+      // Should warn about remote images
+      expect(res).toMatch(/Remote images are detected/)
+      expect(res).toMatch(/--localize/)
+
+      // Should show conversion success
+      expect(res).toMatch(/Conversion successful/)
+
+      // Images directory should exist with local images from epub
+      const imagesDir = path.join(epubPath.pathStem, 'images')
+      expect(fs.existsSync(imagesDir)).toBe(true)
+    })
+
+    it('should process -l flag without network errors in unit test', () => {
+      const epubPath = copyToTemporaryFolder('file-1.epub')
+      // Use file-1.epub which doesn't have remote images to avoid network calls
+      const res = safeExecSync(`node ${cli} ${epubPath.fullPath} -l`)
+
+      // Should not show remote image warning for file-1.epub
+      expect(res).not.toMatch(/Remote images are detected/)
+      expect(res).toMatch(/Conversion successful/)
+
+      // Verify output directory exists
+      expect(fs.existsSync(epubPath.pathStem)).toBe(true)
+    })
+  })
 })

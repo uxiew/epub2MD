@@ -1,0 +1,327 @@
+{
+  "0": {
+    "created output folder": true,
+    "folder name = file stem": true,
+    "image count": 37,
+    "markdown file count": 31,
+    "output merged markdown": false,
+  },
+  "hashTree": HashedFolder {
+    "children": [
+      HashedFile {
+        "hash": "Z3p6Pzs1qRzGpTlJY5J15cr36Hw=",
+        "name": "01-part0000.md",
+      },
+      HashedFile {
+        "hash": "6OoddP/tgHrNyZQGxMA7vHPBkzk=",
+        "name": "02-part0001_split_000.md",
+      },
+      HashedFile {
+        "hash": "a7oqfcPEvw0g9XmHgRU46iopa7I=",
+        "name": "03-part0001_split_001.md",
+      },
+      HashedFile {
+        "hash": "hLExDpCNbJcqfYOhZ1gNCq6SxTk=",
+        "name": "04-part0002.md",
+      },
+      HashedFile {
+        "hash": "owcX7iV2irN5lfOpHk8QGZXbaXI=",
+        "name": "05-part0003.md",
+      },
+      HashedFile {
+        "hash": "NSSObkwS1f1jJc1njqBxcR5RZmI=",
+        "name": "06-part0004.md",
+      },
+      HashedFile {
+        "hash": "FhNKAokZBJpL0BlpNfRf+N/Gzdw=",
+        "name": "07-part0005_split_000.md",
+      },
+      HashedFile {
+        "hash": "P8W6wQQ/ubJ+2UEbov5ohMFN05k=",
+        "name": "08-part0005_split_001.md",
+      },
+      HashedFile {
+        "hash": "ksaBELPg1WmjaXhFbClpZlsRZ40=",
+        "name": "09-part0006_split_000.md",
+      },
+      HashedFile {
+        "hash": "yd5izekvQMsxw8t36e+T8byCrxg=",
+        "name": "10-part0006_split_001.md",
+      },
+      HashedFile {
+        "hash": "eTKLdgkS1ZghtKfBLkT6FEmK1vM=",
+        "name": "11-part0007.md",
+      },
+      HashedFile {
+        "hash": "wNhtsGcNQDnX807Tpt6d8Z1kr3M=",
+        "name": "12-part0008_split_000.md",
+      },
+      HashedFile {
+        "hash": "SfpSB5FeIDRu7ALeboeNKK4ptGM=",
+        "name": "13-part0008_split_001.md",
+      },
+      HashedFile {
+        "hash": "SUUYLblKPgsCxGc/L/dou0Q+B0c=",
+        "name": "14-part0009_split_000.md",
+      },
+      HashedFile {
+        "hash": "BcIrbv2Ij+Mguty0G/i8UdAcwBo=",
+        "name": "15-part0009_split_001.md",
+      },
+      HashedFile {
+        "hash": "s/8+FvlVZzKhsPpYJq+S4nBPaAM=",
+        "name": "16-part0010_split_000.md",
+      },
+      HashedFile {
+        "hash": "NHMkCno9oJ2SKuNJZVZrRuHM6P4=",
+        "name": "17-part0010_split_001.md",
+      },
+      HashedFile {
+        "hash": "6Bhd9fTT/cOF9uQUf2Ia7HU09Ho=",
+        "name": "18-part0011_split_000.md",
+      },
+      HashedFile {
+        "hash": "hyi3QyB3VI6vXVSuVIf2vNK6+YY=",
+        "name": "19-part0011_split_001.md",
+      },
+      HashedFile {
+        "hash": "nnErQf3Pt1+2lqOZRzfnzTfHyfE=",
+        "name": "20-part0012.md",
+      },
+      HashedFile {
+        "hash": "4qjvYnWkEKq5UEBwrqUYOxWGe0o=",
+        "name": "21-part0013_split_000.md",
+      },
+      HashedFile {
+        "hash": "2pb5OdJcRqHe3aKGoBo7B2Tc4Uo=",
+        "name": "22-part0013_split_001.md",
+      },
+      HashedFile {
+        "hash": "c0J+QS3Dfcs8uEpDQAIZvbsS1No=",
+        "name": "23-part0014_split_000.md",
+      },
+      HashedFile {
+        "hash": "wCBuisc+WzUO54gyYq9ZaITTTW4=",
+        "name": "24-part0014_split_001.md",
+      },
+      HashedFile {
+        "hash": "H+loH3P5guSKe799DZRDqX+j3zQ=",
+        "name": "25-part0015.md",
+      },
+      HashedFile {
+        "hash": "u3B0pWOAPFdv+oE2Cy5xalCjf1A=",
+        "name": "26-part0016_split_000.md",
+      },
+      HashedFile {
+        "hash": "bzHQYFYZ3JRvtnycypz8c+yYVHk=",
+        "name": "27-part0016_split_001.md",
+      },
+      HashedFile {
+        "hash": "N0BuDHltQ/j4PKBgR8IsDUdYazo=",
+        "name": "28-part0017_split_000.md",
+      },
+      HashedFile {
+        "hash": "BgdOhKE0TvKG8f50bkqktIZ2Cco=",
+        "name": "29-part0017_split_001.md",
+      },
+      HashedFile {
+        "hash": "mk+UlW1vL60jlgrcmLPvbbX6GR4=",
+        "name": "30-part0018_split_000.md",
+      },
+      HashedFile {
+        "hash": "T+SH5XEJTpX+k4syh1rfEqOU2/g=",
+        "name": "31-part0018_split_001.md",
+      },
+      HashedFolder {
+        "children": [
+          HashedFile {
+            "hash": "ZQGaNi4Cu42I7hemouae2uMs4sc=",
+            "name": "00002.jpeg",
+          },
+          HashedFile {
+            "hash": "UXW+r7au3568wsGMUKo3tVgGnS8=",
+            "name": "00003.jpeg",
+          },
+          HashedFile {
+            "hash": "jmgeFXfICLAX2s9otUb/vIiws+s=",
+            "name": "00004.jpeg",
+          },
+          HashedFile {
+            "hash": "Xoygu6ShbAiW+1lro4PkKvKO9+I=",
+            "name": "00005.jpeg",
+          },
+          HashedFile {
+            "hash": "4C0C4h2bW5aDXJ19b8fNGJnVMZc=",
+            "name": "00006.jpeg",
+          },
+          HashedFile {
+            "hash": "mrJ2vZy5CgEfW7ob09QYbL+GeBI=",
+            "name": "00007.jpeg",
+          },
+          HashedFile {
+            "hash": "qvEI2hP85WUcawSwLKZlfxJCVQE=",
+            "name": "00008.jpeg",
+          },
+          HashedFile {
+            "hash": "tFed27XJkAQ0Y24X2XxoVOP6pT8=",
+            "name": "00009.jpeg",
+          },
+          HashedFile {
+            "hash": "xQ1lIjRxr3LViWz8Y+2B6FpzMME=",
+            "name": "00010.jpeg",
+          },
+          HashedFile {
+            "hash": "+/67BLvSncM7IVqG3UyKAjfBMPQ=",
+            "name": "00011.jpeg",
+          },
+          HashedFile {
+            "hash": "zhYt+prmlLCkptyvyJbrY5JX9fY=",
+            "name": "00012.jpeg",
+          },
+          HashedFile {
+            "hash": "WmrsHWXd4R4L0WtV7V751XF7pkQ=",
+            "name": "00013.jpeg",
+          },
+          HashedFile {
+            "hash": "GncKjao8ry2HPwvvuNIff0MsJPE=",
+            "name": "00014.jpeg",
+          },
+          HashedFile {
+            "hash": "k/87BTSsc11lvrUgYRIb45+Owlk=",
+            "name": "00015.jpeg",
+          },
+          HashedFile {
+            "hash": "xUFLizu/8oQz2pkpByenLWBqJpY=",
+            "name": "00016.jpeg",
+          },
+          HashedFile {
+            "hash": "XPVgkskrAI6S0uRj5WFxUMsUW5s=",
+            "name": "00017.jpeg",
+          },
+          HashedFile {
+            "hash": "QhPFtyRBlruPI+iRRyGqU3UNx/4=",
+            "name": "00018.jpeg",
+          },
+          HashedFile {
+            "hash": "28Djxi+VrW6Yjvi1YYW1Kkfum7c=",
+            "name": "00019.jpeg",
+          },
+          HashedFile {
+            "hash": "NiO8/YJdwQxmGs64qhvawFdMMxU=",
+            "name": "00020.jpeg",
+          },
+          HashedFile {
+            "hash": "XSt5MOx8CrjVnhE0bAZv6eEkoNY=",
+            "name": "00021.jpeg",
+          },
+          HashedFile {
+            "hash": "FFnBQXItg1J+zHat9TrL+aEzTHM=",
+            "name": "00022.jpeg",
+          },
+          HashedFile {
+            "hash": "tWFDZ7UQ3sRNFPx9qJ3eRu1n5hY=",
+            "name": "00023.jpeg",
+          },
+          HashedFile {
+            "hash": "dIUHElXCi9fObOzj8bY5q3xY7bg=",
+            "name": "00024.jpeg",
+          },
+          HashedFile {
+            "hash": "jRFIraMh92nvf2gorCs7QhmkTBU=",
+            "name": "00025.jpeg",
+          },
+          HashedFile {
+            "hash": "7QLpNSb+j+04LqLDItjnYJGPUU4=",
+            "name": "00026.jpeg",
+          },
+          HashedFile {
+            "hash": "cbBEQ+DgFrleBo9IFPV5EUUK9XI=",
+            "name": "00027.jpeg",
+          },
+          HashedFile {
+            "hash": "WG3MEXsJOaQ55oNiSg0Q9Vi7aBU=",
+            "name": "00028.jpeg",
+          },
+          HashedFile {
+            "hash": "76x7/bHS5KkqoMh9VkClD5LBj7I=",
+            "name": "00029.jpeg",
+          },
+          HashedFile {
+            "hash": "uOYPXOdLAZb5mN3MMg3fvqrsH9M=",
+            "name": "00030.jpeg",
+          },
+          HashedFile {
+            "hash": "T5g8UYU0TZ6c1VzfQuK27Axfe8U=",
+            "name": "00031.jpeg",
+          },
+          HashedFile {
+            "hash": "UgbIJRfvVxRHMQFJ5JMg8yAcY6w=",
+            "name": "00032.jpeg",
+          },
+          HashedFile {
+            "hash": "hJENVNEUw017mftbUEc1syzJXL4=",
+            "name": "00033.jpeg",
+          },
+          HashedFile {
+            "hash": "ghEy8wdn3T2nQwIYCLcOi3q5ccU=",
+            "name": "00034.jpeg",
+          },
+          HashedFile {
+            "hash": "p64YxgAIf5Xhv+p5/SOb+uR0lWA=",
+            "name": "00035.jpeg",
+          },
+          HashedFile {
+            "hash": "bA1vUVRLXNEJyGf4MeZpeBa12BQ=",
+            "name": "00036.jpeg",
+          },
+          HashedFile {
+            "hash": "/qmmeegLfy9dx+jNAZSZPovQLZI=",
+            "name": "00037.jpeg",
+          },
+          HashedFile {
+            "hash": "lY3OdzJmu9hnt0u6DlhECKUAdso=",
+            "name": "cover.jpeg",
+          },
+        ],
+        "hash": "yUKSRAZFVFIlLShRIELohvBLZMw=",
+        "name": "images",
+      },
+    ],
+    "hash": "iEHDiv1ZetIx9fuxnOJptMeDUNQ=",
+    "name": "file-1-no-toc",
+  },
+  "stdout": "[34m[epub2md]: [1/1] Converting <absolute path hidden from snapshot>/file-1-no-toc.epub...[39m
+[32m[epub2md]: 1: [01-part0000.md][39m
+[32m[epub2md]: 2: [02-part0001_split_000.md][39m
+[32m[epub2md]: 3: [03-part0001_split_001.md][39m
+[32m[epub2md]: 4: [04-part0002.md][39m
+[32m[epub2md]: 5: [05-part0003.md][39m
+[32m[epub2md]: 6: [06-part0004.md][39m
+[32m[epub2md]: 7: [07-part0005_split_000.md][39m
+[32m[epub2md]: 8: [08-part0005_split_001.md][39m
+[32m[epub2md]: 9: [09-part0006_split_000.md][39m
+[32m[epub2md]: 10: [10-part0006_split_001.md][39m
+[32m[epub2md]: 11: [11-part0007.md][39m
+[32m[epub2md]: 12: [12-part0008_split_000.md][39m
+[32m[epub2md]: 13: [13-part0008_split_001.md][39m
+[32m[epub2md]: 14: [14-part0009_split_000.md][39m
+[32m[epub2md]: 15: [15-part0009_split_001.md][39m
+[32m[epub2md]: 16: [16-part0010_split_000.md][39m
+[32m[epub2md]: 17: [17-part0010_split_001.md][39m
+[32m[epub2md]: 18: [18-part0011_split_000.md][39m
+[32m[epub2md]: 19: [19-part0011_split_001.md][39m
+[32m[epub2md]: 20: [20-part0012.md][39m
+[32m[epub2md]: 21: [21-part0013_split_000.md][39m
+[32m[epub2md]: 22: [22-part0013_split_001.md][39m
+[32m[epub2md]: 23: [23-part0014_split_000.md][39m
+[32m[epub2md]: 24: [24-part0014_split_001.md][39m
+[32m[epub2md]: 25: [25-part0015.md][39m
+[32m[epub2md]: 26: [26-part0016_split_000.md][39m
+[32m[epub2md]: 27: [27-part0016_split_001.md][39m
+[32m[epub2md]: 28: [28-part0017_split_000.md][39m
+[32m[epub2md]: 29: [29-part0017_split_001.md][39m
+[32m[epub2md]: 30: [30-part0018_split_000.md][39m
+[32m[epub2md]: 31: [31-part0018_split_001.md][39m
+[34m[epub2md]: [1/1] Conversion successful! output: <absolute path hidden from snapshot>/file-1-no-toc[39m
+",
+}

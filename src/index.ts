@@ -1,4 +1,4 @@
-import parseEpub from './parseEpub'
+import parseEpub from './epub/parseEpub'
 import parseLink from './parseLink'
 import parseHTML from './parseHTML'
 
