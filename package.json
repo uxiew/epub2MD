@@ -91,7 +91,7 @@
     "ts-node": "^10.9.2",
     "tslint": "^5.19.0",
     "typescript": "^5.9.3",
-    "unbuild": "3.0.0-rc.7",
+    "unbuild": "^3.6.1",
     "vitest": "^4.0.15",
     "vrsource-tslint-rules": "^6.0.0"
   }
