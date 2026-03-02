@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.1](https://github.com/uxiew/epub2MD/compare/v1.6.0...v1.6.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* 🐛 shebang's build missing ([e1dd515](https://github.com/uxiew/epub2MD/commit/e1dd515489b18551ff6e0c5d87707449096efcd1))
+
+
+
 # [1.6.0](https://github.com/uxiew/epub2MD/compare/v1.5.0...v1.6.0) (2026-03-01)
 
 
