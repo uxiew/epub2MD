@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer'
-import path from 'node:path'
+import path from 'node:path/posix'
 import _ from 'lodash'
 
 import parseSection, { Section } from '../parseSection'
@@ -7,8 +7,7 @@ import { parseOptions, ParserOptions } from './options'
 import { Zip } from './zip'
 import { parseStructure, Structure } from '../xml'
 
-
-export const defaultOptions = { type: "path", expand: false } as ParserOptions
+export const defaultOptions = { type: 'path', expand: false } as ParserOptions
 
 export class Epub {
   private zip: Zip
@@ -57,7 +56,7 @@ export class Epub {
     let list: any[] = _.union(Object.keys(this.structure.opf.spine!))
     // no chain
     if (id) {
-      list = [id];
+      list = [id]
     }
     return list.map((id) => {
       const path = this.structure.opf.manifest.getById(id)!.href
@@ -66,7 +65,7 @@ export class Epub {
         id,
         htmlString: html,
         getFile: this.getFile.bind(this),
-        getItemId: href => this.structure.opf.manifest.getItemId(href),
+        getItemId: (href) => this.structure.opf.manifest.getItemId(href),
         expand: this.options.expand,
       })
 
@@ -84,7 +83,7 @@ export class Epub {
     if (sectionIndex === undefined) {
       return this._resolveSections(id)[0]
     }
-    return this.sections ? sectionIndex != -1 ? this.sections[sectionIndex] : null : null
+    return this.sections ? (sectionIndex != -1 ? this.sections[sectionIndex] : null) : null
   }
 }
 

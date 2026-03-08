@@ -11,14 +11,23 @@ import _last from 'lodash/last'
  *   - prefix: The path prefix of the URL.
  *   - url: The complete URL without the hash.
  */
-export default function parseHref(href: string, decode: boolean = false): {
-  hash: string;
-  name: string;
-  ext: string | undefined;
-  prefix: string;
-  url: string;
+export default function parseHref(
+  href: string,
+  decode: boolean = false,
+): {
+  hash: string
+  name: string
+  ext: string | undefined
+  prefix: string
+  url: string
 } {
-  if (decode) href = decodeURIComponent(href)
+  if (decode) {
+    try {
+      href = decodeURIComponent(href)
+    } catch {
+      /* keep original href if malformed */
+    }
+  }
   const hash = href.split('#')[1]
   const url = href.split('#')[0]
   const prefix = url.split('/').slice(0, -1).join('/')

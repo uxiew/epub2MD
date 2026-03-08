@@ -5,16 +5,27 @@ export class Zip {
   constructor(fileContent: Buffer) {
     this.zip = unzipSync(fileContent)
   }
-  
+
   getFile(path: string) {
-    const normalisedPath = decodeURI(path)
+    let decoded: string
+    try {
+      decoded = decodeURIComponent(path)
+    } catch {
+      // fall back to decodeURI if the path contains malformed percent-sequences
+      try {
+        decoded = decodeURI(path)
+      } catch {
+        decoded = path
+      }
+    }
+    const normalisedPath = decoded
+      .replace(/\\/g, '/') // normalize Windows backslashes for zip lookup
       .replace(/^\//, '') // drop initial slash
     const file = this.zip[normalisedPath]
-    if (!file)
-      throw new Error(`Error in epub. File not found: ${normalisedPath}`)
+    if (!file) throw new Error(`Error in epub. File not found: ${normalisedPath}`)
     return {
       asText: () => toString(file),
-      asNodeBuffer: () => Buffer.from(file)
+      asNodeBuffer: () => Buffer.from(file),
     }
   }
 }
