@@ -1,4 +1,5 @@
 import { basename, dirname, extname, join } from 'node:path'
+import { join as posixJoin, dirname as posixDirname } from 'node:path/posix'
 import logger from '../logger'
 import _ from 'lodash'
 import * as iteratorHelpersPolyfill from 'iterator-helpers-polyfill'
@@ -100,7 +101,9 @@ export class Converter {
           if (file) validPath = basename(clearOutpath(file, this.epub.structure.toc).outPath)
 
           // content's id
-          const toId = this.epub.structure.opf.manifest.getItemId(join(dirname(filepath), url))
+          const toId = this.epub.structure.opf.manifest.getItemId(
+            posixJoin(posixDirname(filepath), url),
+          )
 
           return this.options.shouldMerge
             ? linkStartSep + toId + (hash ? '#' + hash : '')

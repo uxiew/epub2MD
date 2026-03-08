@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from 'node:path/posix'
 import { parseMetaContainer } from './meta-container'
 import { Opf, parseOpf } from './opf'
 import { parseToc } from './toc'
@@ -15,7 +15,7 @@ export function parseStructure(zip: Zip) {
   return {
     contentRoot,
     opf,
-    toc
+    toc,
   }
 }
 
@@ -38,6 +38,6 @@ class Parse {
     if (!relativePath) return
     const fullPath = path.join(contentRoot, relativePath)
     const string = this.zip.getFile(fullPath).asText()
-    return parseToc(string, href => opf.manifest.getItemId(href))
+    return parseToc(string, (href) => opf.manifest.getItemId(href))
   }
 }

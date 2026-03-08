@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path/posix'
 import { parseXml } from './parseXml'
 
 export function parseMetaContainer(text: string) {
