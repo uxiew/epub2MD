@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.2](https://github.com/uxiew/epub2MD/compare/v1.6.1...v1.6.2) (2026-03-10)
+
+
+
 ## [1.6.1](https://github.com/uxiew/epub2MD/compare/v1.6.0...v1.6.1) (2026-03-02)
 
 
