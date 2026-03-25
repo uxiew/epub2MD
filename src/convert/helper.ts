@@ -1,5 +1,6 @@
 import { extname } from 'node:path'
 import convert from '../converter'
+import { normalizeUnicode } from './normalize'
 
 /**
  * Matches the image/link syntax in Markdown
@@ -58,5 +59,5 @@ export function convertHTML(prunedHtml: string) {
     .replace(/\s?<!DOCTYPE[^>]*>\s?/g, '') // 移除 DOCTYPE 声明
     .replace(/\n+\s?/g, '\n')
 
-  return convert(htmlString)
+  return normalizeUnicode(convert(htmlString))
 }
