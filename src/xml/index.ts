@@ -1,4 +1,5 @@
 import path from 'node:path/posix'
+import logger from '../logger'
 import { parseMetaContainer } from './meta-container'
 import { Opf, parseOpf } from './opf'
 import { parseToc } from './toc'
@@ -36,8 +37,13 @@ class Parse {
   toc(opf: Opf, contentRoot: string) {
     const relativePath = opf.manifest.getById('ncx')?.href
     if (!relativePath) return
-    const fullPath = path.join(contentRoot, relativePath)
-    const string = this.zip.getFile(fullPath).asText()
-    return parseToc(string, (href) => opf.manifest.getItemId(href))
+    try {
+      const fullPath = path.join(contentRoot, relativePath)
+      const string = this.zip.getFile(fullPath).asText()
+      return parseToc(string, (href) => opf.manifest.getItemId(href))
+    } catch (error) {
+      logger.warn('Failed to read or parse TOC file, skipping TOC', error)
+      return undefined
+    }
   }
 }
