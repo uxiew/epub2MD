@@ -1,11 +1,18 @@
 import _ from 'lodash'
 import parseLink from '../parseLink'
+import logger from '../logger'
 import { GeneralObject } from '../types'
 import { parseXml } from './parseXml'
 import { Manifest } from './opf'
 
 export function parseToc(text: string, getItemId: Manifest['getItemId']) {
-  const object = parseXml(text) as any
+  let object: any
+  try {
+    object = parseXml(text)
+  } catch (error) {
+    logger.warn('Failed to parse TOC XML, skipping TOC', error)
+    return undefined
+  }
   const toc = object.html ? html(object, getItemId) : ncx(object, getItemId)
   return toc && new Toc(toc)
 }
