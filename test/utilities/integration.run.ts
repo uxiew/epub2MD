@@ -3,12 +3,12 @@ import { startVitest } from 'vitest/node'
 
 const usage = `
 Usage:
-  npm run test:snapshot [watch] <only|skip> <test-names...>
+  pnpm test:integration [watch] <only|skip> <test-names...>
 
 Examples:
-  npm run test:snapshot only test3 test4
-  npm run test:snapshot skip test2 test6
-  npm run test:snapshot watch only test1
+  pnpm test:integration only convert merge
+  pnpm test:integration skip localize
+  pnpm test:integration watch only unzip
 `
 
 function fail() {

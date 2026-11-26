@@ -24,6 +24,6 @@ export function getNodeAbsolutePath() {
     if (!nodePath) throw new Error('node 绝对路径为空')
     return nodePath
   } catch (err) {
-    throw new Error(`获取 node 路径失败：${err.message}`)
+    throw new Error(`获取 node 路径失败：${err instanceof Error ? err.message : String(err)}`)
   }
 }

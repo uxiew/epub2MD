@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.5](https://github.com/uxiew/epub2MD/compare/v1.6.4...v1.6.5) (2026-11-25)
+
+
+### Bug Fixes
+
+* restore Node.js ESM imports of `epub2md` ([#34](https://github.com/uxiew/epub2MD/issues/34)) ([9fc00d9](https://github.com/uxiew/epub2MD/commit/9fc00d94754bbcc79ad941f68bf60570206d49b2))
+
+
+
+## [1.6.4](https://github.com/uxiew/epub2MD/compare/v1.6.3...v1.6.4) (2026-09-01)
+
+
+### Bug Fixes
+
+* fix the `TocItem` not found error by exporting it as a type ([87bebe4](https://github.com/uxiew/epub2MD/commit/87bebe47a077a43cbda333c8302c25ff589e9c9d))
+
+
+
 ## [1.6.3](https://github.com/uxiew/epub2MD/compare/v1.6.2...v1.6.3) (2026-04-30)
 
 
